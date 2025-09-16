@@ -1,7 +1,7 @@
-package com.skiresort.terrain;
+package com.terrain;
 
-import com.skiresort.enums.POIStatus;
-import com.skiresort.enums.Point;
+import com.enums.POIStatus;
+import com.enums.Point;
 
 public class Restaurant extends POI {
 

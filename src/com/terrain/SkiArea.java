@@ -1,11 +1,14 @@
-package com.skiresort.terrain;
+package com.terrain;
 
-import com.skiresort.enums.*;
+import com.enums.OpeningHours;
+import com.enums.Point;
+import com.peoples.Worksite;
+import com.enums.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkiArea {
+public class SkiArea implements Worksite {
     private String name = "";
     private final int id;
     private boolean functioning = true;
@@ -38,8 +41,9 @@ public class SkiArea {
         this.opening_hours = opening_hours;
     }
 
-
+    @Override
     public String getName() { return this.name; }
+    @Override
     public int getId() { return id; }
     public boolean isFunctioning() { return functioning; }
     public Point getHighest() { return highest; }

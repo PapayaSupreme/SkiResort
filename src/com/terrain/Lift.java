@@ -1,9 +1,9 @@
-package com.skiresort.terrain;
+package com.terrain;
 
-import com.skiresort.enums.LiftStatus;
-import com.skiresort.enums.LiftType;
-import com.skiresort.enums.OpeningHours;
-import com.skiresort.enums.Point;
+import com.enums.LiftStatus;
+import com.enums.LiftType;
+import com.enums.OpeningHours;
+import com.enums.Point;
 
 public class Lift extends SkiArea{
     private LiftType type;

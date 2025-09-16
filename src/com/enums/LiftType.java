@@ -1,3 +1,3 @@
-package com.skiresort.enums;
+package com.enums;
 
 public enum LiftType { TREADMILL, TELESKI, SEATED, CABIN}

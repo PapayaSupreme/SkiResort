@@ -1,9 +1,10 @@
-package com.skiresort.terrain;
+package com.terrain;
 
-import com.skiresort.enums.POIStatus;
-import com.skiresort.enums.Point;
+import com.enums.POIStatus;
+import com.enums.Point;
+import com.peoples.Worksite;
 
-public class POI {
+public class POI implements Worksite {
     private String name = "";
     private final int id;
     private Point location;
@@ -15,4 +16,9 @@ public class POI {
         this.location = location;
         this.status = status;
     }
+
+    @Override
+    public String getName() { return this.name; }
+    @Override
+    public int getId() { return this.id; }
 }
