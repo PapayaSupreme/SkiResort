@@ -8,16 +8,16 @@ import com.enums.Point;
 public class Lift extends SkiArea{
     private LiftType type;
     private LiftStatus status = LiftStatus.CLOSED;
-    private Slope up_slope;
-    private Slope down_slope;
+    private Slope upSlope;
+    private Slope downSlope;
 
     public Lift(String name, int id, Point highest, Point lowest,
                 String domain, double length, OpeningHours opening_hours,
-                LiftType type, Slope up_slope, Slope down_slope) {
+                LiftType type, Slope upSlope, Slope downSlope) {
         super(name, id, highest, lowest, domain, length, opening_hours);
         this.type = type;
-        this.up_slope = up_slope;
-        this.down_slope = down_slope;
+        this.upSlope = upSlope;
+        this.downSlope = downSlope;
     }
 
     public LiftType getType() { return type; }

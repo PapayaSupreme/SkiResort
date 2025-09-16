@@ -14,5 +14,6 @@ public class Instructor extends Guest {
     }
 
     public SkiSchool getSchool() { return this.school; }
+    
     public void setSchool(SkiSchool school) { this.school = school; }
 }
