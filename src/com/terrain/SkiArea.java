@@ -43,27 +43,31 @@ public class SkiArea implements Worksite {
     @Override
     public String getName() { return this.name; }
     @Override
-    public int getId() { return id; }
-    public boolean isFunctioning() { return functioning; }
-    public Point getHighest() { return highest; }
-    public Point getLowest() { return lowest; }
-    public String getDomain() { return domain; }
-    public double getLength() { return length; }
-    public OpeningHours getOpeningHours() { return openingHours; }
-    public List<Lift> getLifts() { return lifts; }
-    public List<Slope> getSlopes() { return slopes; }
-    public List<POI> getPois() { return pois; }
+    public int getId() { return this.id; }
+    public boolean isFunctioning() { return this.functioning; }
+    public Point getHighest() { return this.highest; }
+    public Point getLowest() { return this.lowest; }
+    public String getDomain() { return this.domain; }
+    public double getLength() { return this.length; }
+    public OpeningHours getOpeningHours() { return this.openingHours; }
+    public List<Lift> getLifts() { return this.lifts; }
+    public List<Slope> getSlopes() { return this.slopes; }
+    public List<POI> getPois() { return this.pois; }
 
+    @Override
     public void setName(String name) { this.name = name; }
     public void setFunctioning(boolean functioning) { this.functioning = functioning; }
     public void setHighest(Point highest) { this.highest = highest; }
     public void setLowest(Point lowest) { this.lowest = lowest; }
     public void setLength(double length) { this.length = length; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
-    public void addLift(Lift l) { lifts.add(l); }
-    public void addSlope(Slope s) { slopes.add(s); }
-    public void addPOI(POI p) { pois.add(p); }
+    public void addLift(Lift lift) { this.lifts.add(lift); }
+    public void addSlope(Slope slope) { this.slopes.add(slope); }
+    public void addPOI(POI poi) { this.pois.add(poi); }
 
+    public boolean removeLift(Lift lift) { return this.lifts.remove(lift); }
+    public boolean removeSlope(Slope slope) { return this.slopes.remove(slope); }
+    public boolean removePOI(POI poi) { return this.pois.remove(poi); }
 
     public void updateHeight() {
         //TODO: for highest and lowest, iterate through

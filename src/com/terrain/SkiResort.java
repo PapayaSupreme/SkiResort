@@ -6,16 +6,18 @@ import java.util.List;
 public class SkiResort {
     private final String name;
     private final int id;
-    private final List<SkiArea> areas = new ArrayList<>();
+    private final List<SkiArea> skiAreas = new ArrayList<>();
 
     public SkiResort(String name, int id) {
         this.name = name;
         this.id = id;
     }
 
-    public String getName() { return name; }
-    public int getId() { return id; }
-    public List<SkiArea> getAreas() { return List.copyOf(areas); }
+    public String getName() { return this.name; }
+    public int getId() { return this.id; }
+    public List<SkiArea> getSkiAreas() { return List.copyOf(this.skiAreas); }
 
-    public void addArea(SkiArea area) { areas.add(area); }
+    public void addSkiArea(SkiArea skiArea) { this.skiAreas.add(skiArea); }
+
+    public boolean removeSkiArea(SkiArea skiArea) { return this.skiAreas.remove(skiArea); }
 }

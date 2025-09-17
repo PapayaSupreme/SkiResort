@@ -10,15 +10,21 @@ public class POI implements Worksite {
     private Point location;
     private POIStatus status = POIStatus.CLOSED;
 
-    public POI(String name, int id, Point location, POIStatus status) {
+    public POI(String name, int id, Point location) {
         this.name = name;
         this.id = id;
         this.location = location;
-        this.status = status;
     }
 
     @Override
     public String getName() { return this.name; }
     @Override
     public int getId() { return this.id; }
+    public Point getLocation() { return this.location; }
+    public POIStatus getStatus() { return this.status; }
+
+    @Override
+    public void setName(String name) { this.name = name; }
+    public void setLocation(Point location) { this.location = location; }
+    public void setStatus(POIStatus status) { this.status = status; }
 }
