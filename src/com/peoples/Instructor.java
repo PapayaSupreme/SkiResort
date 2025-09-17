@@ -1,7 +1,6 @@
 package com.peoples;
 
 import com.enums.SkiSchool;
-import com.terrain.SkiArea;
 
 public class Instructor extends Guest {
     private SkiSchool school;

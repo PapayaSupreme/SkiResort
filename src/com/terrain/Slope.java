@@ -1,6 +1,11 @@
 package com.terrain;
 
-import com.enums.*;
+
+import com.enums.SlopeDifficulty;
+import com.enums.SnowConsistency;
+import com.enums.SlopeType;
+import com.enums.Point;
+import com.enums.OpeningHours;
 
 public class Slope extends SkiArea {
     private SlopeDifficulty slopeDifficulty;
