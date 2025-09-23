@@ -1,3 +1,11 @@
 package com.enums;
 
-public record OpeningHours(int opening, int closing, int daysClosed) {}
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.Set;
+
+public record OpeningHours(
+        LocalTime opening,
+        LocalTime closing,
+        Set<DayOfWeek> daysClosed
+) {}

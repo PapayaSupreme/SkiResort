@@ -4,7 +4,6 @@ import com.enums.PassCategory;
 import com.enums.PassStatus;
 
 import java.time.Instant;
-import java.util.Date;
 
 public abstract class Pass {
     private final int id;
@@ -24,13 +23,13 @@ public abstract class Pass {
         this.createdAt = Instant.now();
     }
 
-    public int getId() { return id; }
-    public int getOwnerId() { return ownerId; }
-    public String getLastName() { return lastName; }
-    public String getFirstName() { return firstName; }
-    public PassStatus getPassStatus() { return passStatus; }
-    public PassCategory getPassCategory() { return passCategory; }
-    public Instant getCreatedAt() { return createdAt; }
+    public int getId() { return this.id; }
+    public int getOwnerId() { return this.ownerId; }
+    public String getLastName() { return this.lastName; }
+    public String getFirstName() { return this.firstName; }
+    public PassStatus getPassStatus() { return this.passStatus; }
+    public PassCategory getPassCategory() { return this.passCategory; }
+    public Instant getCreatedAt() { return this.createdAt; }
 
     public void setLastName(String lastName) { this.lastName = lastName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -40,6 +39,6 @@ public abstract class Pass {
     public void activate() { this.passStatus = PassStatus.ACTIVE; }
     public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
 
-    public abstract boolean isValid(Date date);
+    public abstract boolean isValid(Instant at);
     public abstract double getPrice();
 }

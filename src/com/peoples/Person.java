@@ -1,5 +1,8 @@
 package com.peoples;
 
+import com.passes.Pass;
+
+import java.util.List;
 import java.util.ArrayList;
 
 public abstract class Person {
