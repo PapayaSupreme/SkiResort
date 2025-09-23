@@ -39,6 +39,6 @@ public abstract class Pass {
     public void activate() { this.passStatus = PassStatus.ACTIVE; }
     public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
 
-    public abstract boolean isValid(Instant at);
+    public abstract boolean isValidAt(Instant at);
     public abstract double getPrice();
 }
