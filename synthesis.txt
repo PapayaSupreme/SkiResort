@@ -1,0 +1,41 @@
+Ski Resort Structure — UML/Class Project Synthesis 
+
+I. Context
+
+Domain model for a ski resort: Separated between POIs, Ski Areas, Persons and Passes. Main use cases would be issuing/checking validity of passes, populating the resort with crew & pister using live affluence and meteorological conditions, and also display the status of slopes and rescue points on interactive maps.
+
+II. Structure
+
+com
+├─ passes
+│  ├─ Pass (abstract)
+│  │   ├─ DayPass
+│  │   ├─ MultiDayPass
+│  │   ├─ YearPass
+│  │   └─ ALaCartePass
+│  └─ (enums used by passes: PassCategory, PassStatus)
+│
+├─ peoples
+│  ├─ Person (abstract)			(each Person has a list of Pass)
+│  │   ├─ Guest
+│  │   │  └─ Instructor
+│  │   └─ Employee
+│  └─ Worksite        (plain class; helper/assignment target)
+│
+└─ terrain
+   ├─ POI             (base map entity, single-point locations)
+   │   ├─ Summit
+   │   ├─ Restaurant
+   │   ├─ Map
+   │   └─ RescuePoint
+   │
+   └─ SkiArea         (area with geometry)
+       ├─ Slope
+       └─ Lift
+
+III. Features
+
+Pass: issuing different types of passes, compute their prices, check their validity, give user info
+Person: maps their role, attached location (restaurant for R&B crew, rescue point for pisters...), give out their status/schedule
+Terrain: Display opening hours or emergency status, give out snow and weather report when needed. Map their position and elevation, 
+	 and allow for use a shortest path algorithm between them. 
