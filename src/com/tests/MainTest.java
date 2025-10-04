@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class MainTest {
     public static void main(String[] args) {
-        final LocalDate OPENING_DATE = LocalDate.of(2025,12,1);
+        """final LocalDate OPENING_DATE = LocalDate.of(2025,12,1);
         final LocalDate CLOSING_DATE = LocalDate.of(2026,4,30);
         // Opening hours example
         OpeningHours oh = new OpeningHours(
@@ -56,6 +56,7 @@ public class MainTest {
         );
         alc.logUse(LocalDate.of(2025,12,26));
         alc.logUse(LocalDate.of(2025,12,27));
-        System.out.println("ALaCarte uses: " + alc.getUsageCount() + ", due: " + alc.getAmountDue());
+        System.out.println("ALaCarte uses: " + alc.getUsageCount() + ", due: " + alc.getAmountDue());"""
+
     }
 }
