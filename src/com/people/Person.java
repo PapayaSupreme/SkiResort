@@ -1,4 +1,4 @@
-package com.peoples;
+package com.people;
 
 import com.passes.Pass;
 
@@ -14,7 +14,7 @@ public abstract class Person {
     }
 
     public int getId() { return this.id; }
-    public List<Pass> getPasses() { return this.passes; }
+    public List<Pass> getPasses() { return List.copyOf(this.passes); }
 
     public void addPass(Pass pass) { this.passes.add(pass); }
 

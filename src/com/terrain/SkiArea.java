@@ -2,19 +2,18 @@ package com.terrain;
 
 import com.enums.OpeningHours;
 import com.enums.Point;
-import com.peoples.Worksite;
+import com.people.Worksite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SkiArea implements Worksite {
-    private String name = "";
+    private String name;
     private final int id;
     private boolean functioning = true;
     private Point highest;
     private Point lowest;
-    private final String domain;
-    private double length;
+    private double perimeter;
     private OpeningHours openingHours;
 
     private final List<Lift> lifts = new ArrayList<>();
@@ -22,44 +21,38 @@ public class SkiArea implements Worksite {
     private final List<POI> pois = new ArrayList<>();
 
 
-    public SkiArea(String name, int id, String domain, OpeningHours openingHours) {
+    public SkiArea(String name, int id, OpeningHours openingHours) {
         this.name = name;
         this.id = id;
-        this.domain = domain;
         this.openingHours = openingHours;
     }
 
     public SkiArea(String name, int id, Point highest, Point lowest,
-                   String domain, double length, OpeningHours openingHours) {
+                   double perimeter, OpeningHours openingHours) {
         this.name = name;
         this.id = id;
         this.highest = highest;
         this.lowest = lowest;
-        this.domain = domain;
-        this.length = length;
+        this.perimeter = perimeter;
         this.openingHours = openingHours;
     }
 
-    @Override
-    public String getName() { return this.name; }
-    @Override
-    public int getId() { return this.id; }
+    @Override public String getName() { return this.name; }
+    @Override public int getId() { return this.id; }
     public boolean isFunctioning() { return this.functioning; }
     public Point getHighest() { return this.highest; }
     public Point getLowest() { return this.lowest; }
-    public String getDomain() { return this.domain; }
-    public double getLength() { return this.length; }
+    public double getPerimeter() { return this.perimeter; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
     public List<Lift> getLifts() { return this.lifts; }
     public List<Slope> getSlopes() { return this.slopes; }
     public List<POI> getPois() { return this.pois; }
 
-    @Override
-    public void setName(String name) { this.name = name; }
+    @Override public void setName(String name) { this.name = name; }
     public void setFunctioning(boolean functioning) { this.functioning = functioning; }
     public void setHighest(Point highest) { this.highest = highest; }
     public void setLowest(Point lowest) { this.lowest = lowest; }
-    public void setLength(double length) { this.length = length; }
+    public void setPerimeter(double perimeter) { this.perimeter = perimeter; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void addLift(Lift lift) { this.lifts.add(lift); }
     public void addSlope(Slope slope) { this.slopes.add(slope); }

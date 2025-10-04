@@ -1,4 +1,4 @@
-package com.peoples;
+package com.people;
 
 import com.enums.SkiSchool;
 

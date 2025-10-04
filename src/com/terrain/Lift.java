@@ -4,7 +4,7 @@ import com.enums.LiftStatus;
 import com.enums.LiftType;
 import com.enums.OpeningHours;
 import com.enums.Point;
-import com.peoples.Worksite;
+import com.people.Worksite;
 
 public class Lift implements Worksite {
     private final int id;
@@ -12,21 +12,21 @@ public class Lift implements Worksite {
     private LiftType type;
     private LiftStatus status = LiftStatus.CLOSED;
     private final SkiArea skiArea;
-    private final Point start;
-    private final Point end;
+    private final Point up;
+    private final Point down;
     private final double length;
     private OpeningHours openingHours;
     private Slope upSlope;
     private Slope downSlope;
 
-    public Lift(String name, int id, Point start, Point end,
+    public Lift(String name, int id, Point up, Point down,
                 double length, OpeningHours openingHours,
                 LiftType type, Slope upSlope, Slope downSlope,
                 SkiArea skiArea) {
         this.name = name;
         this.id = id;
-        this.start = start;
-        this.end = end;
+        this.up = up;
+        this.down = down;
         this.length = length;
         this.openingHours = openingHours;
         this.type = type;
@@ -36,8 +36,8 @@ public class Lift implements Worksite {
     }
     @Override public String getName() { return name; }
     @Override public int getId() { return id; }
-    public Point getStart() { return start; }
-    public Point getEnd() { return end; }
+    public Point getUp() { return up; }
+    public Point getDown() { return down; }
     public double getLength() { return length; }
     public OpeningHours getOpeningHours() { return openingHours; }
     public LiftType getType() { return this.type; }

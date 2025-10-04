@@ -1,12 +1,5 @@
 package com.tests;
 
-import com.enums.*;
-import com.passes.*;
-import com.peoples.*;
-
-import java.time.*;
-import java.util.Set;
-
 public class MainTest {
     public static void main(String[] args) {
         """final LocalDate OPENING_DATE = LocalDate.of(2025,12,1);

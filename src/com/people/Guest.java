@@ -1,4 +1,4 @@
-package com.peoples;
+package com.people;
 
 public class Guest extends Person {
 

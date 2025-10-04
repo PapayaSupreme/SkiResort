@@ -1,4 +1,4 @@
-package com.peoples;
+package com.people;
 
 public interface Worksite {
 

@@ -7,8 +7,8 @@ public class Summit extends POI{
     private int snowHeight = 0;
     private SnowConsistency snowConsistency = SnowConsistency.NONE;
 
-    public Summit(String name, int id, Point location) {
-        super(name, id, location);
+    public Summit(String name, int id, Point location, SkiArea skiArea) {
+        super(name, id, location, skiArea);
     }
 
     public int getSnowHeight() { return snowHeight; }

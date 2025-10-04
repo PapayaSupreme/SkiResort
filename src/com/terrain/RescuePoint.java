@@ -5,8 +5,8 @@ import com.enums.Point;
 public class RescuePoint extends POI{
     private boolean warning = false;
 
-    public RescuePoint(String name, int id, Point location) {
-        super(name, id, location);
+    public RescuePoint(String name, int id, Point location, SkiArea skiArea) {
+        super(name, id, location, skiArea);
     }
 
     public boolean isWarning() { return this.warning; }
