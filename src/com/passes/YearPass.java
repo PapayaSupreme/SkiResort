@@ -26,19 +26,17 @@ public class YearPass extends Pass {
         this.seasonEnd = seasonEnd;
     }
 
+    @Override  public double getPrice() { return this.price; }
+    public LocalDate getSeasonStart() { return this.seasonStart; }
+    public LocalDate getSeasonEnd()   { return this.seasonEnd; }
+
     @Override
     public boolean isValidAt(Instant at) {
         LocalDate date = at.atZone(ZoneId.systemDefault()).toLocalDate();
-        return (date.isEqual(seasonStart) || date.isAfter(seasonStart))
-                && (date.isEqual(seasonEnd)   || date.isBefore(seasonEnd))
+        return (date.isEqual(this.seasonStart) || date.isAfter(this.seasonStart))
+                && (date.isEqual(this.seasonEnd)   || date.isBefore(this.seasonEnd))
                 && getPassStatus() == PassStatus.ACTIVE;
     }
 
-    @Override
-    public double getPrice() {
-        return price;
-    }
 
-    public LocalDate getSeasonStart() { return seasonStart; }
-    public LocalDate getSeasonEnd()   { return seasonEnd; }
 }

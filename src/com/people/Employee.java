@@ -12,8 +12,8 @@ public class Employee extends Person {
         this.worksite = worksite;
     }
 
-    public EmployeeType getEmployeeType() { return employeeType; }
-    public Worksite getWorksite() { return worksite; }
+    public EmployeeType getEmployeeType() { return this.employeeType; }
+    public Worksite getWorksite() { return this.worksite; }
 
     public void setEmployeeType(EmployeeType employeeType) { this.employeeType = employeeType; }
     public void setWorksite(Worksite worksite) { this.worksite = worksite; }

@@ -23,18 +23,12 @@ public class DayPass extends Pass {
         this.validDate = validDate;
     }
 
+    @Override public double getPrice() { return this.price; }
+    public LocalDate getValidDate() { return this.validDate; }
+
     @Override
     public boolean isValidAt(Instant at) {
         LocalDate date = at.atZone(ZoneId.systemDefault()).toLocalDate();
-        return date.isEqual(validDate) && getPassStatus() == PassStatus.ACTIVE;
-    }
-
-    @Override
-    public double getPrice() {
-        return price;
-    }
-
-    public LocalDate getValidDate() {
-        return validDate;
+        return date.isEqual(this.validDate) && getPassStatus() == PassStatus.ACTIVE;
     }
 }

@@ -8,8 +8,8 @@ import java.time.Instant;
 public abstract class Pass {
     private final int id;
     private final int ownerId;
-    private String lastName = "";
-    private String firstName = "";
+    private final String lastName;
+    private final String firstName;
     private PassStatus passStatus = PassStatus.ACTIVE;
     private PassCategory passCategory;
     private final Instant createdAt;
@@ -31,8 +31,6 @@ public abstract class Pass {
     public PassCategory getPassCategory() { return this.passCategory; }
     public Instant getCreatedAt() { return this.createdAt; }
 
-    public void setLastName(String lastName) { this.lastName = lastName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setPassStatus(PassStatus passStatus) { this.passStatus = passStatus; }
     public void setPassCategory(PassCategory passCategory) { this.passCategory = passCategory; }
 

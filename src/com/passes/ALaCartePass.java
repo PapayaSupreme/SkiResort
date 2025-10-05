@@ -28,24 +28,20 @@ public class ALaCartePass extends Pass {
     public ALaCartePass(int id, int ownerId, PassCategory category, String firstName,
                         String lastName, LocalDate seasonStart, LocalDate seasonEnd) {
         super(id, ownerId, lastName, firstName, category);
-
-        if (seasonStart == null || seasonEnd == null) {
-            throw new IllegalArgumentException("Season start/end must be provided");
-        }
-        if (seasonEnd.isBefore(seasonStart)) {
-            throw new IllegalArgumentException("seasonEnd must be on or after seasonStart");
-        }
-
         this.seasonStart = seasonStart;
         this.seasonEnd = seasonEnd;
         this.counter = 0;
     }
 
+    public LocalDate getSeasonStart() { return this.seasonStart; }
+    public LocalDate getSeasonEnd()   { return this.seasonEnd; }
+    public int getCounter() { return this.counter; }
+
     @Override
     public boolean isValidAt(Instant at) {
         if (getPassStatus() != PassStatus.ACTIVE) return false;
         LocalDate d = at.atZone(ZoneId.systemDefault()).toLocalDate();
-        return !d.isBefore(seasonStart) && !d.isAfter(seasonEnd);
+        return !d.isBefore(this.seasonStart) && !d.isAfter(this.seasonEnd);
     }
 
     @Override
@@ -84,8 +80,5 @@ public class ALaCartePass extends Pass {
         //TODO: implement that too
     }
 
-    public LocalDate getSeasonStart() { return this.seasonStart; }
-    public LocalDate getSeasonEnd()   { return this.seasonEnd; }
 
-    public int getCounter() { return this.counter; }
 }

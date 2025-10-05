@@ -34,16 +34,16 @@ public class Slope implements Worksite {
         this.skiArea = skiArea;
     }
 
-    @Override public String getName() { return name; }
-    @Override public int getId() { return id; }
-    public Point getUp() { return up; }
-    public Point getDown() { return down; }
-    public double getLength() { return length; }
-    public OpeningHours getOpeningHours() { return openingHours; }
+    @Override public String getName() { return this.name; }
+    @Override public int getId() { return this.id; }
+    public Point getUp() { return this.up; }
+    public Point getDown() { return this.down; }
+    public double getLength() { return this.length; }
+    public OpeningHours getOpeningHours() { return this.openingHours; }
     public SlopeDifficulty getSlopeDifficulty() { return this.slopeDifficulty; }
     public SnowConsistency getSnowConsistency() { return this.snowConsistency; }
     public SlopeType getSlopeType() { return this.slopeType;}
-    public SkiArea getSkiArea() { return skiArea; }
+    public SkiArea getSkiArea() { return this.skiArea; }
 
 
     @Override public void setName(String name) { this.name = name; }

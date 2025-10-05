@@ -11,8 +11,8 @@ public class Summit extends POI{
         super(name, id, location, skiArea);
     }
 
-    public int getSnowHeight() { return snowHeight; }
-    public SnowConsistency getSnowConsistency() { return snowConsistency; }
+    public int getSnowHeight() { return this.snowHeight; }
+    public SnowConsistency getSnowConsistency() { return this.snowConsistency; }
 
     public void setSnowHeight(int snowHeight) { this.snowHeight = snowHeight; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }

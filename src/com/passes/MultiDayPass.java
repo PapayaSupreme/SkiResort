@@ -7,9 +7,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-/**
- * A pass valid for a fixed number of consecutive days starting from a given date.
- */
 public class MultiDayPass extends Pass {
     private final double price;
     private final LocalDate startDate;
@@ -29,24 +26,19 @@ public class MultiDayPass extends Pass {
         this.numberOfDays = numberOfDays;
     }
 
+    @Override public double getPrice() { return this.price; }
+    public LocalDate getStartDate() { return this.startDate; }
+    public int getNumberOfDays() { return this.numberOfDays; }
+    public LocalDate getEndDate() {
+        return this.startDate.plusDays(this.numberOfDays - 1);
+    }
+
     @Override
     public boolean isValidAt(Instant at) {
         LocalDate date = at.atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endDate = startDate.plusDays(numberOfDays - 1);
-        return (date.isEqual(startDate) || date.isAfter(startDate))
+        LocalDate endDate = this.startDate.plusDays(this.numberOfDays - 1);
+        return (date.isEqual(this.startDate) || date.isAfter(this.startDate))
                 && (date.isEqual(endDate)   || date.isBefore(endDate))
                 && getPassStatus() == PassStatus.ACTIVE;
-    }
-
-    @Override
-    public double getPrice() {
-        return price;
-    }
-
-    public LocalDate getStartDate() { return startDate; }
-    public int getNumberOfDays() { return numberOfDays; }
-
-    public LocalDate getEndDate() {
-        return startDate.plusDays(numberOfDays - 1);
     }
 }

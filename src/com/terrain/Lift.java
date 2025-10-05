@@ -34,12 +34,12 @@ public class Lift implements Worksite {
         this.downSlope = downSlope;
         this.skiArea = skiArea;
     }
-    @Override public String getName() { return name; }
-    @Override public int getId() { return id; }
-    public Point getUp() { return up; }
-    public Point getDown() { return down; }
-    public double getLength() { return length; }
-    public OpeningHours getOpeningHours() { return openingHours; }
+    @Override public String getName() { return this.name; }
+    @Override public int getId() { return this.id; }
+    public Point getUp() { return this.up; }
+    public Point getDown() { return this.down; }
+    public double getLength() { return this.length; }
+    public OpeningHours getOpeningHours() { return this.openingHours; }
     public LiftType getType() { return this.type; }
     public LiftStatus getStatus() { return this.status; }
     public Slope getUpSlope() { return this.upSlope; }
