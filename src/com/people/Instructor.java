@@ -2,12 +2,14 @@ package com.people;
 
 import com.enums.SkiSchool;
 
-public class Instructor extends Guest {
+import java.time.LocalDate;
+
+public class Instructor extends Person {
     private SkiSchool school;
     private Worksite worksite;
 
-    public Instructor(int id, SkiSchool school, Worksite worksite) {
-        super(id);
+    public Instructor(String firstName, String lastName, LocalDate dob, SkiSchool school, Worksite worksite) {
+        super(firstName, lastName, dob);
         this.school = school;
         this.worksite = worksite;
     }
@@ -17,4 +19,10 @@ public class Instructor extends Guest {
 
     public void setSchool(SkiSchool school) { this.school = school; }
     public void setWorksite(Worksite worksite) { this.worksite = worksite; }
+
+    @Override
+    public String toString() {
+        return "Instructor: school=" + this.school + ", worksite="
+                + this.worksite + " - " + super.toString();
+    }
 }

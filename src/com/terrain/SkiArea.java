@@ -56,7 +56,7 @@ public class SkiArea implements Worksite {
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void addLift(Lift lift) { this.lifts.add(lift); }
     public void addSlope(Slope slope) { this.slopes.add(slope); }
-    public void addPOI(POI poi) { this.pois.add(poi); }
+    public void addPoi(POI poi) { this.pois.add(poi); }
 
     public boolean removeLift(Lift lift) { return this.lifts.remove(lift); }
     public boolean removeSlope(Slope slope) { return this.slopes.remove(slope); }

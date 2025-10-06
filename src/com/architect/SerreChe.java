@@ -95,11 +95,11 @@ public class SerreChe {
 
         Lift vallons = new Lift(
                 "Vallons", 302, new Point(0, 0, 2505), new Point(0, 0, 1915),
-                2207.0, SerreChe.winterHours(), LiftType.CHAIR, cucumelle, routeFrejus, chantemerle);
+                2207.0, SerreChe.winterHours(), LiftType.CHAIRLIFT, cucumelle, routeFrejus, chantemerle);
 
         Lift bachas = new Lift(
                 "Bachas", 304, new Point(0, 0, 2176), new Point(0, 0, 1465),
-                2492.0, SerreChe.winterHours(), LiftType.CHAIR, rochamout, null, monetier);
+                2492.0, SerreChe.winterHours(), LiftType.CHAIRLIFT, rochamout, null, monetier);
 
         // Attach lifts and slopes to areas
         briancon.addSlope(grandeGargouille);
@@ -135,21 +135,21 @@ public class SerreChe {
         Summit colDeLaCucumelle = new Summit("Col de la Cucumelle", 604, new Point(0, 0, 2505), monetier);
 
         // attach pois to areas
-        briancon.addPOI(serreBlanc);
-        briancon.addPOI(prorelRP);
-        briancon.addPOI(colDuProrel);
+        briancon.addPoi(serreBlanc);
+        briancon.addPoi(prorelRP);
+        briancon.addPoi(colDuProrel);
 
-        chantemerle.addPOI(cabaneASucre1);
-        chantemerle.addPOI(serreRatierRP);
-        chantemerle.addPOI(serreChevalier);
+        chantemerle.addPoi(cabaneASucre1);
+        chantemerle.addPoi(serreRatierRP);
+        chantemerle.addPoi(serreChevalier);
 
-        villeneuve.addPOI(bivouac);
-        villeneuve.addPOI(meaRP);
-        villeneuve.addPOI(eychauda);
+        villeneuve.addPoi(bivouac);
+        villeneuve.addPoi(meaRP);
+        villeneuve.addPoi(eychauda);
 
-        monetier.addPOI(flocon);
-        monetier.addPOI(bachasRP);
-        monetier.addPOI(colDeLaCucumelle);
+        monetier.addPoi(flocon);
+        monetier.addPoi(bachasRP);
+        monetier.addPoi(colDeLaCucumelle);
 
         resort.addSkiArea(briancon);
         resort.addSkiArea(chantemerle);

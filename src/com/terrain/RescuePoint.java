@@ -12,4 +12,9 @@ public class RescuePoint extends POI{
     public boolean isWarning() { return this.warning; }
 
     public void setWarning(boolean warning) { this.warning = warning; }
+
+    @Override
+    public String toString() {
+        return "Rescue Point: warning=" + this.warning + " - " + super.toString();
+    }
 }

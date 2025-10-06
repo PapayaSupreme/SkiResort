@@ -26,4 +26,11 @@ public class POI implements Worksite {
 
     @Override  public void setName(String name) { this.name = name; }
     public void setStatus(POIStatus status) { this.status = status; }
+
+    @Override
+    public String toString() {
+        return "POI: id=" + this.id + ", name=" + this.name+ ", location="
+                + this.location.toString() + ", status=" + this.status
+                + ", ski area=" + this.skiArea;
+    }
 }

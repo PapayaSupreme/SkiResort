@@ -8,7 +8,7 @@ import com.enums.Point;
 import com.enums.OpeningHours;
 import com.people.Worksite;
 
-public class Slope implements Worksite {
+public class Slope {
     private final int id;
     private String name;
     private SlopeDifficulty slopeDifficulty;
@@ -34,8 +34,8 @@ public class Slope implements Worksite {
         this.skiArea = skiArea;
     }
 
-    @Override public String getName() { return this.name; }
-    @Override public int getId() { return this.id; }
+    public String getName() { return this.name; }
+    public int getId() { return this.id; }
     public Point getUp() { return this.up; }
     public Point getDown() { return this.down; }
     public double getLength() { return this.length; }
@@ -46,7 +46,7 @@ public class Slope implements Worksite {
     public SkiArea getSkiArea() { return this.skiArea; }
 
 
-    @Override public void setName(String name) { this.name = name; }
+    public void setName(String name) { this.name = name; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void setSlopeDifficulty(SlopeDifficulty slopeDifficulty) { this.slopeDifficulty = slopeDifficulty; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }
