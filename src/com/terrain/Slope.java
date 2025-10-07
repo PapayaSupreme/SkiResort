@@ -50,4 +50,15 @@ public class Slope {
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void setSlopeDifficulty(SlopeDifficulty slopeDifficulty) { this.slopeDifficulty = slopeDifficulty; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }
+
+    @Override
+    public String toString() {
+        return "Slope: name=" + this.name + ", id=" + this.id+ ", up="
+                + this.up.toString() + ", down=" + this.down
+                + ", length=" + this.length + ", opening hours=" + this.openingHours
+                + ", difficulty=" + this.slopeDifficulty + ", snow=" + this.snowConsistency
+                + ", type=" + this.slopeType + ", ski area=" + this.skiArea.getName();
+    }
+
+
 }

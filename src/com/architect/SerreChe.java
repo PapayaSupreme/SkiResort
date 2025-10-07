@@ -135,21 +135,21 @@ public class SerreChe {
         Summit colDeLaCucumelle = new Summit("Col de la Cucumelle", 604, new Point(0, 0, 2505), monetier);
 
         // attach pois to areas
-        briancon.addPoi(serreBlanc);
-        briancon.addPoi(prorelRP);
-        briancon.addPoi(colDuProrel);
+        briancon.addRestaurant(serreBlanc);
+        briancon.addRescuePoint(prorelRP);
+        briancon.addSummit(colDuProrel);
 
-        chantemerle.addPoi(cabaneASucre1);
-        chantemerle.addPoi(serreRatierRP);
-        chantemerle.addPoi(serreChevalier);
+        chantemerle.addRestaurant(cabaneASucre1);
+        chantemerle.addRescuePoint(serreRatierRP);
+        chantemerle.addSummit(serreChevalier);
 
-        villeneuve.addPoi(bivouac);
-        villeneuve.addPoi(meaRP);
-        villeneuve.addPoi(eychauda);
+        villeneuve.addRestaurant(bivouac);
+        villeneuve.addRescuePoint(meaRP);
+        villeneuve.addSummit(eychauda);
 
-        monetier.addPoi(flocon);
-        monetier.addPoi(bachasRP);
-        monetier.addPoi(colDeLaCucumelle);
+        monetier.addRestaurant(flocon);
+        monetier.addRescuePoint(bachasRP);
+        monetier.addSummit(colDeLaCucumelle);
 
         resort.addSkiArea(briancon);
         resort.addSkiArea(chantemerle);

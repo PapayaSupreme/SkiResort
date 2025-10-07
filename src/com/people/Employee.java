@@ -70,68 +70,25 @@ public class Employee extends Person {
             valid = (type!=null);
         }
 
-        Worksite worksiteChoice = switch (type) { //Switch to cast speicific type of worsksite to employee, ugly but light
-            case PISTER -> {
-                List<RescuePoint> workplaces = ResortUtils.getAllPOIsOfType(skiResort, RescuePoint.class);
-                do {
-                    System.out.println("Select workplace (adapted to employee type): ");
-                    for (int i = 0; i < workplaces.size(); i++) {
-                        System.out.println((i + 1) + ". " + workplaces.get(i).toString());
-                    }
-                    choice = sc.nextInt();
-                    sc.nextLine();
-                    if (choice <= 0 || choice > workplaces.size()) {
-                        System.out.println("Out of bounds. Try again");
-                    }
-                } while (choice <=0 || choice > workplaces.size());
-                yield workplaces.get(choice-1);
-            }
-            case LIFT_OP -> {
-                List<Lift> workplaces = ResortUtils.getAllPOIsOfType(skiResort, Lift.class);
-                do {
-                    System.out.println("Select workplace (adapted to employee type): ");
-                    for (int i = 0; i < workplaces.size(); i++) {
-                        System.out.println((i + 1) + ". " + workplaces.get(i).toString());
-                    }
-                    choice = sc.nextInt();
-                    sc.nextLine();
-                    if (choice <= 0 || choice > workplaces.size()) {
-                        System.out.println("Out of bounds. Try again");
-                    }
-                } while (choice <=0 || choice > workplaces.size());
-                yield workplaces.get(choice-1);
-            }
-            case RESTAURATION -> {
-                List<Restaurant> workplaces = ResortUtils.getAllPOIsOfType(skiResort, Restaurant.class);
-                do {
-                    System.out.println("Select workplace (adapted to employee type): ");
-                    for (int i = 0; i < workplaces.size(); i++) {
-                        System.out.println((i + 1) + ". " + workplaces.get(i).toString());
-                    }
-                    choice = sc.nextInt();
-                    sc.nextLine();
-                    if (choice <= 0 || choice > workplaces.size()) {
-                        System.out.println("Out of bounds. Try again");
-                    }
-                } while (choice <=0 || choice > workplaces.size());
-                yield workplaces.get(choice-1);
-            }
-            case MAINTENANCE -> {
-                List<SkiArea> workplaces = ResortUtils.getAllPOIsOfType(skiResort, SkiArea.class);
-                do {
-                    System.out.println("Select workplace (adapted to employee type): ");
-                    for (int i = 0; i < workplaces.size(); i++) {
-                        System.out.println((i + 1) + ". " + workplaces.get(i).toString());
-                    }
-                    choice = sc.nextInt();
-                    sc.nextLine();
-                    if (choice <= 0 || choice > workplaces.size()) {
-                        System.out.println("Out of bounds. Try again");
-                    }
-                } while (choice <=0 || choice > workplaces.size());
-                yield workplaces.get(choice-1);
-            }
+        List<? extends Worksite> workplaces = switch (type) {
+            case PISTER -> ResortUtils.getAllWorksitesOfType(skiResort, RescuePoint.class);
+            case LIFT_OP -> ResortUtils.getAllWorksitesOfType(skiResort, Lift.class);
+            case RESTAURATION -> ResortUtils.getAllWorksitesOfType(skiResort, Restaurant.class);
+            case MAINTENANCE -> ResortUtils.getAllWorksitesOfType(skiResort, SkiArea.class);
+            default -> List.of();
         };
+        do {
+            System.out.println("Select workplace (adapted to employee type): ");
+            for (int i = 0; i < workplaces.size(); i++) {
+                System.out.println((i + 1) + ". " + workplaces.get(i).toString());
+            }
+            choice = sc.nextInt();
+            sc.nextLine();
+            if (choice <= 0 || choice > workplaces.size()) {
+                System.out.println("Out of bounds. Try again");
+            }
+        } while (choice <=0 || choice > workplaces.size());
+        Worksite worksiteChoice = workplaces.get(choice-1);
         try {
             Employee employee = new Employee(firstName, lastName, dob, type, worksiteChoice);
             skiResort.addEmployee(employee);
@@ -144,6 +101,6 @@ public class Employee extends Person {
     @Override
     public String toString() {
         return "Employee: type=" + this.employeeType + ", worksite="
-                + this.worksite + " - " + super.toString();
+                + this.worksite.getName() + " (" + this.worksite.getWorksiteType() + ")" + " - " + super.toString();
     }
 }

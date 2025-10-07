@@ -6,4 +6,6 @@ public interface Worksite {
     int getId();
 
     void setName(String name);
+
+    String getWorksiteType();
 }

@@ -4,7 +4,7 @@ import com.enums.POIStatus;
 import com.enums.Point;
 import com.people.Worksite;
 
-public class POI implements Worksite {
+public class POI {
     private String name = "";
     private final int id;
     private final Point location;
@@ -18,19 +18,19 @@ public class POI implements Worksite {
         this.skiArea = skiArea;
     }
 
-    @Override  public String getName() { return this.name; }
-    @Override  public int getId() { return this.id; }
+    public String getName() { return this.name; }
+    public int getId() { return this.id; }
     public Point getLocation() { return this.location; }
     public POIStatus getStatus() { return this.status; }
     public SkiArea getSkiArea() { return skiArea; }
 
-    @Override  public void setName(String name) { this.name = name; }
+    public void setName(String name) { this.name = name; }
     public void setStatus(POIStatus status) { this.status = status; }
 
     @Override
     public String toString() {
-        return "POI: id=" + this.id + ", name=" + this.name+ ", location="
+        return "name=" + this.name + ", id=" + this.id+ ", location="
                 + this.location.toString() + ", status=" + this.status
-                + ", ski area=" + this.skiArea;
+                + ", ski area=" + this.skiArea.getName();
     }
 }

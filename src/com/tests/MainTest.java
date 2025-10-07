@@ -18,57 +18,79 @@ public class MainTest {
         Scanner sc = new Scanner(System.in);
         SkiResort skiResort = null;
         boolean exit = false;
+        boolean goBack = false;
+        int choice1, choice2, choice3; //3var for 3 levels of user input
         while (!exit) {
-            System.out.println("=== MAIN MENU ===");
+            System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. instantiate with default resort");
-            System.out.println("2. register a person");
-            System.out.println("3. [WIP] add pass to a person");
-            System.out.println("4. exit");
+            System.out.println("2. View current resort");
+            System.out.println("3. register a person");
+            System.out.println("4. [WIP] add pass to a person");
+            System.out.println("5. exit");
 
-            int choice = sc.nextInt();
+            choice1 = sc.nextInt();
             sc.nextLine();
-
-            switch(choice) {
-                case 1:
+            goBack = false;
+            if (skiResort == null && choice1 !=1){
+                choice1 = 1;
+                System.out.println("You tried to access resort-related options without creating one.\n" +
+                        "Instantiating with default resort now...");
+            }
+            switch(choice1) {
+                case 1 -> {
                     try {
                         skiResort = createResort();
                         System.out.println("instantiation successful. Going back to main menu...");
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         System.out.println("Error while instantiating : " + e);
                     }
-                    break;
-                case 2:
-                    boolean goBack = false;
-                    while(!goBack) {
-                        System.out.println("=== PERSONS MENU ===");
+                }
+                case 2 -> {
+                    while (!goBack) {
+                        System.out.println("\n=== RESORT MENU ===\n");
+                        System.out.println("1. view ALL");
+                        System.out.println("2. view ALL Persons");
+                        System.out.println("3. view ALL POIs");
+                        System.out.println("4. view ALL Lifts/Slopes");
+                        System.out.println("5. view SPECIFIC");
+                        System.out.println("6. go back");
+                        choice2 = sc.nextInt();
+                        sc.nextLine();
+                        switch(choice2) {
+                            case 1 -> System.out.println(skiResort.toString());
+                            case 6 -> {
+                                System.out.println("going back...");
+                                goBack = true;}
+                        }
+                        }
+                }
+                case 3 -> {
+                    while (!goBack) {
+                        System.out.println("\n=== PERSONS MENU ===\n");
                         System.out.println("1. register an employee");
                         System.out.println("2. register a guest");
-                        System.out.println("3. [WIP] register an instructor");
+                        System.out.println("3. register an instructor");
                         System.out.println("4. go back");
-                        choice = sc.nextInt();
+                        choice2 = sc.nextInt();
                         sc.nextLine();
-                        switch (choice) {
-                            case 1 -> {
-                                Employee.register(sc, skiResort);
-                                System.out.println(skiResort.getEmployees());
-                            }
-                            case 2 ->
-                                Guest.register(sc, skiResort);
-                            case 3 -> System.out.println("WIP.");
+                        switch (choice2) {
+                            case 1 -> Employee.register(sc, skiResort);
+                            case 2 -> Guest.register(sc, skiResort);
+                            case 3 -> Instructor.register(sc, skiResort);
                             case 4 -> {
                                 System.out.println("going back...");
                                 goBack = true;
                             }
                         }
                     }
-                    break;
-                case 3:
+                }
+                case 4 -> {
                     System.out.println("WIP, going back...");
-                    break;
-                case 4:
+                }
+                case 5 -> {
                     System.out.println("exiting...");
                     exit = true;
-                    break;
+                }
             }
         }
 

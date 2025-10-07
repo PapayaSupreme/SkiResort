@@ -42,4 +42,53 @@ public class SkiResort {
     public void removeEmployee(Employee employee) { this.employees.remove(employee); }
     public void removeGuest(Guest guest) { this.guests.remove(guest); }
     public void removeInstructor(Instructor instructor) { this.instructors.remove(instructor); }
+
+    @Override
+    public String toString() {
+        StringBuilder a = new StringBuilder("Ski resort: name=" +  this.name + ", id=" + this.id + "ski areas=");
+        for (SkiArea skiArea: this.skiAreas) {
+            a.append(skiArea.toString()).append("\n");
+        }
+        a.append("\n==== LIFTS ====\n\n");
+        for (SkiArea skiArea: this.skiAreas) {
+            a.append(skiArea.getName()).append(":\n");
+            for (Lift lift: skiArea.getLifts()) {
+                a.append(lift.toString()).append("\n");
+            }
+            a.append("\n");
+        }
+        a.append("\n==== SLOPES ====\n\n");
+        for (SkiArea skiArea: this.skiAreas) {
+            a.append(skiArea.getName()).append(":\n");
+            for (Slope slope: skiArea.getSlopes()) {
+                a.append(slope.toString()).append("\n");
+            }
+            a.append("\n");
+        }
+        a.append("\n==== RESCUE POINTS ====\n\n");
+        for (SkiArea skiArea: this.skiAreas) {
+            a.append(skiArea.getName()).append(":\n");
+            for (RescuePoint rescuePoint: skiArea.getRescuePoints()) {
+                a.append(rescuePoint.toString()).append("\n");
+            }
+            a.append("\n");
+        }
+        a.append("\n==== RESTAURANTS ====\n\n");
+        for (SkiArea skiArea: this.skiAreas) {
+            a.append(skiArea.getName()).append(":\n");
+            for (Restaurant restaurant: skiArea.getRestaurants()) {
+                a.append(restaurant.toString()).append("\n");
+            }
+            a.append("\n");
+        }
+        a.append("\n==== SUMMITS ====\n\n");
+        for (SkiArea skiArea: this.skiAreas) {
+            a.append(skiArea.getName()).append(":\n");
+            for (Summit summit: skiArea.getSummits()) {
+                a.append(summit.toString()).append("\n");
+            }
+            a.append("\n");
+        }
+        return a.toString();
+    }
 }

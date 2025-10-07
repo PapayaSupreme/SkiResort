@@ -52,4 +52,20 @@ public class Lift implements Worksite {
     public void setUpSlope(Slope upSlope) { this.upSlope = upSlope; }
     public void setDownSlope(Slope downSlope) { this.downSlope = downSlope; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
+
+
+    @Override
+    public String getWorksiteType(){
+        return "Lift";
+    }
+
+    @Override
+    public String toString() {
+        return "Lift: name=" + this.name + ", id=" + this.id+ ", up="
+                + this.up.toString() + ", down=" + this.down
+                + ", length=" + this.length + ", opening hours=" + this.openingHours
+                + ", type=" + this.type + ", status=" + this.status
+                + ", up slope=" + this.upSlope + ", down slope=" + this.downSlope
+                + ", ski area=" + this.skiArea.getName();
+    }
 }

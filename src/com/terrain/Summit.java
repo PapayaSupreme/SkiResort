@@ -16,4 +16,11 @@ public class Summit extends POI{
 
     public void setSnowHeight(int snowHeight) { this.snowHeight = snowHeight; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }
+
+    @Override
+    public String toString() {
+        return "Summit: snow height=" + this.snowHeight
+                + "snow consistency="+ this.snowConsistency
+                + ", " + super.toString();
+    }
 }
