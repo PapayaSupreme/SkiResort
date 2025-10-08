@@ -15,7 +15,6 @@ public abstract class Person {
     private final String firstName;
     private final String lastName;
     private final LocalDate dob;
-    private final List<Pass> passes = new ArrayList<>();
     private final Instant createdAt;
     protected Person(String firstName, String lastName, LocalDate dob) {
         this.id = IDGenerator.generateID();
@@ -27,17 +26,11 @@ public abstract class Person {
     }
 
     public long getId() { return this.id; }
-    public UUID getPublicId() { return publicId; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-    public LocalDate getDob() { return dob; }
-    public Instant getCreatedAt() { return createdAt; }
-
-    public List<Pass> getPasses() { return List.copyOf(this.passes); }
-
-    public void addPass(Pass pass) { this.passes.add(pass); }
-
-    public boolean removePass(Pass pass) { return this.passes.remove(pass); }
+    public UUID getPublicId() { return this.publicId; }
+    public String getFirstName() { return this.firstName; }
+    public String getLastName() { return this.lastName; }
+    public LocalDate getDob() { return this.dob; }
+    public Instant getCreatedAt() { return this.createdAt; }
 
     @Override
     public String toString() {

@@ -12,15 +12,8 @@ public class YearPass extends Pass {
     private final LocalDate seasonStart;
     private final LocalDate seasonEnd;
 
-    public YearPass(int id,
-                    int ownerId,
-                    String lastName,
-                    String firstName,
-                    PassCategory category,
-                    double price,
-                    LocalDate seasonStart,
-                    LocalDate seasonEnd) {
-        super(id, ownerId, lastName, firstName, category);
+    public YearPass(int ownerId, PassCategory passCategory, double price, LocalDate seasonStart, LocalDate seasonEnd) {
+        super(ownerId, passCategory);
         this.price = price;
         this.seasonStart = seasonStart;
         this.seasonEnd = seasonEnd;

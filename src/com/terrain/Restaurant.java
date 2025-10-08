@@ -5,8 +5,8 @@ import com.people.Worksite;
 
 public class Restaurant extends POI implements Worksite {
 
-    public Restaurant(String name, int id, Point location, SkiArea skiArea) {
-        super(name, id, location, skiArea);
+    public Restaurant(String name, Point location, SkiArea skiArea) {
+        super(name, location, skiArea);
     }
 
     @Override

@@ -6,10 +6,10 @@ import com.enums.SnowConsistency;
 import com.enums.SlopeType;
 import com.enums.Point;
 import com.enums.OpeningHours;
-import com.people.Worksite;
+import com.utils.IDGenerator;
 
 public class Slope {
-    private final int id;
+    private final long id;
     private String name;
     private SlopeDifficulty slopeDifficulty;
     private SnowConsistency snowConsistency = SnowConsistency.NONE;
@@ -20,11 +20,11 @@ public class Slope {
     private final double length;
     private OpeningHours openingHours;
 
-    public Slope(String name, int id, Point up, Point down,
+    public Slope(String name, Point up, Point down,
                  double length, OpeningHours openingHours,
                  SlopeDifficulty slopeDifficulty, SlopeType slopeType, SkiArea skiArea) {
         this.name = name;
-        this.id = id;
+        this.id = IDGenerator.generateID();
         this.up = up;
         this.down = down;
         this.length = length;
@@ -35,7 +35,7 @@ public class Slope {
     }
 
     public String getName() { return this.name; }
-    public int getId() { return this.id; }
+    public long getId() { return this.id; }
     public Point getUp() { return this.up; }
     public Point getDown() { return this.down; }
     public double getLength() { return this.length; }

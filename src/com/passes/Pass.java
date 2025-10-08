@@ -2,25 +2,30 @@ package com.passes;
 
 import com.enums.PassCategory;
 import com.enums.PassStatus;
+import com.utils.IDGenerator;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public abstract class Pass {
-    private final int id;
-    private final int ownerId;
+    private final long id;
+    private final long ownerId;
+    private UUID publicId;
     private PassStatus passStatus = PassStatus.ACTIVE;
     private PassCategory passCategory;
     private final Instant createdAt;
 
-    public Pass(int id, int ownerId, String lastName, String firstName, PassCategory passCategory) {
-        this.id = id;
+    public Pass(long ownerId, PassCategory passCategory) {
+        this.id = IDGenerator.generateID();
         this.ownerId = ownerId;
+        this.publicId = UUID.randomUUID();
         this.passCategory = passCategory;
         this.createdAt = Instant.now();
     }
 
-    public int getId() { return this.id; }
-    public int getOwnerId() { return this.ownerId; }
+    public long getId() { return this.id; }
+    public long getOwnerId() { return this.ownerId; }
+    public UUID getPublicId() { return publicId; }
     public PassStatus getPassStatus() { return this.passStatus; }
     public PassCategory getPassCategory() { return this.passCategory; }
     public Instant getCreatedAt() { return this.createdAt; }

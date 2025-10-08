@@ -2,24 +2,24 @@ package com.terrain;
 
 import com.enums.POIStatus;
 import com.enums.Point;
-import com.people.Worksite;
+import com.utils.IDGenerator;
 
 public class POI {
-    private String name = "";
-    private final int id;
+    private String name;
+    private final long id;
     private final Point location;
     private POIStatus status = POIStatus.CLOSED;
     private final SkiArea skiArea;
 
-    public POI(String name, int id, Point location, SkiArea skiArea) {
+    public POI(String name, Point location, SkiArea skiArea) {
         this.name = name;
-        this.id = id;
+        this.id = IDGenerator.generateID();
         this.location = location;
         this.skiArea = skiArea;
     }
 
     public String getName() { return this.name; }
-    public int getId() { return this.id; }
+    public long getId() { return this.id; }
     public Point getLocation() { return this.location; }
     public POIStatus getStatus() { return this.status; }
     public SkiArea getSkiArea() { return skiArea; }

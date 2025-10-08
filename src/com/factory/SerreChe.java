@@ -1,4 +1,4 @@
-package com.architect;
+package com.factory;
 
 import com.enums.*;
 import com.terrain.*;
@@ -44,61 +44,61 @@ public class SerreChe {
     // ---- Build the whole resort (SkiResort -> 4 areas -> lifts/slopes/POIs) ----
     public static SkiResort createResort() {
         // Resort
-        SkiResort resort = new SkiResort("Serre Chevalier",1);
+        SkiResort resort = new SkiResort("Serre Chevalier");
 
         //Ski Areas
-        SkiArea briancon   = new SkiArea("Briançon", 101,
-                new Point(0, 0, 2404), new Point(0, 0, 1200), 1000, SerreChe.winterHours());
+        SkiArea briancon   = new SkiArea("Briançon", new Point(0, 0, 2404),
+                new Point(0, 0, 1200), 1000, SerreChe.winterHours());
 
-        SkiArea chantemerle= new SkiArea("Chantemerle", 102,
-                new Point(0, 0, 2491),new Point(0, 0, 1350), 1000, SerreChe.winterHours());
+        SkiArea chantemerle= new SkiArea("Chantemerle", new Point(0, 0, 2491),
+                new Point(0, 0, 1350), 1000, SerreChe.winterHours());
 
-        SkiArea villeneuve = new SkiArea("Villeneuve", 103,
-                new Point(0, 0, 1659),new Point(0, 0, 1400), 1000, SerreChe.winterHours());
+        SkiArea villeneuve = new SkiArea("Villeneuve", new Point(0, 0, 1659),
+                new Point(0, 0, 1400), 1000, SerreChe.winterHours());
 
-        SkiArea monetier   = new SkiArea("Le Monêtier", 104,
-                new Point(0, 0, 2830),new Point(0, 0, 1500), 1000, SerreChe.winterHours());
+        SkiArea monetier   = new SkiArea("Le Monêtier", new Point(0, 0, 2830),
+                new Point(0, 0, 1500), 1000, SerreChe.winterHours());
 
         // Slopes
         Slope grandeGargouille = new Slope(
-                "Grande Gargouille", 201, new Point(0, 0, 2360), new Point(0, 0, 1606),
+                "Grande Gargouille", new Point(0, 0, 2360), new Point(0, 0, 1606),
                 2614.0, SerreChe.winterHours(), SlopeDifficulty.RED, SlopeType.PISTE, briancon);
 
         Slope vauban = new Slope(
-                "Vauban", 205, new Point(0, 0, 1625), new Point(0, 0, 1215),
+                "Vauban", new Point(0, 0, 1625), new Point(0, 0, 1215),
                 1920.0, SerreChe.winterHours(), SlopeDifficulty.RED, SlopeType.PISTE, briancon);
 
         Slope lucAlphand = new Slope(
-                "Luc Alphand", 202, new Point(0, 0, 1892), new Point(0, 0, 1350),
+                "Luc Alphand", new Point(0, 0, 1892), new Point(0, 0, 1350),
                 1978.0, SerreChe.winterHours(), SlopeDifficulty.BLACK, SlopeType.PISTE, chantemerle);
 
         Slope cucumelle = new Slope(
-                "Cucumelle", 203, new Point(0, 0, 2510), new Point(0, 0, 1775),
+                "Cucumelle", new Point(0, 0, 2510), new Point(0, 0, 1775),
                 4036.0, SerreChe.winterHours(), SlopeDifficulty.RED, SlopeType.PISTE, villeneuve);
 
         Slope routeFrejus = new Slope(
-                "Route Fréjus", 206, new Point(0, 0, 1940), new Point(0, 0, 1490),
+                "Route Fréjus", new Point(0, 0, 1940), new Point(0, 0, 1490),
                 4312.0, SerreChe.winterHours(), SlopeDifficulty.GREEN, SlopeType.PISTE, villeneuve);
 
         Slope rochamout = new Slope(
-                "Rochamout", 204, new Point(0, 0, 2175), new Point(0, 0, 1500),
+                "Rochamout", new Point(0, 0, 2175), new Point(0, 0, 1500),
                 4361.0, SerreChe.winterHours(), SlopeDifficulty.BLUE, SlopeType.PISTE, monetier);
 
         // Lifts
         Lift prorel2 = new Lift(
-                "Prorel 2", 301, new Point(0, 0, 2355), new Point(0, 0, 1627),
+                "Prorel 2", new Point(0, 0, 2355), new Point(0, 0, 1627),
                 2336.0, SerreChe.winterHours(), LiftType.GONDOLA, grandeGargouille, vauban, briancon);
 
         Lift ratier = new Lift(
-                "Ratier", 302, new Point(0, 0, 1888), new Point(0, 0, 1350),
+                "Ratier", new Point(0, 0, 1888), new Point(0, 0, 1350),
                 1610.0, SerreChe.winterHours(), LiftType.GONDOLA, lucAlphand, null, chantemerle);
 
         Lift vallons = new Lift(
-                "Vallons", 302, new Point(0, 0, 2505), new Point(0, 0, 1915),
+                "Vallons", new Point(0, 0, 2505), new Point(0, 0, 1915),
                 2207.0, SerreChe.winterHours(), LiftType.CHAIRLIFT, cucumelle, routeFrejus, chantemerle);
 
         Lift bachas = new Lift(
-                "Bachas", 304, new Point(0, 0, 2176), new Point(0, 0, 1465),
+                "Bachas", new Point(0, 0, 2176), new Point(0, 0, 1465),
                 2492.0, SerreChe.winterHours(), LiftType.CHAIRLIFT, rochamout, null, monetier);
 
         // Attach lifts and slopes to areas
@@ -117,22 +117,22 @@ public class SerreChe {
         monetier.addLift(bachas);
 
         // Restaurants
-        Restaurant serreBlanc = new Restaurant("Chalet de Serre Blanc", 401, new Point(0, 0, 2200), briancon);
-        Restaurant cabaneASucre1 = new Restaurant("Cabane à Sucre", 402, new Point(0, 0, 2172), chantemerle);
-        Restaurant bivouac = new Restaurant("Bivouac 3200", 403, new Point(0, 0, 2300), villeneuve);
-        Restaurant flocon = new Restaurant("Flocon", 405, new Point(0, 0, 2176), monetier);
+        Restaurant serreBlanc = new Restaurant("Chalet de Serre Blanc", new Point(0, 0, 2200), briancon);
+        Restaurant cabaneASucre1 = new Restaurant("Cabane à Sucre", new Point(0, 0, 2172), chantemerle);
+        Restaurant bivouac = new Restaurant("Bivouac 3200", new Point(0, 0, 2300), villeneuve);
+        Restaurant flocon = new Restaurant("Flocon", new Point(0, 0, 2176), monetier);
 
         // Rescue Points
-        RescuePoint prorelRP = new RescuePoint("Prorel", 501, new Point(0, 0, 2360), briancon);
-        RescuePoint serreRatierRP = new RescuePoint("Serre Ratier", 502, new Point(0, 0, 1905), chantemerle);
-        RescuePoint meaRP = new RescuePoint("Méa", 503, new Point(0, 0, 2251), villeneuve);
-        RescuePoint bachasRP = new RescuePoint("Bachas", 504, new Point(0, 0, 2176), monetier);
+        RescuePoint prorelRP = new RescuePoint("Prorel", new Point(0, 0, 2360), briancon);
+        RescuePoint serreRatierRP = new RescuePoint("Serre Ratier", new Point(0, 0, 1905), chantemerle);
+        RescuePoint meaRP = new RescuePoint("Méa", new Point(0, 0, 2251), villeneuve);
+        RescuePoint bachasRP = new RescuePoint("Bachas", new Point(0, 0, 2176), monetier);
 
         // Summits
-        Summit colDuProrel = new Summit("Col du Prorel", 601, new Point(0, 0, 2404), briancon);
-        Summit serreChevalier = new Summit("Serre Chevalier", 602, new Point(0, 0, 2491), chantemerle);
-        Summit eychauda = new Summit("L'Eychauda", 603, new Point(0, 0, 2659), villeneuve);
-        Summit colDeLaCucumelle = new Summit("Col de la Cucumelle", 604, new Point(0, 0, 2505), monetier);
+        Summit colDuProrel = new Summit("Col du Prorel", new Point(0, 0, 2404), briancon);
+        Summit serreChevalier = new Summit("Serre Chevalier", new Point(0, 0, 2491), chantemerle);
+        Summit eychauda = new Summit("L'Eychauda", new Point(0, 0, 2659), villeneuve);
+        Summit colDeLaCucumelle = new Summit("Col de la Cucumelle", new Point(0, 0, 2505), monetier);
 
         // attach pois to areas
         briancon.addRestaurant(serreBlanc);

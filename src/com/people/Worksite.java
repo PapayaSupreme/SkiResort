@@ -3,7 +3,7 @@ package com.people;
 public interface Worksite {
 
     String getName();
-    int getId();
+    long getId();
 
     void setName(String name);
 

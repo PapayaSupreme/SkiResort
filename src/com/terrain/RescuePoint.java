@@ -6,8 +6,8 @@ import com.people.Worksite;
 public class RescuePoint extends POI implements Worksite {
     private boolean warning = false;
 
-    public RescuePoint(String name, int id, Point location, SkiArea skiArea) {
-        super(name, id, location, skiArea);
+    public RescuePoint(String name, Point location, SkiArea skiArea) {
+        super(name, location, skiArea);
     }
 
     public boolean isWarning() { return this.warning; }

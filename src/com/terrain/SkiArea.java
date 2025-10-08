@@ -3,13 +3,14 @@ package com.terrain;
 import com.enums.OpeningHours;
 import com.enums.Point;
 import com.people.Worksite;
+import com.utils.IDGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SkiArea implements Worksite {
     private String name;
-    private final int id;
+    private final long id;
     private boolean functioning = true;
     private Point up;
     private Point down;
@@ -22,10 +23,10 @@ public class SkiArea implements Worksite {
     private final List<Restaurant> restaurants = new ArrayList<>();
     private final List<Summit> summits = new ArrayList<>();
 
-    public SkiArea(String name, int id, Point highest, Point down,
+    public SkiArea(String name, Point highest, Point down,
                    double perimeter, OpeningHours openingHours) {
         this.name = name;
-        this.id = id;
+        this.id = IDGenerator.generateID();
         this.up = highest;
         this.down = down;
         this.perimeter = perimeter;
@@ -33,17 +34,17 @@ public class SkiArea implements Worksite {
     }
 
     @Override public String getName() { return this.name; }
-    @Override public int getId() { return this.id; }
+    @Override public long getId() { return this.id; }
     public boolean isFunctioning() { return this.functioning; }
     public Point getUp() { return this.up; }
     public Point getDown() { return this.down; }
     public double getPerimeter() { return this.perimeter; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
-    public List<Lift> getLifts() { return this.lifts; }
-    public List<Slope> getSlopes() { return this.slopes; }
-    public List<RescuePoint> getRescuePoints() { return this.rescuePoints; }
-    public List<Restaurant> getRestaurants() { return this.restaurants; }
-    public List<Summit> getSummits() { return this.summits; }
+    public List<Lift> getLifts() { return List.copyOf(this.lifts); }
+    public List<Slope> getSlopes() { return List.copyOf(this.slopes); }
+    public List<RescuePoint> getRescuePoints() { return List.copyOf(this.rescuePoints); }
+    public List<Restaurant> getRestaurants() { return List.copyOf(this.restaurants); }
+    public List<Summit> getSummits() { return List.copyOf(this.summits); }
 
     @Override public void setName(String name) { this.name = name; }
     public void setFunctioning(boolean functioning) { this.functioning = functioning; }

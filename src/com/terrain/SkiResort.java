@@ -7,26 +7,22 @@ import com.utils.IDGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class SkiResort {
     private final String name;
     private final long id;
-    private UUID publicId;
     private final List<SkiArea> skiAreas = new ArrayList<>();
     private final List<Guest> guests = new ArrayList<>();
     private final List<Instructor> instructors = new ArrayList<>();
     private final List<Employee> employees = new ArrayList<>();
 
-    public SkiResort(String name, long id) {
+    public SkiResort(String name) {
         this.name = name;
         this.id = IDGenerator.generateID();
-        this.publicId = UUID.randomUUID();
     }
 
     public String getName() { return this.name; }
     public long getId() { return this.id; }
-    public UUID getPublicId() { return publicId; }
 
     public List<SkiArea> getSkiAreas() { return List.copyOf(this.skiAreas); }
     public List<Employee> getEmployees() { return List.copyOf(this.employees); }

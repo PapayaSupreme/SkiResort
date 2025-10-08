@@ -12,15 +12,8 @@ public class MultiDayPass extends Pass {
     private final LocalDate startDate;
     private final int numberOfDays;
 
-    public MultiDayPass(int id,
-                        int ownerId,
-                        String lastName,
-                        String firstName,
-                        PassCategory category,
-                        double price,
-                        LocalDate startDate,
-                        int numberOfDays) {
-        super(id, ownerId, lastName, firstName, category);
+    public MultiDayPass(int ownerId, PassCategory passCategory, double price, LocalDate startDate, int numberOfDays) {
+        super(ownerId, passCategory);
         this.price = price;
         this.startDate = startDate;
         this.numberOfDays = numberOfDays;

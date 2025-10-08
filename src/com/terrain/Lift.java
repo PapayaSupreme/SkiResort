@@ -5,9 +5,10 @@ import com.enums.LiftType;
 import com.enums.OpeningHours;
 import com.enums.Point;
 import com.people.Worksite;
+import com.utils.IDGenerator;
 
 public class Lift implements Worksite {
-    private final int id;
+    private final long id;
     private String name;
     private LiftType type;
     private LiftStatus status = LiftStatus.CLOSED;
@@ -19,12 +20,12 @@ public class Lift implements Worksite {
     private Slope upSlope;
     private Slope downSlope;
 
-    public Lift(String name, int id, Point up, Point down,
+    public Lift(String name, Point up, Point down,
                 double length, OpeningHours openingHours,
                 LiftType type, Slope upSlope, Slope downSlope,
                 SkiArea skiArea) {
         this.name = name;
-        this.id = id;
+        this.id = IDGenerator.generateID();
         this.up = up;
         this.down = down;
         this.length = length;
@@ -35,7 +36,7 @@ public class Lift implements Worksite {
         this.skiArea = skiArea;
     }
     @Override public String getName() { return this.name; }
-    @Override public int getId() { return this.id; }
+    @Override public long getId() { return this.id; }
     public Point getUp() { return this.up; }
     public Point getDown() { return this.down; }
     public double getLength() { return this.length; }

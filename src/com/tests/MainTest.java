@@ -1,9 +1,5 @@
 package com.tests;
 
-import com.passes.ALaCartePass;
-import com.passes.DayPass;
-import com.passes.MultiDayPass;
-import com.passes.YearPass;
 import com.people.Employee;
 import com.people.Guest;
 import com.people.Instructor;
@@ -11,7 +7,7 @@ import com.terrain.SkiResort;
 
 import java.util.Scanner;
 
-import static com.architect.SerreChe.createResort;
+import static com.factory.SerreChe.createResort;
 
 public class MainTest {
     public static void main(String[] args) {
@@ -48,11 +44,9 @@ public class MainTest {
                 case 2 -> {
                     while (!goBack) {
                         System.out.println("\n=== RESORT MENU ===\n");
-                        System.out.println("1. view ALL");
-                        System.out.println("2. view ALL Persons");
-                        System.out.println("3. view ALL POIs");
-                        System.out.println("4. view ALL Lifts/Slopes");
-                        System.out.println("5. view SPECIFIC");
+                        System.out.println("1. view ALL terrain");
+                        System.out.println("2. view ALL persons");
+                        System.out.println("4. view SPECIFIC");
                         System.out.println("6. go back");
                         choice2 = sc.nextInt();
                         sc.nextLine();

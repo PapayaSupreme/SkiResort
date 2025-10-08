@@ -34,12 +34,11 @@ public class Guest extends Person {
         }
         try {
             Guest g = new Guest(firstName, lastName, dob);
-            valid = true;
+            skiResort.addGuest(g);
             System.out.println("Registration successful for: " + firstName + " " + lastName + " (" + dob + ")");
         } catch(Exception e) {
             System.out.println("Registration failed :" + e);
         }
-        //TODO: skiResort.gu
     }
 
     @Override

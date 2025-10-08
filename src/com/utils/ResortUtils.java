@@ -1,5 +1,6 @@
 package com.utils;
 
+import com.passes.Pass;
 import com.people.Worksite;
 import com.terrain.SkiArea;
 import com.terrain.SkiResort;
@@ -7,7 +8,7 @@ import com.terrain.SkiResort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResortUtils {
+public final class ResortUtils {
     public static <T extends Worksite> List<T> getAllWorksitesOfType(SkiResort resort, Class<T> clazz) {
         List<T> all = new ArrayList<>();
 

@@ -11,14 +11,8 @@ public class DayPass extends Pass {
     private final double price;
     private final LocalDate validDate;
 
-    public DayPass(int id,
-                   int ownerId,
-                   String lastName,
-                   String firstName,
-                   PassCategory category,
-                   double price,
-                   LocalDate validDate) {
-        super(id, ownerId, lastName, firstName, category);
+    public DayPass(int ownerId, PassCategory passCategory, double price, LocalDate validDate) {
+        super(ownerId, passCategory);
         this.price = price;
         this.validDate = validDate;
     }
