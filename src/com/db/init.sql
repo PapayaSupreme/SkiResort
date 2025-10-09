@@ -11,9 +11,9 @@ CREATE TABLE person (
                                 OR (person_kind = 'EMPLOYEE' AND employee_type IN ('PISTER', 'LIFT_OP', 'RESTAURATION', 'MAINTENANCE'))
                             ),
     -- employee + instructors specific field
-                        worksite    VARCHAR(50) CHECK (
-                            (person_kind = 'GUEST' AND worksite IS NULL)
-                                OR (person_kind <> 'GUEST' AND worksite IS NOT NULL)),
+                            worksite_id    BIGINT CHECK (
+                            (person_kind = 'GUEST' AND worksite_id IS NULL)
+                                OR (person_kind <> 'GUEST' AND worksite_id IS NOT NULL)),
 
     -- instructor-specific field
                         ski_school  VARCHAR(50) CHECK (
@@ -26,9 +26,9 @@ CREATE TABLE person (
                         created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 CREATE INDEX idx_person_kind ON person (person_kind);
 CREATE INDEX idx_employee_type ON person (employee_type) WHERE person_kind = 'EMPLOYEE';
+
 
 CREATE TABLE pass (
                       id              BIGSERIAL PRIMARY KEY,
