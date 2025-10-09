@@ -1,7 +1,7 @@
 package com.terrain;
 
 import com.enums.Point;
-import com.people.Worksite;
+import com.utils.Worksite;
 
 public class Restaurant extends POI implements Worksite {
 

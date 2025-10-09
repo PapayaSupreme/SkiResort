@@ -2,7 +2,7 @@ package com.terrain;
 
 import com.enums.OpeningHours;
 import com.enums.Point;
-import com.people.Worksite;
+import com.utils.Worksite;
 import com.utils.IDGenerator;
 
 import java.util.ArrayList;

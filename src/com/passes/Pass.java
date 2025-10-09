@@ -2,6 +2,7 @@ package com.passes;
 
 import com.enums.PassCategory;
 import com.enums.PassStatus;
+import com.terrain.SkiResort;
 import com.utils.IDGenerator;
 
 import java.time.Instant;
@@ -36,6 +37,7 @@ public abstract class Pass {
     public void activate() { this.passStatus = PassStatus.ACTIVE; }
     public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
 
+    public abstract void createPass(SkiResort skiResort, long ownerId);
     public abstract boolean isValidAt(Instant at);
     public abstract double getPrice();
 }

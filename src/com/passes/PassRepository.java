@@ -1,61 +1,68 @@
 package com.passes;
 
+import com.utils.CrudRepository;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class PassRepository {
+public final class PassRepository implements CrudRepository<Pass> {
 
     // Primary store: passId -> Pass
-    private final Map<Long, Pass> PassesById = new HashMap<>();
+    private final Map<Long, Pass> passesById = new HashMap<>();
 
     // Secondary index: holderPersonId -> set of passIds
-    private final Map<Long, Set<Long>> PassesByHolder = new HashMap<>();
+    private final Map<Long, Set<Long>> passesByOwnerId = new HashMap<>();
 
-    public void savePass(Pass pass) {
-        PassesById.put(pass.getId(), pass);
-        PassesByHolder
-                .computeIfAbsent(pass.getOwnerId(), k -> new LinkedHashSet<>())
-                .add(pass.getId());
+    @Override
+    public void save(Pass pass) {
+        passesById.put(pass.getId(), pass);
+        passesByOwnerId.computeIfAbsent(pass.getOwnerId(),
+                        k -> new LinkedHashSet<>()).add(pass.getId());
     }
 
-    public Pass getPassById(Long passId) {
-        return PassesById.get(passId);
+    @Override
+    public Pass getById(Long id) {
+        return passesById.get(id);
     }
 
     public List<Pass> getPassesByOwnerId(Long ownerId) {
-        Set<Long> ids = PassesByHolder.get(ownerId);
+        Set<Long> ids = passesByOwnerId.get(ownerId);
         if (ids == null || ids.isEmpty()) return List.of();
-        //unmodifyable is intentional i dont want to try to add a pass here lol
+        //unmodifiable is intentional i don't want to try to add a pass here lol
         List<Pass> passes = ids.stream()
-                .map(PassesById::get)
+                .map(passesById::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableList());
         return passes;
     }
 
-    public void deletePassById(Long passId) {
-        Pass removed = PassesById.remove(passId);
+    @Override
+    public void deleteById(Long id) {
+        Pass removed = passesById.remove(id);
         if (removed == null) return;
 
-        Set<Long> set = PassesByHolder.get(removed.getOwnerId());
+        Set<Long> set = passesByOwnerId.get(removed.getOwnerId());
         if (set != null) {
-            set.remove(passId);
+            set.remove(id);
             if (set.isEmpty()) {
-                PassesByHolder.remove(removed.getOwnerId());
+                passesByOwnerId.remove(removed.getOwnerId());
             }
         }
     }
 
-    public boolean passExists(Long passId) {
-        return PassesById.containsKey(passId);
+    @Override
+    public boolean exists(Long passId) {
+        return passesById.containsKey(passId);
     }
 
+    @Override
     public int count() {
-        return PassesById.size();
+        return passesById.size();
     }
 
-    public void clearAllPasses() {
-        PassesById.clear();
-        PassesByHolder.clear();
+    @Override
+    public void clearAll() {
+        passesById.clear();
+        passesByOwnerId.clear();
     }
 }

@@ -21,7 +21,7 @@ public class MainTest {
             System.out.println("1. instantiate with default resort");
             System.out.println("2. View current resort");
             System.out.println("3. register a person");
-            System.out.println("4. [WIP] add pass to a person");
+            System.out.println("4. create pass");
             System.out.println("5. exit");
 
             choice1 = sc.nextInt();

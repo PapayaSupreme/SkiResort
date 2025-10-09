@@ -4,7 +4,7 @@ import com.enums.LiftStatus;
 import com.enums.LiftType;
 import com.enums.OpeningHours;
 import com.enums.Point;
-import com.people.Worksite;
+import com.utils.Worksite;
 import com.utils.IDGenerator;
 
 public class Lift implements Worksite {

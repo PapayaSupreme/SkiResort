@@ -1,7 +1,5 @@
 package com.utils;
 
-import com.passes.Pass;
-import com.people.Worksite;
 import com.terrain.SkiArea;
 import com.terrain.SkiResort;
 
