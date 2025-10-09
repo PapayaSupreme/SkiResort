@@ -1,4 +1,4 @@
-package com.utils;
+package com.legacy;
 
 public interface CrudRepository <T>{
     void save(T entity);

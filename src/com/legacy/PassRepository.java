@@ -1,6 +1,6 @@
-package com.passes;
+package com.legacy;
 
-import com.utils.CrudRepository;
+import com.passes.Pass;
 
 import java.util.*;
 import java.util.stream.Collectors;
