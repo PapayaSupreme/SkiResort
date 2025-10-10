@@ -68,9 +68,6 @@ public class MainTest {
                         choice2 = sc.nextInt();
                         sc.nextLine();
                         switch (choice2) {
-                            case 1 -> Employee.register(sc, skiResort);
-                            case 2 -> Guest.register(sc, skiResort);
-                            case 3 -> Instructor.register(sc, skiResort);
                             case 4 -> {
                                 System.out.println("going back...");
                                 goBack = true;
