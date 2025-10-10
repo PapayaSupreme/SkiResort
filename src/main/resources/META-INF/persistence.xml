@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+    <persistence-unit name="skiPU">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Entity classes -->
+        <class>people.Person</class>
+        <class>people.Guest</class>
+        <class>people.Employee</class>
+        <class>people.Instructor</class>
+        <class>passes.Pass</class>
+        <class>passes.DayPass</class>
+        <class>passes.MultiDayPass</class>
+        <class>passes.YearPass</class>
+        <class>passes.ALaCartePass</class>
+        <class>terrain.Lift</class>
+        <class>terrain.POI</class>
+        <class>terrain.RescuePoint</class>
+        <class>terrain.Restaurant</class>
+        <class>terrain.SkiArea</class>
+        <class>terrain.SkiResort</class>
+        <class>terrain.Slope</class>
+        <class>terrain.Summit</class>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="lyoko"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
