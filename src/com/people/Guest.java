@@ -1,5 +1,6 @@
 package com.people;
 
+import com.enums.PersonKind;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
@@ -17,4 +18,6 @@ public class Guest extends Person {
     public static Guest of(String firstName, String lastName, LocalDate dob) {
         return new Guest(firstName, lastName, dob);
     }
+
+    @Override public PersonKind getPersonKind(){ return PersonKind.GUEST; }
 }

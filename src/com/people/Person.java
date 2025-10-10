@@ -35,19 +35,6 @@ public abstract class Person {
     @Column(name = "person_kind", nullable = false, insertable = false, updatable = false)
     private PersonKind personKind;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "employee_type")
-    private EmployeeType employeeType;
-
-    // EMPLOYEE + INSTRUCTOR specific (guests must have NULL per DB CHECK)
-    @Column(name = "worksite_id") //TODO: make an util findWorksiteByID
-    private Long worksiteId;
-
-    // INSTRUCTOR-only (others must be NULL per DB CHECK)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "ski_school")
-    private SkiSchool skiSchool;
-
     // DB defaults handle insert; app sets updatedAt on UPDATE
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Instant createdAt;
@@ -76,16 +63,13 @@ public abstract class Person {
     public String getFirstName() { return this.firstName; }
     public String getLastName() { return this.lastName; }
     public LocalDate getDob() { return this.dob; }
-    public PersonKind getPersonKind() { return this.personKind; }
-    public EmployeeType getEmployeeType() { return this.employeeType; }
-    public Long getWorksiteId() { return this.worksiteId; }
-    public SkiSchool getSkiSchool() { return this.skiSchool; }
     public Instant getCreatedAt() { return this.createdAt; }
     public Instant getUpdatedAt() { return this.updatedAt; }
 
-    // ---------- protected setters for subclasses ----------
-    protected void setEmployeeType(EmployeeType employeeType) { this.employeeType = employeeType; }
-    protected void setSkiSchool(SkiSchool skiSchool) { this.skiSchool = skiSchool; }
+    public abstract PersonKind getPersonKind();
+    public EmployeeType getEmployeeType() { return null; }
+    public Long getWorksiteId() { return null; }
+    public SkiSchool getSkiSchool() { return null; }
 
     // equals/hashCode by publicId (stable before DB id exists)
     @Override public boolean equals(Object o) {

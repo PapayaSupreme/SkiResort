@@ -11,7 +11,7 @@ CREATE TABLE person (
                                 OR (person_kind = 'EMPLOYEE' AND employee_type IN ('PISTER', 'LIFT_OP', 'RESTAURATION', 'MAINTENANCE'))
                             ),
     -- employee + instructors specific field
-                            worksite_id    BIGINT CHECK (
+                        worksite_id    BIGINT CHECK (
                             (person_kind = 'GUEST' AND worksite_id IS NULL)
                                 OR (person_kind <> 'GUEST' AND worksite_id IS NOT NULL)),
 
