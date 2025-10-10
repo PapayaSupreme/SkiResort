@@ -37,7 +37,7 @@ public abstract class Pass {
     public void activate() { this.passStatus = PassStatus.ACTIVE; }
     public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
 
-    public abstract void createPass(SkiResort skiResort, long ownerId);
+    //TODO: public abstract void createPass(SkiResort skiResort, long ownerId);
     public abstract boolean isValidAt(Instant at);
     public abstract double getPrice();
 }
