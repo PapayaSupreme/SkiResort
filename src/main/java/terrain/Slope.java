@@ -8,8 +8,11 @@ import enums.Point;
 import enums.OpeningHours;
 import utils.IDGenerator;
 
+import java.util.UUID;
+
 public class Slope {
     private final long id;
+    private final UUID publicId;
     private String name;
     private SlopeDifficulty slopeDifficulty;
     private SnowConsistency snowConsistency = SnowConsistency.NONE;
@@ -20,11 +23,12 @@ public class Slope {
     private final double length;
     private OpeningHours openingHours;
 
-    public Slope(String name, Point up, Point down,
+    public Slope(long id, UUID publicId, String name, Point up, Point down,
                  double length, OpeningHours openingHours,
                  SlopeDifficulty slopeDifficulty, SlopeType slopeType, SkiArea skiArea) {
         this.name = name;
-        this.id = IDGenerator.generateID();
+        this.publicId = publicId;
+        this.id = id;
         this.up = up;
         this.down = down;
         this.length = length;

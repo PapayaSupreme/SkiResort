@@ -1,8 +1,10 @@
 package utils;
 
+import enums.OpeningHours;
 import terrain.SkiArea;
 import terrain.SkiResort;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,4 +29,17 @@ public final class ResortUtils {
         }
         return all;
     }
+
+    public static OpeningHours parseOH(String json) {
+        if (json == null) return null;
+        String j = json.replaceAll("\\s+", "");
+        // expects: {"open":"HH:MM","close":"HH:MM"}
+        int o1 = j.indexOf("\"open\":\"");  int c1 = j.indexOf("\"", o1 + 8);
+        int o2 = j.indexOf("\"close\":\""); int c2 = j.indexOf("\"", o2 + 9);
+        return new OpeningHours(
+                LocalTime.parse(j.substring(o1 + 8, c1)),
+                LocalTime.parse(j.substring(o2 + 9, c2))
+        );
+    }
+
 }

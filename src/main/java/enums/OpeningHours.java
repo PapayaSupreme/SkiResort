@@ -6,6 +6,5 @@ import java.util.Set;
 
 public record OpeningHours(
         LocalTime opening,
-        LocalTime closing,
-        Set<DayOfWeek> daysClosed
+        LocalTime closing
 ) {}

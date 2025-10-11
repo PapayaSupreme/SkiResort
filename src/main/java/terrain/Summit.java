@@ -3,12 +3,15 @@ package terrain;
 import enums.Point;
 import enums.SnowConsistency;
 
-public class Summit extends POI{
-    private int snowHeight = 0;
-    private SnowConsistency snowConsistency = SnowConsistency.NONE;
 
-    public Summit(String name, Point location, SkiArea skiArea) {
-        super(name, location, skiArea);
+public class Summit extends POI{
+    private int snowHeight;
+    private SnowConsistency snowConsistency;
+
+    public Summit(long id, String name, Point location, SkiArea skiArea, int snowHeight, SnowConsistency snowConsistency) {
+        super(id, name, location, skiArea, enums.POIStatus.OPEN); // summit always open lol
+        this.snowHeight = snowHeight;
+        this.snowConsistency = snowConsistency;
     }
 
     public int getSnowHeight() { return this.snowHeight; }

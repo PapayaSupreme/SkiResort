@@ -2,13 +2,15 @@ package terrain;
 
 import enums.*;
 import utils.Worksite;
-import utils.IDGenerator;
+
+import java.util.UUID;
 
 public class Lift implements Worksite {
-    private long id;
+    private final long id;
+    private final UUID publicId;
     private String name;
     private LiftType type;
-    private LiftStatus status = LiftStatus.CLOSED;
+    private LiftStatus status;
     private final SkiArea skiArea;
     private final Point up;
     private final Point down;
@@ -17,17 +19,19 @@ public class Lift implements Worksite {
     private Slope upSlope;
     private Slope downSlope;
 
-    public Lift(String name, Point up, Point down,
+    public Lift(long id, UUID publicId, String name, Point up, Point down,
                 double length, OpeningHours openingHours,
-                LiftType type, Slope upSlope, Slope downSlope,
+                LiftType type, LiftStatus status, Slope upSlope, Slope downSlope,
                 SkiArea skiArea) {
         this.name = name;
-        this.id = IDGenerator.generateID();
+        this.id = id;
+        this.publicId = publicId;
         this.up = up;
         this.down = down;
         this.length = length;
         this.openingHours = openingHours;
         this.type = type;
+        this.status = status;
         this.upSlope = upSlope;
         this.downSlope = downSlope;
         this.skiArea = skiArea;

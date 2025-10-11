@@ -4,8 +4,6 @@ import terrain.SkiResort;
 
 import java.util.Scanner;
 
-import static factory.SerreChe.createResort;
-
 public class MainTest {
     public static void mainTest(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -32,7 +30,7 @@ public class MainTest {
             switch(choice1) {
                 case 1 -> {
                     try {
-                        skiResort = createResort();
+                        //skiResort = createResort();
                         System.out.println("instantiation successful. Going back to main menu...");
                     } catch (Exception e) {
                         System.out.println("Error while instantiating : " + e);

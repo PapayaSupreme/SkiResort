@@ -2,20 +2,20 @@ package terrain;
 
 import enums.POIStatus;
 import enums.Point;
-import utils.IDGenerator;
 
 public class POI {
     private String name;
     private final long id;
     private final Point location;
-    private POIStatus status = POIStatus.CLOSED;
+    private POIStatus status;
     private final SkiArea skiArea;
 
-    public POI(String name, Point location, SkiArea skiArea) {
+    public POI(long id, String name, Point location, SkiArea skiArea, POIStatus status) {
         this.name = name;
-        this.id = IDGenerator.generateID();
+        this.id = id;
         this.location = location;
         this.skiArea = skiArea;
+        this.status = status;
     }
 
     public String getName() { return this.name; }

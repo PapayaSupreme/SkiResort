@@ -1,21 +1,20 @@
 package terrain;
 
 import enums.OpeningHours;
-import enums.Point;
 import enums.WorksiteType;
 import utils.Worksite;
-import utils.IDGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SkiArea implements Worksite {
     private String name;
+    private final UUID publicId;
     private final long id;
-    private boolean functioning = true;
-    private Point up;
-    private Point down;
-    private double perimeter;
+    private final int up;
+    private final int down;
+    private boolean functioning;
     private OpeningHours openingHours;
 
     private final List<Lift> lifts = new ArrayList<>();
@@ -24,22 +23,22 @@ public class SkiArea implements Worksite {
     private final List<Restaurant> restaurants = new ArrayList<>();
     private final List<Summit> summits = new ArrayList<>();
 
-    public SkiArea(String name, Point highest, Point down,
-                   double perimeter, OpeningHours openingHours) {
+    public SkiArea(long id, UUID publicId, String name, int up, int down,
+                   OpeningHours openingHours, boolean functioning) {
+        this.id = id;
         this.name = name;
-        this.id = IDGenerator.generateID();
-        this.up = highest;
+        this.up = up;
         this.down = down;
-        this.perimeter = perimeter;
         this.openingHours = openingHours;
+        this.publicId = publicId;
+        this.functioning = functioning;
     }
 
     @Override public String getName() { return this.name; }
     @Override public long getId() { return this.id; }
     public boolean isFunctioning() { return this.functioning; }
-    public Point getUp() { return this.up; }
-    public Point getDown() { return this.down; }
-    public double getPerimeter() { return this.perimeter; }
+    public int getUp() { return this.up; }
+    public int getDown() { return this.down; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
     public List<Lift> getLifts() { return List.copyOf(this.lifts); }
     public List<Slope> getSlopes() { return List.copyOf(this.slopes); }
@@ -49,9 +48,6 @@ public class SkiArea implements Worksite {
 
     @Override public void setName(String name) { this.name = name; }
     public void setFunctioning(boolean functioning) { this.functioning = functioning; }
-    public void setUp(Point highest) { this.up = highest; }
-    public void setDown(Point down) { this.down = down; }
-    public void setPerimeter(double perimeter) { this.perimeter = perimeter; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void addLift(Lift lift) { this.lifts.add(lift); }
     public void addSlope(Slope slope) { this.slopes.add(slope); }
@@ -81,7 +77,7 @@ public class SkiArea implements Worksite {
     @Override
     public String toString() {
         return "Ski area: name=" + this.name + ", id=" + this.id+ ", up="
-                + this.up.toString() + ", down=" + this.down
-                + ", perimeter=" + this.perimeter + ", opening hours=" + this.openingHours;
+                + this.up + ", down=" + this.down
+                + " + " + " opening hours=" + this.openingHours;
     }
 }
