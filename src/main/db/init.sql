@@ -165,13 +165,6 @@ CREATE TRIGGER trg_lift_updated
 BEFORE UPDATE ON lift
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
--- Relation: which lifts serve which slopes (many-to-many)
-CREATE TABLE IF NOT EXISTS lift_serves_slope (
-  lift_id   BIGINT NOT NULL REFERENCES lift(id)  ON DELETE CASCADE,
-  slope_id  BIGINT NOT NULL REFERENCES slope(id) ON DELETE CASCADE,
-  PRIMARY KEY (lift_id, slope_id)
-);
-
 -- ---------- POI base ----------
 CREATE TABLE IF NOT EXISTS poi (
   id               BIGSERIAL PRIMARY KEY,
@@ -257,13 +250,14 @@ CREATE TRIGGER trg_summit_updated
 BEFORE UPDATE ON summit
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
--- ---------- People & Passes (kept minimal) ----------
+-- ---------- People & Passes  ---------- //TODO: add back skischools, add a set of passes id to each person
 CREATE TABLE IF NOT EXISTS person (
   id           BIGSERIAL PRIMARY KEY,
   public_id    UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
   first_name   VARCHAR(64) NOT NULL,
   last_name    VARCHAR(64) NOT NULL,
   email        VARCHAR(256),
+
   -- optional affinity to a worksite (e.g., assigned workplace)
   worksite_id  BIGINT REFERENCES worksite(id) ON DELETE SET NULL,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -292,7 +286,7 @@ CREATE TRIGGER trg_pass_updated
 BEFORE UPDATE ON pass
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
--- ---------- Views (optional helpers) ----------
+------------ Views helpers ----------
 CREATE OR REPLACE VIEW v_lifts_with_areas AS
 SELECT w.id            AS worksite_id,
        w.worksite_name AS lift_name,
@@ -311,5 +305,3 @@ SELECT s.id, s.public_id, s.name, s.difficulty, s.length_m, s.ski_area_id, wa.wo
 FROM slope s
 JOIN ski_area sa ON sa.id = s.ski_area_id
 JOIN worksite wa ON wa.id = sa.id;
-
--- Done.

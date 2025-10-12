@@ -8,6 +8,7 @@ import java.util.*;
 
 public final class App {
     public static void main(String[] args) {
+        long t0 = System.nanoTime();
         try (HikariDataSource ds = ResortBootstrap.makeDataSource()) {
             var loader   = new ResortLoader(ds);
             var mappers  = ResortBootstrap.makeMappers();
@@ -23,10 +24,12 @@ public final class App {
                     cast(snapshot.rescuePoints, RescuePoint.class),
                     cast(snapshot.summits,      Summit.class)
             );
-
+            long t1 = System.nanoTime() - t0;
             System.out.printf(
-                    "Resort ready | Areas=%d, Lifts=%d, Slopes=%d," +
+                    "%s Resort ready in %.2f ms. | Areas=%d, Lifts=%d, Slopes=%d," +
                             "Restaurants=%d, Rescue Points=%d, Summits=%d%n",
+                    resort.getResortName(),
+                    t1 / 1000000.0,
                     resort.getSkiAreas().size(),
                     resort.getLifts().size(),
                     resort.getSlopes().size(),
@@ -34,13 +37,7 @@ public final class App {
                     resort.getRescuePoints().size(),
                     resort.getSummits().size()
             );
-
-            // plain for-each
-            for (Lift l : resort.getLifts().values()) {
-                System.out.println(l.toString());
-            }
-
-            mainTest(resort);
+            Dashboard(resort);
 
         } catch (Exception e) {
             System.err.println("Boot failed: " + e.getMessage());
@@ -58,7 +55,7 @@ public final class App {
         return Collections.unmodifiableMap(out);
     }
 
-    public static void mainTest(Resort resort) {
+    public static void Dashboard(Resort resort) {
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
         boolean goBack = false;
