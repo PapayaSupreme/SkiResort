@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.util.UUID;
 
 import enums.*;
+import io.github.cdimascio.dotenv.Dotenv;
 import terrain.*;
 import utils.ResortUtils;
 
@@ -16,9 +17,13 @@ public final class ResortBootstrap {
 
     public static HikariDataSource makeDataSource() {
         HikariConfig cfg = new HikariConfig();
-        cfg.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres?currentSchema=skiresort");//TODO: hide that in secrets
-        cfg.setUsername("postgres");
-        cfg.setPassword("lyoko");
+        Dotenv dotenv = Dotenv.load();
+        String url = dotenv.get("DB_URL");
+        String username = dotenv.get("DB_USERNAME");
+        String password = dotenv.get("DB_PASSWORD");
+        cfg.setJdbcUrl(url);
+        cfg.setUsername(username);
+        cfg.setPassword(password);
         cfg.setMaximumPoolSize(5);
         return new HikariDataSource(cfg);
     }

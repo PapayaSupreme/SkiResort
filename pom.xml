@@ -42,6 +42,14 @@
             <artifactId>HikariCP</artifactId>
             <version>7.0.2</version>
         </dependency>
+
+        <!-- https://github.com/cdimascio/dotenv-java -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>
