@@ -6,7 +6,7 @@ PREREQUISITES :<br>
                 - PostgreSQL DB<br><br>
 SETUP :<br>
               1. Run db/init.sql (db config)<br>
-              2. Setup secrets (db creds and link)<br>
+              2. Setup env variable; fill and rename to ".env" the file "template.env"<br>
               3. [OPTIONAL] setup SLF4J log providers for Hikari<br>
               4. Run test/App.java<br><br>
 
