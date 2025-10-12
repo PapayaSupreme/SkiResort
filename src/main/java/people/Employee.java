@@ -16,16 +16,16 @@ public class Employee extends Person {
 
     protected Employee() { /* JPA */ }
 
-    public Employee(String firstName, String lastName, LocalDate dob,
+    public Employee(String email, String firstName, String lastName, LocalDate dob,
                     EmployeeType employeeType, Long worksiteId) {
-        super(firstName, lastName, dob);
+        super(email, firstName, lastName, dob);
         this.employeeType =employeeType;
         setWorksiteId(worksiteId);
     }
 
-    public static Employee of(String firstName, String lastName, LocalDate dob,
+    public static Employee of(String email, String firstName, String lastName, LocalDate dob,
                               EmployeeType type, Long worksiteId) {
-        return new Employee(firstName, lastName, dob, type, worksiteId);
+        return new Employee(email, firstName, lastName, dob, type, worksiteId);
     }
 
     @Override public PersonKind getPersonKind(){ return PersonKind.EMPLOYEE; }

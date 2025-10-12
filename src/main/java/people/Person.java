@@ -31,6 +31,9 @@ public abstract class Person {
     @Column(name = "dob", nullable = false)
     private LocalDate dob;
 
+    @Column(name = "email", length = 128)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "person_kind", nullable = false, insertable = false, updatable = false)
     private PersonKind personKind;
@@ -47,11 +50,12 @@ public abstract class Person {
 
     protected Person() { /* JPA */ }
 
-    protected Person(String firstName, String lastName, LocalDate dob) {
+    protected Person(String email, String firstName, String lastName, LocalDate dob) {
         this.publicId = UUID.randomUUID();
         this.firstName = firstName;
-        this.lastName  = lastName;
-        this.dob       = dob;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.email = email;
     }
 
     // Keep DB as source of truth for created_at; update updated_at on changes
@@ -63,6 +67,7 @@ public abstract class Person {
     // ---------- getters ----------
     public Long getId() { return this.id; }
     public UUID getPublicId() { return this.publicId; }
+    public String getEmail() { return email; }
     public String getFirstName() { return this.firstName; }
     public String getLastName() { return this.lastName; }
     public LocalDate getDob() { return this.dob; }
@@ -76,6 +81,7 @@ public abstract class Person {
     public SkiSchool getSkiSchool() { return null; }
 
     protected void setWorksiteId(Long worksiteId) { this.worksiteId = worksiteId; }
+    public void setPersonKind(PersonKind personKind) { this.personKind = personKind; }
 
     // equals/hashCode by publicId (stable before DB id exists)
     @Override public boolean equals(Object o) {

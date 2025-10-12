@@ -13,10 +13,10 @@ public class TEST {
         var repo = new PersonRepo();
 
         // INSERT
-        var g = new Guest("Pablo", "ferreira", LocalDate.of(2004,11,11));
+        var g = new Guest("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11));
         repo.save(g);
 
-        Employee e = new Employee("Pablo", "ferreira", LocalDate.of(2004,11,11), EmployeeType.PISTER, 1200000L);
+        Employee e = new Employee("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11), EmployeeType.PISTER, 10L);
         repo.save(e);
 
         // SELECT

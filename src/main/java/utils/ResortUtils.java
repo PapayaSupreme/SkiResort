@@ -1,10 +1,13 @@
 package utils;
 
 import enums.OpeningHours;
+import people.Person;
 
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Locale;
+import java.util.Scanner;
 
 public final class ResortUtils {
     /*public static <T extends Worksite> List<T> getAllWorksitesOfType(SkiResort resort, Class<T> clazz) {
@@ -45,5 +48,4 @@ public final class ResortUtils {
         n = n.replaceAll("\\p{M}+", "");
         return n.toLowerCase(Locale.ROOT);
     }
-
 }

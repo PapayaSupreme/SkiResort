@@ -1,9 +1,14 @@
 package tests;
 import com.zaxxer.hikari.HikariDataSource;
+import enums.EmployeeType;
 import factory.ResortBootstrap;
 import factory.ResortLoader;
+import people.Employee;
+import people.Guest;
+import people.PersonRepo;
 import terrain.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public final class App {
@@ -37,6 +42,14 @@ public final class App {
                     resort.getRescuePoints().size(),
                     resort.getSummits().size()
             );
+            var repo = new PersonRepo();
+
+            // INSERT
+            var g = new Guest("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11));
+            repo.save(g);
+
+            Employee e = new Employee("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11), EmployeeType.PISTER, 10L);
+            repo.save(e);
             Dashboard(resort);
 
         } catch (Exception e) {
@@ -59,13 +72,18 @@ public final class App {
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
         boolean goBack = false;
+        boolean valid = false;
+        String email, firstName, lastName;
         int choice1, choice2, choice3; //3var for 3 levels of user input
+        LocalDate dob;
+        EmployeeType type = null;
         String search;
         while (!exit) {
             System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. View resort data");
-            System.out.println("2. Create pass");
-            System.out.println("3. Exit");
+            System.out.println("2. Create person");
+            System.out.println("3. Create pass");
+            System.out.println("4. Exit");
             choice1 = sc.nextInt();
             sc.nextLine();
             goBack = false;
@@ -76,7 +94,6 @@ public final class App {
                         System.out.println("\n=== RESORT MENU ===\n");
                         System.out.println("1. VIEW ALL terrain");
                         System.out.println("2. SEARCH IN terrain");
-                        System.out.println("2. [WIP] SELECT IN terrain");
                         System.out.println("3. [WIP] VIEW ALL persons");
                         System.out.println("4. [WIP] SEARCH IN persons");
                         System.out.println("5. go back");
@@ -105,14 +122,58 @@ public final class App {
                 }
                 case 2 -> {
                     while (!goBack) {
-                        System.out.println("\n=== PERSONS MENU ===\n");
-                        System.out.println("1. register an employee");
-                        System.out.println("2. register a guest");
-                        System.out.println("3. register an instructor");
-                        System.out.println("4. go back");
-                        choice2 = sc.nextInt();
-                        sc.nextLine();
+                        do {
+                            System.out.println("\n=== PERSONS MENU ===\n");
+                            System.out.println("1. register an employee");
+                            System.out.println("2. register a guest");
+                            System.out.println("3. register an instructor");
+                            System.out.println("4. go back");
+                            choice2 = sc.nextInt();
+                            sc.nextLine();
+                        } while (choice2<0 || choice2>4);
+                        System.out.print("Enter email: ");
+                        email = sc.nextLine();
+
+                        System.out.print("Enter first name: ");
+                        firstName = sc.nextLine();
+
+                        System.out.print("Enter last name: ");
+                        lastName = sc.nextLine();
+
+                        while (!valid) {
+                            System.out.print("Enter date of birth, format YYYY-MM-DD : ");
+                            String dobInput = sc.nextLine();
+                            try {
+                                dob = LocalDate.parse(dobInput);
+                                valid = true;
+                            } catch (Exception e) {
+                                System.out.println("Invalid date format. Try again.");
+                            }
+                        }
                         switch (choice2) {
+                            case 1 -> {
+                                valid = false;
+                                while (!valid) {
+                                    System.out.println("Select employee type");
+                                    System.out.println("1. Pister");
+                                    System.out.println("2. Lift Operator");
+                                    System.out.println("3. Restauration Crew");
+                                    System.out.println("4. Maintenance");
+                                    choice3 = sc.nextInt();
+                                    sc.nextLine();
+                                    type = switch (choice3) {
+                                        case 1 -> EmployeeType.PISTER;
+                                        case 2 -> EmployeeType.LIFT_OP;
+                                        case 3 -> EmployeeType.RESTAURATION;
+                                        case 4 -> EmployeeType.MAINTENANCE;
+                                        default -> {
+                                            System.out.println("Invalid choice, try again.");
+                                            yield null;
+                                        }
+                                    };
+                                    valid = (type!=null);
+                                }
+                            }
                             case 4 -> {
                                 System.out.println("going back...");
                                 goBack = true;

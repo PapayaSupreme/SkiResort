@@ -17,16 +17,16 @@ public class Instructor extends Person {
 
     protected Instructor() { /* JPA */ }
 
-    public Instructor(String firstName, String lastName, LocalDate dob,
+    public Instructor(String email, String firstName, String lastName, LocalDate dob,
                        SkiSchool skiSchool, Long worksiteId) {
-        super(firstName, lastName, dob);
+        super(email, firstName, lastName, dob);
         this.skiSchool = skiSchool;
         setWorksiteId(worksiteId);
     }
 
-    public static Instructor of(String firstName, String lastName, LocalDate dob,
+    public static Instructor of(String email, String firstName, String lastName, LocalDate dob,
                                 SkiSchool skiSchool, Long worksiteId) {
-        return new Instructor(firstName, lastName, dob, skiSchool, worksiteId);
+        return new Instructor(email, firstName, lastName, dob, skiSchool, worksiteId);
     }
     @Override public PersonKind getPersonKind() { return PersonKind.INSTRUCTOR; }
     @Override public SkiSchool getSkiSchool() { return this.skiSchool; }

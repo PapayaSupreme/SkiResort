@@ -11,13 +11,14 @@ public class Guest extends Person {
 
     protected Guest() { /* JPA */ }
 
-    public Guest(String firstName, String lastName, LocalDate dob) {
-        super(firstName, lastName, dob);
+    public Guest(String email, String firstName, String lastName, LocalDate dob) {
+        super(email, firstName, lastName, dob);
         setWorksiteId(null);
+        setPersonKind(PersonKind.GUEST);
     }
 
-    public static Guest of(String firstName, String lastName, LocalDate dob) {
-        return new Guest(firstName, lastName, dob);
+    public static Guest of(String email, String firstName, String lastName, LocalDate dob) {
+        return new Guest(email, firstName, lastName, dob);
     }
 
     @Override public PersonKind getPersonKind(){ return PersonKind.GUEST; }
