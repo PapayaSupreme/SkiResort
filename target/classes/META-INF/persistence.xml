@@ -18,7 +18,6 @@
         <class>terrain.RescuePoint</class>
         <class>terrain.Restaurant</class>
         <class>terrain.SkiArea</class>
-        <class>terrain.SkiResort</class>
         <class>terrain.Slope</class>
         <class>terrain.Summit</class>
 

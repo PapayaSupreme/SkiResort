@@ -8,7 +8,7 @@ import utils.JPA;
 
 import java.time.LocalDate;
 
-public class Main {
+public class TEST {
     public static void main(String[] args) {
         var repo = new PersonRepo();
 

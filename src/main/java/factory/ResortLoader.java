@@ -3,14 +3,17 @@ package factory;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Two-phase loader:
- *   Phase 1: bulk fetch rows into lightweight Row records (no cross refs).
- *   Phase 2: wire references (IDs -> objects), then build an immutable ResortSnapshot.
+ * Phase 1: bulk fetch rows into lightweight Row records (no cross refs).
+ * Phase 2: wire references (IDs -> objects), then build an immutable ResortSnapshot.
  */
-public final class ResortLoader {
+public record ResortLoader(DataSource ds) {
 
     // -------- Public API
 
@@ -31,34 +34,41 @@ public final class ResortLoader {
                 Map<Long, Object> rescuePoints,
                 Map<Long, Object> summits
         ) {
-            this.skiAreas     = Collections.unmodifiableMap(new LinkedHashMap<>(skiAreas));
-            this.lifts        = Collections.unmodifiableMap(new LinkedHashMap<>(lifts));
-            this.slopes       = Collections.unmodifiableMap(new LinkedHashMap<>(slopes));
-            this.restaurants  = Collections.unmodifiableMap(new LinkedHashMap<>(restaurants));
+            this.skiAreas = Collections.unmodifiableMap(new LinkedHashMap<>(skiAreas));
+            this.lifts = Collections.unmodifiableMap(new LinkedHashMap<>(lifts));
+            this.slopes = Collections.unmodifiableMap(new LinkedHashMap<>(slopes));
+            this.restaurants = Collections.unmodifiableMap(new LinkedHashMap<>(restaurants));
             this.rescuePoints = Collections.unmodifiableMap(new LinkedHashMap<>(rescuePoints));
-            this.summits      = Collections.unmodifiableMap(new LinkedHashMap<>(summits));
-            this.loadedAt     = OffsetDateTime.now();
+            this.summits = Collections.unmodifiableMap(new LinkedHashMap<>(summits));
+            this.loadedAt = OffsetDateTime.now();
         }
     }
 
-    /** Pluggable constructors. Return your real domain objects from these. */
+    /**
+     * Pluggable constructors. Return your real domain objects from these.
+     */
     public interface Mappers {
         Object makeSkiArea(SkiAreaRow ws, SkiAreaDetailRow detail);
+
         Object makeSlope(SlopeRow row, Object skiArea /* SkiArea */);
+
         Object makeLift(LiftRow row, Object skiArea /* SkiArea */,
                         Object upSlope /* Slope or null */, Object downSlope /* Slope or null */);
+
         Object makeRestaurant(RestaurantRow row, Object skiArea /* SkiArea */);
+
         Object makeRescuePoint(RescuePointRow row, Object skiArea /* SkiArea */);
+
         Object makeSummit(SummitRow row, Object skiArea /* SkiArea */);
     }
-
-    private final DataSource ds;
 
     public ResortLoader(DataSource ds) {
         this.ds = Objects.requireNonNull(ds);
     }
 
-    /** Loads a consistent snapshot (single txn), builds & returns the wired model. */
+    /**
+     * Loads a consistent snapshot (single txn), builds & returns the wired model.
+     */
     public ResortSnapshot load(Mappers mappers) throws SQLException {
         try (Connection c = ds.getConnection()) {
             c.setAutoCommit(false);
@@ -104,7 +114,7 @@ public final class ResortLoader {
                 var ws = worksites.get(row.id);
                 if (ws == null || !"LIFT".equals(ws.worksiteType)) continue;
                 var area = skiAreas.get(row.skiAreaId);
-                var up   = row.upSlopeId   != null ? slopes.get(row.upSlopeId)   : null;
+                var up = row.upSlopeId != null ? slopes.get(row.upSlopeId) : null;
                 var down = row.downSlopeId != null ? slopes.get(row.downSlopeId) : null;
                 var lift = mappers.makeLift(row, area, up, down);
                 lifts.put(row.id, lift);
@@ -114,13 +124,13 @@ public final class ResortLoader {
             Map<Long, Object> restaurants = new LinkedHashMap<>();
             for (var e : restaurantLinks.entrySet()) {
                 long wsId = e.getKey();                // worksite.id (and restaurant.id)
-                var link  = e.getValue();              // poi_id + ws id
-                var poi   = poiRows.get(link.poiId);
-                var ws    = worksites.get(wsId);
+                var link = e.getValue();              // poi_id + ws id
+                var poi = poiRows.get(link.poiId);
+                var ws = worksites.get(wsId);
                 if (poi == null || ws == null) continue;
-                var area  = skiAreas.get(poi.skiAreaId);
-                var row   = RestaurantRow.from(ws, poi);
-                var obj   = mappers.makeRestaurant(row, area);
+                var area = skiAreas.get(poi.skiAreaId);
+                var row = RestaurantRow.from(ws, poi);
+                var obj = mappers.makeRestaurant(row, area);
                 restaurants.put(wsId, obj);
             }
 
@@ -128,13 +138,13 @@ public final class ResortLoader {
             Map<Long, Object> rescuePoints = new LinkedHashMap<>();
             for (var e : rescueLinks.entrySet()) {
                 long wsId = e.getKey();
-                var link  = e.getValue();
-                var poi   = poiRows.get(link.poiId);
-                var ws    = worksites.get(wsId);
+                var link = e.getValue();
+                var poi = poiRows.get(link.poiId);
+                var ws = worksites.get(wsId);
                 if (poi == null || ws == null) continue;
-                var area  = skiAreas.get(poi.skiAreaId);
-                var row   = RescuePointRow.from(ws, poi, link.warning);
-                var obj   = mappers.makeRescuePoint(row, area);
+                var area = skiAreas.get(poi.skiAreaId);
+                var row = RescuePointRow.from(ws, poi, link.warning);
+                var obj = mappers.makeRescuePoint(row, area);
                 rescuePoints.put(wsId, obj);
             }
 
@@ -142,12 +152,12 @@ public final class ResortLoader {
             Map<Long, Object> summits = new LinkedHashMap<>();
             for (var e : summitLinks.entrySet()) {
                 long poiId = e.getKey();
-                var link   = e.getValue();
-                var poi    = poiRows.get(poiId);
+                var link = e.getValue();
+                var poi = poiRows.get(poiId);
                 if (poi == null) continue;
-                var area   = skiAreas.get(poi.skiAreaId);
-                var row    = SummitRow.from(poi, link);
-                var obj    = mappers.makeSummit(row, area);
+                var area = skiAreas.get(poi.skiAreaId);
+                var row = SummitRow.from(poi, link);
+                var obj = mappers.makeSummit(row, area);
                 summits.put(poiId, obj);
             }
 
@@ -348,159 +358,74 @@ public final class ResortLoader {
 
     // -------- Row records (Phase 1 containers)
 
-    public static final class WorksiteRow {
-        public final long id;
-        public final String name;
-        public final String worksiteType; // SKI_AREA, LIFT, RESTAURANT, RESCUE_POINT
-        public final String openingHoursJson;
-        public WorksiteRow(long id, String name, String worksiteType, String openingHoursJson) {
-            this.id = id; this.name = name; this.worksiteType = worksiteType; this.openingHoursJson = openingHoursJson;
-        }
+    public record WorksiteRow(long id, String name, String worksiteType, String openingHoursJson) {
     }
-    /** Exposed view for SkiArea mapper: includes Worksite name/type + detail row. */
+
     public static final class SkiAreaRow {
         public final long id;
         public final String name;
         public final String openingHoursJson;
+
         public SkiAreaRow(WorksiteRow ws) {
-            this.id = ws.id; this.name = ws.name; this.openingHoursJson = ws.openingHoursJson;
+            this.id = ws.id;
+            this.name = ws.name;
+            this.openingHoursJson = ws.openingHoursJson;
         }
-    }
-    public static final class SkiAreaDetailRow {
-        public final long id;
-        public final String publicId;
-        public final Integer elevationMin;
-        public final Integer elevationMax;
-        public final boolean functioning;
-        public final String openingHoursJson;
-        public SkiAreaDetailRow(long id, String publicId, Integer elevationMin, Integer elevationMax, boolean functioning, String openingHoursJson) {
-            this.id = id; this.publicId = publicId; this.elevationMin = elevationMin; this.elevationMax = elevationMax; this.functioning = functioning; this.openingHoursJson = openingHoursJson;
-        }
-    }
-    public static final class SlopeRow {
-        public final long id;
-        public final long skiAreaId;
-        public final String publicId;
-        public final String name;
-        public final String difficulty; // GREEN/BLUE/RED/BLACK
-        public final String slopeType;  // PISTE/...
-        public final Integer lengthM;
-        public final Integer avgWidthM;
-        public final boolean groomed;
-        public final boolean snowmaking;
-        public final Double upX, upY, upZ;
-        public final Double downX, downY, downZ;
-        public final String openingHoursJson;
-        public SlopeRow(long id, long skiAreaId, String publicId, String name, String difficulty, String slopeType,
-                        Integer lengthM, Integer avgWidthM, boolean groomed, boolean snowmaking,
-                        Double upX, Double upY, Double upZ, Double downX, Double downY, Double downZ,
-                        String openingHoursJson) {
-            this.id = id; this.skiAreaId = skiAreaId; this.publicId = publicId; this.name = name; this.difficulty = difficulty; this.slopeType = slopeType;
-            this.lengthM = lengthM; this.avgWidthM = avgWidthM; this.groomed = groomed; this.snowmaking = snowmaking;
-            this.upX = upX; this.upY = upY; this.upZ = upZ; this.downX = downX; this.downY = downY; this.downZ = downZ;
-            this.openingHoursJson = openingHoursJson;
-        }
-    }
-    public static final class LiftRow {
-        public final long id;              // worksite.id
-        public final String name;
-        public final long skiAreaId;
-        public final String publicId;
-        public final String liftType;
-        public final String liftStatus;
-        public final Integer lengthM;
-        public final Integer verticalRiseM;
-        public final Double speedMps;
-        public final Double upX, upY, upZ;
-        public final Double downX, downY, downZ;
-        public final Long upSlopeId, downSlopeId;
-        public final String openingHoursJson;
-        public LiftRow(long id, String name, long skiAreaId, String publicId, String liftType, String liftStatus,
-                       Integer lengthM, Integer verticalRiseM, Double speedMps,
-                       Double upX, Double upY, Double upZ, Double downX, Double downY, Double downZ,
-                       Long upSlopeId, Long downSlopeId, String openingHoursJson) {
-            this.id = id; this.name = name; this.skiAreaId = skiAreaId; this.publicId = publicId; this.liftType = liftType; this.liftStatus = liftStatus;
-            this.lengthM = lengthM; this.verticalRiseM = verticalRiseM; this.speedMps = speedMps;
-            this.upX = upX; this.upY = upY; this.upZ = upZ; this.downX = downX; this.downY = downY; this.downZ = downZ;
-            this.upSlopeId = upSlopeId; this.downSlopeId = downSlopeId; this.openingHoursJson = openingHoursJson;
-        }
-    }
-    public static final class PoiRow {
-        public final long id;
-        public final long skiAreaId;
-        public final Long worksiteId; // null for non-worksite POIs (e.g., Summit)
-        public final String name;      // may be null if worksite-backed; else required
-        public final Double x, y, z;
-        public final String status;    // OPEN/CLOSED/...
-        public final String publicId;
-        public PoiRow(long id, long skiAreaId, Long worksiteId, String name, Double x, Double y, Double z, String status, String publicId) {
-            this.id = id; this.skiAreaId = skiAreaId; this.worksiteId = worksiteId; this.name = name; this.x = x; this.y = y; this.z = z; this.status = status; this.publicId = publicId;
-        }
-    }
-    public static final class RestaurantLinkRow {
-        public final long id;    // worksite.id
-        public final long poiId; // poi.id
-        public RestaurantLinkRow(long id, long poiId) { this.id = id; this.poiId = poiId; }
-    }
-    public static final class RescuePointLinkRow {
-        public final long id;    // worksite.id
-        public final long poiId; // poi.id
-        public final boolean warning;
-        public RescuePointLinkRow(long id, long poiId, boolean warning) { this.id = id; this.poiId = poiId; this.warning = warning; }
-    }
-    public static final class SummitLinkRow {
-        public final long poiId;
-        public final int snowHeightCm;
-        public final String snowConsistency;
-        public SummitLinkRow(long poiId, int snowHeightCm, String snowConsistency) { this.poiId = poiId; this.snowHeightCm = snowHeightCm; this.snowConsistency = snowConsistency; }
     }
 
-    // Simplified input DTOs for POI-backed subtypes you’ll construct
-    public static final class RestaurantRow {
-        public final long worksiteId;
-        public final String name; // from worksite
-        public final long poiId;
-        public final long skiAreaId;
-        public final Double x, y, z;
-        public final String status;
-        private RestaurantRow(long worksiteId, String name, long poiId, long skiAreaId, Double x, Double y, Double z, String status) {
-            this.worksiteId = worksiteId; this.name = name; this.poiId = poiId; this.skiAreaId = skiAreaId;
-            this.x = x; this.y = y; this.z = z; this.status = status;
-        }
+    public record SkiAreaDetailRow(long id, String publicId, Integer elevationMin, Integer elevationMax,
+                                   boolean functioning, String openingHoursJson) {
+    }
+
+    public record SlopeRow(long id, long skiAreaId, String publicId, String name, String difficulty, String slopeType,
+                           Integer lengthM, Integer avgWidthM, boolean groomed, boolean snowmaking, Double upX,
+                           Double upY, Double upZ, Double downX, Double downY, Double downZ, String openingHoursJson) {
+    }
+
+    public record LiftRow(long id, String name, long skiAreaId, String publicId, String liftType, String liftStatus,
+                          Integer lengthM, Integer verticalRiseM, Double speedMps, Double upX, Double upY, Double upZ,
+                          Double downX, Double downY, Double downZ, Long upSlopeId, Long downSlopeId,
+                          String openingHoursJson) {
+    }
+
+    public record PoiRow(long id, long skiAreaId, Long worksiteId, String name, Double x, Double y, Double z,
+                         String status, String publicId) {
+    }
+
+    public record RestaurantLinkRow(long id, long poiId) {
+    }
+
+    public record RescuePointLinkRow(long id, long poiId, boolean warning) {
+    }
+
+    public record SummitLinkRow(long poiId, int snowHeightCm, String snowConsistency) {
+    }
+
+        public record RestaurantRow(long worksiteId, String name, long poiId, long skiAreaId, Double x, Double y, Double z,
+                                    String status) {
+
         static RestaurantRow from(WorksiteRow ws, PoiRow poi) {
-            return new RestaurantRow(ws.id, ws.name, poi.id, poi.skiAreaId, poi.x, poi.y, poi.z, poi.status);
+                return new RestaurantRow(ws.id, ws.name, poi.id, poi.skiAreaId, poi.x, poi.y, poi.z, poi.status);
+            }
         }
-    }
-    public static final class RescuePointRow {
-        public final long worksiteId;
-        public final String name; // from worksite
-        public final long poiId;
-        public final long skiAreaId;
-        public final Double x, y, z;
-        public final String status;
-        public final boolean warning;
-        private RescuePointRow(long worksiteId, String name, long poiId, long skiAreaId, Double x, Double y, Double z, String status, boolean warning) {
-            this.worksiteId = worksiteId; this.name = name; this.poiId = poiId; this.skiAreaId = skiAreaId;
-            this.x = x; this.y = y; this.z = z; this.status = status; this.warning = warning;
-        }
+
+
+    public record RescuePointRow(long worksiteId, String name, long poiId, long skiAreaId, Double x, Double y, Double z,
+                                 String status, boolean warning) {
+
         static RescuePointRow from(WorksiteRow ws, PoiRow poi, boolean warning) {
-            return new RescuePointRow(ws.id, ws.name, poi.id, poi.skiAreaId, poi.x, poi.y, poi.z, poi.status, warning);
+                return new RescuePointRow(ws.id, ws.name, poi.id, poi.skiAreaId, poi.x, poi.y, poi.z, poi.status, warning);
+            }
         }
-    }
-    public static final class SummitRow {
-        public final long poiId;
-        public final String name; // from poi (non-worksite POI)
-        public final long skiAreaId;
-        public final Double x, y, z;
-        public final int snowHeightCm;
-        public final String snowConsistency;
-        private SummitRow(long poiId, String name, long skiAreaId, Double x, Double y, Double z, int snowHeightCm, String snowConsistency) {
-            this.poiId = poiId; this.name = name; this.skiAreaId = skiAreaId; this.x = x; this.y = y; this.z = z; this.snowHeightCm = snowHeightCm; this.snowConsistency = snowConsistency;
-        }
+
+
+    public record SummitRow(long poiId, String name, long skiAreaId, Double x, Double y, Double z, int snowHeightCm,
+                            String snowConsistency) {
+
         static SummitRow from(PoiRow poi, SummitLinkRow link) {
-            return new SummitRow(poi.id, poi.name, poi.skiAreaId, poi.x, poi.y, poi.z, link.snowHeightCm, link.snowConsistency);
+                return new SummitRow(poi.id, poi.name, poi.skiAreaId, poi.x, poi.y, poi.z, link.snowHeightCm, link.snowConsistency);
+            }
         }
-    }
 
     // -------- utils
 
@@ -508,10 +433,12 @@ public final class ResortLoader {
         int v = rs.getInt(col);
         return rs.wasNull() ? null : v;
     }
+
     private static Long getNullableLong(ResultSet rs, String col) throws SQLException {
         long v = rs.getLong(col);
         return rs.wasNull() ? null : v;
     }
+
     private static Double getNullableDouble(ResultSet rs, String col) throws SQLException {
         double v = rs.getDouble(col);
         return rs.wasNull() ? null : v;
