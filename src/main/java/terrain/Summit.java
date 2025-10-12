@@ -2,9 +2,10 @@ package terrain;
 
 import enums.Point;
 import enums.SnowConsistency;
+import enums.TerrainType;
 
 
-public class Summit extends POI{
+public class Summit extends POI implements Terrain{
     private int snowHeight;
     private SnowConsistency snowConsistency;
 
@@ -19,6 +20,11 @@ public class Summit extends POI{
 
     public void setSnowHeight(int snowHeight) { this.snowHeight = snowHeight; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }
+
+    @Override
+    public TerrainType getTerrainType(){
+        return TerrainType.Summit;
+    }
 
     @Override
     public String toString() {

@@ -1,6 +1,8 @@
 package terrain;
 
-import java.util.Map;
+import java.util.*;
+
+import static utils.ResortUtils.norm;
 
 public final class Resort {
     private final String resortName;
@@ -10,6 +12,8 @@ public final class Resort {
     private final Map<Long, Restaurant> restaurants;
     private final Map<Long, RescuePoint> rescuePoints;
     private final Map<Long, Summit> summits;
+    private final Map<String, List<Long>> idFromName = new HashMap<>();
+    private final Map<Long, Terrain> terrainIndex = new HashMap<>();
 
     public Resort(String resortName, Map<Long, ?> sa, Map<Long, ?> sl, Map<Long, ?> lf,
                   Map<Long, ?> re, Map<Long, ?> rp, Map<Long, ?> su) {
@@ -20,15 +24,52 @@ public final class Resort {
         this.restaurants  = Map.copyOf((Map<Long, Restaurant>) re);
         this.rescuePoints = Map.copyOf((Map<Long, RescuePoint>) rp);
         this.summits      = Map.copyOf((Map<Long, Summit>) su);
+        buildTerrainIndex();
+        buildIdFromNameIndex();
     }
 
     public String getResortName(){ return this.resortName; }
-    public Map<Long, SkiArea> getSkiAreas(){ return this.skiAreas; }
-    public Map<Long, Slope>   getSlopes(){ return this.slopes; }
-    public Map<Long, Lift>    getLifts(){ return this.lifts; }
-    public Map<Long, Restaurant> getRestaurants(){ return this.restaurants; }
-    public Map<Long, RescuePoint> getRescuePoints(){ return this.rescuePoints; }
-    public Map<Long, Summit>  getSummits(){ return this.summits; }
+    public Map<Long, SkiArea> getSkiAreas(){ return Map.copyOf(this.skiAreas); }
+    public Map<Long, Slope>   getSlopes(){ return Map.copyOf(this.slopes); }
+    public Map<Long, Lift>    getLifts(){ return Map.copyOf(this.lifts); }
+    public Map<Long, Restaurant> getRestaurants(){ return Map.copyOf(this.restaurants); }
+    public Map<Long, RescuePoint> getRescuePoints(){ return Map.copyOf(this.rescuePoints); }
+    public Map<Long, Summit>  getSummits(){ return Map.copyOf(this.summits); }
+    public Map<Long, Terrain> getTerrainIndex() { return Map.copyOf(this.terrainIndex); }
+
+    public HashSet<Long> getIdsFromName(String name){
+        HashSet<Long> out = new HashSet<>();
+        if (name == null) return out;
+        String contain = norm(name);
+        for (var idFromNameEntry: this.idFromName.entrySet()) {
+            if (idFromNameEntry.getKey().contains(contain)){
+                out.addAll(idFromNameEntry.getValue());
+            }
+        }
+        return out;
+    }
+
+
+
+    //once-at-runtime helper, DO NOT USE AFTER OR MAYBE FOR HOT REBUILD
+    private void buildIdFromNameIndex() {
+        this.idFromName.clear();
+        for (var terrainIndexEntry: this.terrainIndex.entrySet()){
+            String k = norm(terrainIndexEntry.getValue().getName());
+            this.idFromName.computeIfAbsent(k, unused -> new ArrayList<>())
+            .add(terrainIndexEntry.getKey());
+        }
+    }
+
+    private void buildTerrainIndex() {
+        this.terrainIndex.clear();
+        this.terrainIndex.putAll(this.skiAreas);
+        this.terrainIndex.putAll(this.slopes);
+        this.terrainIndex.putAll(this.lifts);
+        this.terrainIndex.putAll(this.restaurants);
+        this.terrainIndex.putAll(this.rescuePoints);
+        this.terrainIndex.putAll(this.summits);
+    }
 
     @Override
     public String toString(){

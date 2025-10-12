@@ -4,13 +4,9 @@ import factory.ResortBootstrap;
 import factory.ResortLoader;
 import terrain.*;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public final class App {
-
     public static void main(String[] args) {
         try (HikariDataSource ds = ResortBootstrap.makeDataSource()) {
             var loader   = new ResortLoader(ds);
@@ -27,9 +23,6 @@ public final class App {
                     cast(snapshot.rescuePoints, RescuePoint.class),
                     cast(snapshot.summits,      Summit.class)
             );
-
-            // globally accessible instance
-            ResortHolder.set(resort);
 
             System.out.printf(
                     "Resort ready | Areas=%d, Lifts=%d, Slopes=%d," +
@@ -57,7 +50,7 @@ public final class App {
 
     }
 
-    /** Unsafe but convenient cast from Map<Long,Object> -> Map<Long,T> (we control both ends). */
+    /** Unsafe but convenient cast from Map<Long,Object> -> Map<Long,T> (controlled both ends still). */
     @SuppressWarnings("unchecked")
     private static <T> Map<Long, T> cast(Map<Long, Object> m, Class<T> cls) {
         var out = new LinkedHashMap<Long, T>(m.size());
@@ -65,18 +58,12 @@ public final class App {
         return Collections.unmodifiableMap(out);
     }
 
-    /** Optional holder if other parts of the app need the current Resort quickly. */
-    public static final class ResortHolder {
-        private static volatile Resort current;
-        public static void set(Resort r) { current = r; }
-        public static Resort get() { return current; }
-    }
-
     public static void mainTest(Resort resort) {
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
         boolean goBack = false;
         int choice1, choice2, choice3; //3var for 3 levels of user input
+        String search;
         while (!exit) {
             System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. View resort data");
@@ -85,12 +72,14 @@ public final class App {
             choice1 = sc.nextInt();
             sc.nextLine();
             goBack = false;
+            HashSet<Long> ids;
             switch(choice1) {
                 case 1 -> {
                     while (!goBack) {
                         System.out.println("\n=== RESORT MENU ===\n");
                         System.out.println("1. VIEW ALL terrain");
-                        System.out.println("2. [WIP] SEARCH IN terrain");
+                        System.out.println("2. SEARCH IN terrain");
+                        System.out.println("2. [WIP] SELECT IN terrain");
                         System.out.println("3. [WIP] VIEW ALL persons");
                         System.out.println("4. [WIP] SEARCH IN persons");
                         System.out.println("5. go back");
@@ -98,6 +87,19 @@ public final class App {
                         sc.nextLine();
                         switch(choice2) {
                             case 1 -> System.out.println(resort.toString());
+                            case 2 -> {
+                                System.out.println("\n=== TERRAIN SEARCH ===\n");
+                                System.out.println("Search by name of the structure:\n");
+                                search = sc.nextLine();
+                                ids = resort.getIdsFromName(search);
+                                for (Long id: ids){
+                                    System.out.println(resort.getTerrainIndex()
+                                            .get(id).toString());
+                                }
+                                if (Objects.equals(search, "")){
+                                    System.out.println("\nNote: your query was empty, so it displayed the whole resort.");
+                                }
+                            }
                             case 5 -> {
                                 System.out.println("going back...");
                                 goBack = true;}

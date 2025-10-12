@@ -1,6 +1,7 @@
 package terrain;
 
 import enums.OpeningHours;
+import enums.TerrainType;
 import enums.WorksiteType;
 import utils.Worksite;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SkiArea implements Worksite {
+public class SkiArea implements Worksite, Terrain {
     private String name;
     private final UUID publicId;
     private final long id;
@@ -72,6 +73,11 @@ public class SkiArea implements Worksite {
     @Override
     public WorksiteType getWorksiteType(){
         return WorksiteType.SKI_AREA;
+    }
+
+    @Override
+    public TerrainType getTerrainType(){
+        return TerrainType.SkiArea;
     }
 
     @Override

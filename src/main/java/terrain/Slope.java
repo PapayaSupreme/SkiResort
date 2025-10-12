@@ -1,16 +1,12 @@
 package terrain;
 
 
-import enums.SlopeDifficulty;
-import enums.SnowConsistency;
-import enums.SlopeType;
-import enums.Point;
-import enums.OpeningHours;
+import enums.*;
 import utils.IDGenerator;
 
 import java.util.UUID;
 
-public class Slope {
+public class Slope implements Terrain {
     private final long id;
     private final UUID publicId;
     private String name;
@@ -54,6 +50,11 @@ public class Slope {
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void setSlopeDifficulty(SlopeDifficulty slopeDifficulty) { this.slopeDifficulty = slopeDifficulty; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }
+
+    @Override
+    public TerrainType getTerrainType(){
+        return TerrainType.Slope;
+    }
 
     @Override
     public String toString() {

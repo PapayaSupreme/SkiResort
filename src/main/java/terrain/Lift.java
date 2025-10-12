@@ -5,7 +5,7 @@ import utils.Worksite;
 
 import java.util.UUID;
 
-public class Lift implements Worksite {
+public class Lift implements Worksite, Terrain {
     private final long id;
     private final UUID publicId;
     private String name;
@@ -57,7 +57,14 @@ public class Lift implements Worksite {
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
 
 
-    @Override public WorksiteType getWorksiteType(){ return WorksiteType.LIFT; }
+    @Override public WorksiteType getWorksiteType(){
+        return WorksiteType.LIFT;
+    }
+
+    @Override
+    public TerrainType getTerrainType(){
+        return TerrainType.Lift;
+    }
 
     @Override
     public String toString() {

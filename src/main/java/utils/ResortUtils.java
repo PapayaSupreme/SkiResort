@@ -1,11 +1,10 @@
 package utils;
 
 import enums.OpeningHours;
-import terrain.SkiArea;
 
+import java.text.Normalizer;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 public final class ResortUtils {
     /*public static <T extends Worksite> List<T> getAllWorksitesOfType(SkiResort resort, Class<T> clazz) {
@@ -39,6 +38,12 @@ public final class ResortUtils {
                 LocalTime.parse(j.substring(o1 + 8, c1)),
                 LocalTime.parse(j.substring(o2 + 9, c2))
         );
+    }
+
+    public static String norm(String s) {
+        String n = Normalizer.normalize(s.trim(), Normalizer.Form.NFKD);
+        n = n.replaceAll("\\p{M}+", "");
+        return n.toLowerCase(Locale.ROOT);
     }
 
 }
