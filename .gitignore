@@ -30,3 +30,6 @@ bin/
 src/main/resources/hibernate.properties
 .env
 /target/
+.idea/data_source_mapping.xml
+.idea/sqldialects.xml
+.idea/dataSources/
