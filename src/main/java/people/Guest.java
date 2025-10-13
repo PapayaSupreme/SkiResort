@@ -27,4 +27,9 @@ public class Guest extends Person {
     public void setWorksiteId(Long worksiteId) {
         super.setWorksiteId(null);
     }
+
+    @Override
+    public String toString(){
+        return "Guest: " + super.toString();
+    }
 }

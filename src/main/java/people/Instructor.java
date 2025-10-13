@@ -32,4 +32,9 @@ public class Instructor extends Person {
     @Override public SkiSchool getSkiSchool() { return this.skiSchool; }
 
     protected void setSkiSchool(SkiSchool skiSchool) { this.skiSchool = skiSchool; }
+
+    @Override
+    public String toString(){
+        return "Instructor: ski school=" + this.skiSchool + ", worksite=" + this.getWorksiteId() + super.toString();
+    }
 }

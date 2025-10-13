@@ -10,15 +10,11 @@ import enums.SkiSchool;
 
 import factory.ResortBootstrap;
 import factory.ResortLoader;
-import people.Employee;
-import people.Guest;
-import people.Instructor;
-import people.PersonRepo;
+import people.*;
 import terrain.*;
 import utils.JPA;
 
-import static utils.ResortUtils.makeDataSource;
-import static utils.ResortUtils.pickInt;
+import static utils.ResortUtils.*;
 
 public final class App {
     public static void main(String[] args) {
@@ -43,12 +39,11 @@ public final class App {
 
             EntityManagerFactory entityManagerFactory = JPA.emf();
             PersonRepo personRepo = new PersonRepo(entityManagerFactory);
-            long t1 = System.nanoTime() - t0;
+            long t1 = System.nanoTime();
             System.out.printf(
-                    "%s Resort ready in %.2f ms. | Areas=%d, Lifts=%d, Slopes=%d," +
+                    "%s Resort ready | Areas=%d, Lifts=%d, Slopes=%d," +
                             "Restaurants=%d, Rescue Points=%d, Summits=%d%n",
                     resort.getResortName(),
-                    t1 / 1000000.0,
                     resort.getSkiAreas().size(),
                     resort.getLifts().size(),
                     resort.getSlopes().size(),
@@ -56,7 +51,7 @@ public final class App {
                     resort.getRescuePoints().size(),
                     resort.getSummits().size()
             );
-
+            runTimer("Resort start setup", t0, t1);
 
             Dashboard(resort, personRepo);
 
@@ -94,6 +89,7 @@ public final class App {
         Guest guest = null;
         Instructor instructor = null;
         SkiSchool skiSchool = null;
+        List<Person> persons= new ArrayList<>();
         while (!exit) {
             System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. View resort data");
@@ -109,12 +105,13 @@ public final class App {
                         System.out.println("\n=== RESORT MENU ===\n");
                         System.out.println("1. VIEW ALL terrain");
                         System.out.println("2. SEARCH IN terrain");
-                        System.out.println("3. [WIP] VIEW ALL persons");
+                        System.out.println("3. VIEW ALL persons");
                         System.out.println("4. [WIP] SEARCH IN persons");
                         System.out.println("5. go back");
                         choice2 = pickInt(sc, 1, 5);
                         switch(choice2) {
                             case 1 -> System.out.println(resort.toString());
+
                             case 2 -> {
                                 System.out.println("\n=== TERRAIN SEARCH ===\n");
                                 System.out.println("Search by name of the structure:\n");
@@ -125,11 +122,21 @@ public final class App {
                                     System.out.println(resort.getTerrainIndex()
                                             .get(id).toString());
                                 }
-                                t1 = System.nanoTime() - t0;
-                                System.out.printf("Query took %.4f ms", t1/1000000.0);
+                                t1 = System.nanoTime();
+                                runTimer("Terrain name search query", t0, t1);
                                 if (Objects.equals(search, "")){
                                     System.out.println("\nNote: your query was empty, so it displayed the whole resort.");
                                 }
+                            }
+
+                            case 3 -> {
+                                t0 = System.nanoTime();
+                                persons = personRepo.findAll();
+                                for (Person person: persons){
+                                    System.out.println(person.toString());
+                                }
+                                t1 = System.nanoTime();
+                                runTimer("Exhaustive person display from DB", t0, t1);
                             }
                             case 5 -> {
                                 System.out.println("going back...");

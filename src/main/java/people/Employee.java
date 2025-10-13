@@ -32,4 +32,9 @@ public class Employee extends Person {
     @Override public EmployeeType getEmployeeType() { return this.employeeType; }
 
     protected void setEmployeeType(EmployeeType employeeType) { this.employeeType = employeeType; }
+
+    @Override
+    public String toString(){
+        return "Employee: kind=" + this.employeeType + ", worksite=" + this.getWorksiteId() + super.toString();
+    }
 }
