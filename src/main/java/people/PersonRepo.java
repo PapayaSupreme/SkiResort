@@ -1,42 +1,43 @@
 package people;
 
 import jakarta.persistence.EntityManager;
-import utils.JPA;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import java.util.List;
+import java.util.Optional;
 
 public final class PersonRepo {
+    private final EntityManagerFactory entityManagerFactory;
+    public PersonRepo(EntityManagerFactory entityManagerFactory){
+        this.entityManagerFactory = entityManagerFactory;
+    }
     public void save(Person p) {
-        EntityManager em = JPA.em();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
-            em.getTransaction().begin();
-            if (p.getId() == null) {
-                em.persist(p);
-            } else {
-                p = em.merge(p);
+            entityTransaction.begin();
+            entityManager.merge(p);   // insert or update
+            entityTransaction.commit();
+        } catch (RuntimeException e) {
+            if (entityTransaction.isActive()){
+                entityTransaction.rollback();
             }
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw new RuntimeException("Error saving person: " + e.getMessage(), e);
+            throw e;
         } finally {
-            em.close();
+            entityManager.close();
         }
     }
 
     public List<Person> findAll() {
-        try (EntityManager em = JPA.em()) {
-            return em.createQuery("SELECT p FROM Person p", Person.class)
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("select p from Person p", Person.class)
                     .getResultList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching people: " + e.getMessage(), e);
         }
     }
 
-    public Person findById(Long id) {
-        try (EntityManager em = JPA.em()) {
-            return em.find(Person.class, id);
+    public Optional<Person> findById(Long id) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return Optional.ofNullable(entityManager.find(Person.class, id));
         }
     }
 }

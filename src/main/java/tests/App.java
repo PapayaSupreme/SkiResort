@@ -3,9 +3,11 @@ import com.zaxxer.hikari.HikariDataSource;
 import enums.EmployeeType;
 import factory.ResortBootstrap;
 import factory.ResortLoader;
+import jakarta.persistence.EntityManagerFactory;
 import people.Employee;
 import people.PersonRepo;
 import terrain.*;
+import utils.JPA;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -30,6 +32,11 @@ public final class App {
                     cast(snapshot.rescuePoints, RescuePoint.class),
                     cast(snapshot.summits,      Summit.class)
             );
+
+            JPA.init(ds);
+
+            EntityManagerFactory entityManagerFactory = JPA.emf();
+            PersonRepo personRepo = new PersonRepo(entityManagerFactory);
             long t1 = System.nanoTime() - t0;
             System.out.printf(
                     "%s Resort ready in %.2f ms. | Areas=%d, Lifts=%d, Slopes=%d," +
@@ -44,7 +51,7 @@ public final class App {
                     resort.getSummits().size()
             );
 
-            PersonRepo personRepo = new PersonRepo();
+
             Dashboard(resort, personRepo);
 
         } catch (Exception e) {
@@ -65,6 +72,7 @@ public final class App {
 
     public static void Dashboard(Resort resort, PersonRepo personRepo) {
         Scanner sc = new Scanner(System.in);
+        long t0, t1;
         boolean exit = false;
         boolean goBack = false;
         boolean valid = false;
@@ -103,11 +111,14 @@ public final class App {
                                 System.out.println("\n=== TERRAIN SEARCH ===\n");
                                 System.out.println("Search by name of the structure:\n");
                                 search = sc.nextLine();
+                                t0 = System.nanoTime();
                                 ids = resort.getIdsFromName(search);
                                 for (Long id: ids){
                                     System.out.println(resort.getTerrainIndex()
                                             .get(id).toString());
                                 }
+                                t1 = System.nanoTime() - t0;
+                                System.out.printf("Query took %.4f ms", t1/1000000.0);
                                 if (Objects.equals(search, "")){
                                     System.out.println("\nNote: your query was empty, so it displayed the whole resort.");
                                 }

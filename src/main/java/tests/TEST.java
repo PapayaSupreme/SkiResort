@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 public class TEST {
     public static void main(String[] args) {
-        var repo = new PersonRepo();
+        /*var repo = new PersonRepo();
 
         // INSERT
         var g = new Guest("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11));
@@ -24,6 +24,6 @@ public class TEST {
                 System.out.println(p.getId() + " " + p.getFirstName() + " " + p.getLastName())
         );
 
-        JPA.close();
+        JPA.close();*/
     }
 }
