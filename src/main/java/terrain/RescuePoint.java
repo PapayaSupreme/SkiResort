@@ -3,7 +3,6 @@ package terrain;
 import enums.POIStatus;
 import enums.Point;
 import enums.TerrainType;
-import enums.WorksiteType;
 
 public class RescuePoint extends POI implements Terrain, Worksite {
     private boolean warning ;

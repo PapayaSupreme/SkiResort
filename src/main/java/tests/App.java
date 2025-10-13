@@ -1,10 +1,13 @@
 package tests;
 import com.zaxxer.hikari.HikariDataSource;
 import enums.EmployeeType;
+import enums.SkiSchool;
 import factory.ResortBootstrap;
 import factory.ResortLoader;
 import jakarta.persistence.EntityManagerFactory;
 import people.Employee;
+import people.Guest;
+import people.Instructor;
 import people.PersonRepo;
 import terrain.*;
 import utils.JPA;
@@ -85,6 +88,9 @@ public final class App {
         Worksite worksite = null;
         HashSet<Long> ids;
         Employee employee = null;
+        Guest guest = null;
+        Instructor instructor = null;
+        SkiSchool skiSchool = null;
         while (!exit) {
             System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. View resort data");
@@ -187,7 +193,6 @@ public final class App {
                                     case RESTAURATION -> new ArrayList<>(resort.getRestaurants().values());
                                     case MAINTENANCE -> new ArrayList<>(resort.getSkiAreas().values());
                                 };
-
                                 while (!valid){
                                     System.out.println("Select employee worksite (adapted to employee type): ");
                                     for (int i = 0;i<worksites.size();i++){
@@ -203,6 +208,7 @@ public final class App {
                                     }
                                 }
                                 valid = false;
+
                                 try {
                                     employee = new Employee(email, firstName, lastName,
                                             dob, employeeType, worksite.getId());
@@ -216,8 +222,74 @@ public final class App {
                                 } catch (Exception e){
                                     System.out.println("Error while instantiating employee : " + e);
                                 }
-
                             }
+
+
+                            case 2 ->{
+                                try {
+                                    guest = new Guest(email, firstName, lastName, dob);
+                                    try {
+                                        personRepo.save(guest);
+                                        System.out.println("Successfully saved guest : " + guest.toString());
+                                    } catch (Exception e){
+                                        System.out.println("Error while saving guest to the DB : " + e);
+                                    }
+                                } catch (Exception e){
+                                    System.out.println("Error while instantiating guest : " + e);
+                                }
+                            }
+
+
+                            case 3 ->{
+                                while (!valid) {
+                                    System.out.println("Select instructor ski school");
+                                    for (SkiSchool s: SkiSchool.values()){
+                                        System.out.println((s.ordinal()+1) + ". " + s.name());
+                                    }
+                                    choice3 = sc.nextInt();
+                                    sc.nextLine();
+                                    if (0<choice3 && choice3<SkiSchool.values().length+1){
+                                        skiSchool = SkiSchool.values()[choice3-1];
+                                        valid = true;
+                                    }  else {
+                                        System.out.println("Out of bounds, try again.");
+                                    }
+                                }
+                                valid = false;
+
+                                worksites = new ArrayList<>(resort.getSkiAreas().values());
+                                while (!valid){
+                                    System.out.println("Select instructor worksite: ");
+                                    for (int i = 0;i<worksites.size();i++){
+                                        System.out.println((i+1) + ". " + worksites.get(i));
+                                    }
+                                    choice3 = sc.nextInt();
+                                    sc.nextLine();
+                                    if (0<choice3 && choice3<worksites.size()+1){
+                                        worksite = worksites.get(choice3-1);
+                                        valid = true;
+                                    } else {
+                                        System.out.println("Out of bounds, try again.");
+                                    }
+                                }
+                                valid = false;
+
+                                try {
+                                    instructor = new Instructor(email, firstName, lastName,
+                                            dob, skiSchool, worksite.getId());
+                                    try {
+                                        personRepo.save(instructor);
+                                        System.out.println("Successfully saved instructor : " + instructor.toString());
+                                    } catch (Exception e){
+                                        System.out.println("Error while saving instructor to the DB : " + e);
+                                    }
+
+                                } catch (Exception e){
+                                    System.out.println("Error while instantiating instructor : " + e);
+                                }
+                            }
+
+
                             case 4 -> {
                                 System.out.println("going back...");
                                 goBack = true;
