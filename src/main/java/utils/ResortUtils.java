@@ -1,13 +1,13 @@
 package utils;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import enums.OpeningHours;
-import people.Person;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.text.Normalizer;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Locale;
-import java.util.Scanner;
 
 public final class ResortUtils {
     /*public static <T extends Worksite> List<T> getAllWorksitesOfType(SkiResort resort, Class<T> clazz) {
@@ -30,6 +30,19 @@ public final class ResortUtils {
         }
         return all;
     }*/
+
+    public static HikariDataSource makeDataSource() {
+        HikariConfig cfg = new HikariConfig();
+        Dotenv dotenv = Dotenv.load();
+        String url = dotenv.get("DB_URL");
+        String username = dotenv.get("DB_USERNAME");
+        String password = dotenv.get("DB_PASSWORD");
+        cfg.setJdbcUrl(url);
+        cfg.setUsername(username);
+        cfg.setPassword(password);
+        cfg.setMaximumPoolSize(5);
+        return new HikariDataSource(cfg);
+    }
 
     public static OpeningHours parseOH(String json) {
         if (json == null) return null;

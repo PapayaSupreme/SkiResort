@@ -15,19 +15,6 @@ public final class ResortBootstrap {
     public static void main(String[] args) {
     }
 
-    public static HikariDataSource makeDataSource() {
-        HikariConfig cfg = new HikariConfig();
-        Dotenv dotenv = Dotenv.load();
-        String url = dotenv.get("DB_URL");
-        String username = dotenv.get("DB_USERNAME");
-        String password = dotenv.get("DB_PASSWORD");
-        cfg.setJdbcUrl(url);
-        cfg.setUsername(username);
-        cfg.setPassword(password);
-        cfg.setMaximumPoolSize(5);
-        return new HikariDataSource(cfg);
-    }
-
     public static ResortLoader.Mappers makeMappers() {
         return new ResortLoader.Mappers() {
             @Override

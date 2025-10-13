@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/f4dcd07c-a26c-4c47-99e0-7c44110c6630/console.sql" value="f4dcd07c-a26c-4c47-99e0-7c44110c6630" />
     <file url="file://$PROJECT_DIR$/src/main/db/init.sql" value="f4dcd07c-a26c-4c47-99e0-7c44110c6630" />
     <file url="file://$PROJECT_DIR$/src/main/java/factory/ResortLoader.java" value="f4dcd07c-a26c-4c47-99e0-7c44110c6630" />
     <file url="file://$PROJECT_DIR$/src/main/java/factory/serre_che.sql" value="f4dcd07c-a26c-4c47-99e0-7c44110c6630" />

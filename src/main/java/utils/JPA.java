@@ -1,6 +1,8 @@
 package utils;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public final class JPA {
     private static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("skiPU");

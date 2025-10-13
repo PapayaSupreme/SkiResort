@@ -10,10 +10,12 @@ import terrain.*;
 import java.time.LocalDate;
 import java.util.*;
 
+import static utils.ResortUtils.makeDataSource;
+
 public final class App {
     public static void main(String[] args) {
         long t0 = System.nanoTime();
-        try (HikariDataSource ds = ResortBootstrap.makeDataSource()) {
+        try (HikariDataSource ds = makeDataSource()) {
             var loader   = new ResortLoader(ds);
             var mappers  = ResortBootstrap.makeMappers();
 
@@ -41,16 +43,7 @@ public final class App {
                     resort.getRescuePoints().size(),
                     resort.getSummits().size()
             );
-            /*
-            var repo = new PersonRepo();
 
-            // INSERT
-            var g = new Guest("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11));
-            repo.save(g);
-
-            Employee e = new Employee("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11), EmployeeType.PISTER, 10L);
-            repo.save(e);
-            */
             PersonRepo personRepo = new PersonRepo();
             Dashboard(resort, personRepo);
 
