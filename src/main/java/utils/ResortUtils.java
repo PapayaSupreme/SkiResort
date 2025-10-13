@@ -8,6 +8,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.text.Normalizer;
 import java.time.LocalTime;
 import java.util.Locale;
+import java.util.Scanner;
 
 public final class ResortUtils {
     /*public static <T extends Worksite> List<T> getAllWorksitesOfType(SkiResort resort, Class<T> clazz) {
@@ -69,5 +70,21 @@ public final class ResortUtils {
         String n = Normalizer.normalize(s.trim(), Normalizer.Form.NFKD);
         n = n.replaceAll("\\p{M}+", "");
         return n.toLowerCase(Locale.ROOT);
+    }
+
+    /**
+    * MIN AND MAX ARE INCLUDED
+     * IT RETURNS CHOICE
+     * !!!NOT CHOICE - 1!!!
+     */
+    public static int pickInt(Scanner sc, int min, int max){
+        int choice = sc.nextInt();
+        sc.nextLine();
+        while (choice < min || max < choice) {
+            System.out.println("Out of bounds, try again.");
+            choice = sc.nextInt();
+            sc.nextLine();
+        }
+        return choice;
     }
 }

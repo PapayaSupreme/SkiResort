@@ -1,10 +1,15 @@
 package tests;
+
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManagerFactory;
+import java.time.LocalDate;
+import java.util.*;
+
 import enums.EmployeeType;
 import enums.SkiSchool;
+
 import factory.ResortBootstrap;
 import factory.ResortLoader;
-import jakarta.persistence.EntityManagerFactory;
 import people.Employee;
 import people.Guest;
 import people.Instructor;
@@ -12,10 +17,8 @@ import people.PersonRepo;
 import terrain.*;
 import utils.JPA;
 
-import java.time.LocalDate;
-import java.util.*;
-
 import static utils.ResortUtils.makeDataSource;
+import static utils.ResortUtils.pickInt;
 
 public final class App {
     public static void main(String[] args) {
@@ -95,8 +98,8 @@ public final class App {
             System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. View resort data");
             System.out.println("2. Create person");
-            System.out.println("3. Create pass");
-            System.out.println("4. Exit");
+            System.out.println("3. [WIP] Create pass");
+            System.out.println("4. EXIT");
             choice1 = sc.nextInt();
             sc.nextLine();
             goBack = false;
@@ -109,8 +112,7 @@ public final class App {
                         System.out.println("3. [WIP] VIEW ALL persons");
                         System.out.println("4. [WIP] SEARCH IN persons");
                         System.out.println("5. go back");
-                        choice2 = sc.nextInt();
-                        sc.nextLine();
+                        choice2 = pickInt(sc, 1, 5);
                         switch(choice2) {
                             case 1 -> System.out.println(resort.toString());
                             case 2 -> {
@@ -137,15 +139,12 @@ public final class App {
                 }
                 case 2 -> {
                     while (!goBack) {
-                        do {
-                            System.out.println("\n=== PERSONS MENU ===\n");
-                            System.out.println("1. register an employee");
-                            System.out.println("2. register a guest");
-                            System.out.println("3. register an instructor");
-                            System.out.println("4. go back");
-                            choice2 = sc.nextInt();
-                            sc.nextLine();
-                        } while (choice2<0 || choice2>4);
+                        System.out.println("\n=== PERSONS MENU ===\n");
+                        System.out.println("1. Register an employee");
+                        System.out.println("2. Register a guest");
+                        System.out.println("3. Register an instructor");
+                        System.out.println("4. GO BACK");
+                        choice2 = pickInt(sc, 1, 4);
                         System.out.print("Enter email: ");
                         email = sc.nextLine();
 
@@ -167,47 +166,36 @@ public final class App {
                         valid = false;
                         switch (choice2) {
                             case 1 -> {
-                                do {
-                                    System.out.println("Select employee type");
-                                    System.out.println("1. Pister");
-                                    System.out.println("2. Lift Operator");
-                                    System.out.println("3. Restauration Crew");
-                                    System.out.println("4. Maintenance");
-                                    choice3 = sc.nextInt();
-                                    sc.nextLine();
-                                    employeeType = switch (choice3) {
-                                        case 1 -> EmployeeType.PISTER;
-                                        case 2 -> EmployeeType.LIFT_OP;
-                                        case 3 -> EmployeeType.RESTAURATION;
-                                        case 4 -> EmployeeType.MAINTENANCE;
-                                        default -> {
-                                            System.out.println("Invalid choice, try again.");
-                                            yield null;
-                                        }
-                                    };
-                                } while (employeeType == null);
+                                System.out.println("Select employee type");
+                                System.out.println("1. Pister");
+                                System.out.println("2. Lift Operator");
+                                System.out.println("3. Restauration Crew");
+                                System.out.println("4. Maintenance");
+                                choice3 = pickInt(sc, 1, 4);
+                                employeeType = switch (choice3) {
+                                    case 1 -> EmployeeType.PISTER;
+                                    case 2 -> EmployeeType.LIFT_OP;
+                                    case 3 -> EmployeeType.RESTAURATION;
+                                    case 4 -> EmployeeType.MAINTENANCE;
+                                    default -> {
+                                        System.out.println("Invalid choice, try again.");
+                                        yield null;
+                                    }
+                                };
 
+                                assert employeeType != null;
                                 worksites = switch (employeeType) {
                                     case PISTER -> new ArrayList<>(resort.getRescuePoints().values());
                                     case LIFT_OP -> new ArrayList<>(resort.getLifts().values());
                                     case RESTAURATION -> new ArrayList<>(resort.getRestaurants().values());
                                     case MAINTENANCE -> new ArrayList<>(resort.getSkiAreas().values());
                                 };
-                                while (!valid){
-                                    System.out.println("Select employee worksite (adapted to employee type): ");
-                                    for (int i = 0;i<worksites.size();i++){
-                                        System.out.println((i+1) + ". " + worksites.get(i));
-                                    }
-                                    choice3 = sc.nextInt();
-                                    sc.nextLine();
-                                    if (0<choice3 && choice3<worksites.size()+1){
-                                        worksite = worksites.get(choice3-1);
-                                        valid = true;
-                                    } else {
-                                        System.out.println("Out of bounds, try again.");
-                                    }
+                                System.out.println("Select employee worksite (adapted to employee type): ");
+                                for (int i = 0;i<worksites.size();i++){
+                                    System.out.println((i+1) + ". " + worksites.get(i));
                                 }
-                                valid = false;
+                                choice3 = pickInt(sc, 1, worksites.size())-1;
+                                worksite = worksites.get(choice3);
 
                                 try {
                                     employee = new Employee(email, firstName, lastName,
@@ -241,38 +229,20 @@ public final class App {
 
 
                             case 3 ->{
-                                while (!valid) {
-                                    System.out.println("Select instructor ski school");
-                                    for (SkiSchool s: SkiSchool.values()){
-                                        System.out.println((s.ordinal()+1) + ". " + s.name());
-                                    }
-                                    choice3 = sc.nextInt();
-                                    sc.nextLine();
-                                    if (0<choice3 && choice3<SkiSchool.values().length+1){
-                                        skiSchool = SkiSchool.values()[choice3-1];
-                                        valid = true;
-                                    }  else {
-                                        System.out.println("Out of bounds, try again.");
-                                    }
+                                System.out.println("Select instructor ski school");
+                                for (SkiSchool s: SkiSchool.values()){
+                                    System.out.println((s.ordinal()+1) + ". " + s.name());
                                 }
-                                valid = false;
+                                choice3 = pickInt(sc, 1, SkiSchool.values().length)-1;
+                                skiSchool = SkiSchool.values()[choice3];
 
                                 worksites = new ArrayList<>(resort.getSkiAreas().values());
-                                while (!valid){
-                                    System.out.println("Select instructor worksite: ");
-                                    for (int i = 0;i<worksites.size();i++){
-                                        System.out.println((i+1) + ". " + worksites.get(i));
-                                    }
-                                    choice3 = sc.nextInt();
-                                    sc.nextLine();
-                                    if (0<choice3 && choice3<worksites.size()+1){
-                                        worksite = worksites.get(choice3-1);
-                                        valid = true;
-                                    } else {
-                                        System.out.println("Out of bounds, try again.");
-                                    }
+                                System.out.println("Select instructor worksite: ");
+                                for (int i = 0;i<worksites.size();i++){
+                                    System.out.println((i+1) + ". " + worksites.get(i));
                                 }
-                                valid = false;
+                                choice3 = pickInt(sc, 1, worksites.size())-1;
+                                worksite = worksites.get(choice3);
 
                                 try {
                                     instructor = new Instructor(email, firstName, lastName,
@@ -297,7 +267,7 @@ public final class App {
                         }
                     }
                 }
-                case 3 -> {
+                case 4 -> {
                     System.out.println("exiting...");
                     exit = true;
                 }
