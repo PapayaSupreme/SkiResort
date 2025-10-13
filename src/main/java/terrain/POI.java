@@ -3,9 +3,12 @@ package terrain;
 import enums.POIStatus;
 import enums.Point;
 
+import java.util.UUID;
+
 public class POI {
-    private String name;
+    private final String name;
     private final long id;
+    private UUID publicId;
     private final Point location;
     private POIStatus status;
     private final SkiArea skiArea;
@@ -24,7 +27,7 @@ public class POI {
     public POIStatus getStatus() { return this.status; }
     public SkiArea getSkiArea() { return skiArea; }
 
-    public void setName(String name) { this.name = name; }
+
     public void setStatus(POIStatus status) { this.status = status; }
 
     @Override

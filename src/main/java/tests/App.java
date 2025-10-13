@@ -4,7 +4,6 @@ import enums.EmployeeType;
 import factory.ResortBootstrap;
 import factory.ResortLoader;
 import people.Employee;
-import people.Guest;
 import people.PersonRepo;
 import terrain.*;
 
@@ -42,6 +41,7 @@ public final class App {
                     resort.getRescuePoints().size(),
                     resort.getSummits().size()
             );
+            /*
             var repo = new PersonRepo();
 
             // INSERT
@@ -50,7 +50,9 @@ public final class App {
 
             Employee e = new Employee("gmail", "Pablo", "ferreira", LocalDate.of(2004,11,11), EmployeeType.PISTER, 10L);
             repo.save(e);
-            Dashboard(resort);
+            */
+            PersonRepo personRepo = new PersonRepo();
+            Dashboard(resort, personRepo);
 
         } catch (Exception e) {
             System.err.println("Boot failed: " + e.getMessage());
@@ -68,16 +70,20 @@ public final class App {
         return Collections.unmodifiableMap(out);
     }
 
-    public static void Dashboard(Resort resort) {
+    public static void Dashboard(Resort resort, PersonRepo personRepo) {
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
         boolean goBack = false;
         boolean valid = false;
         String email, firstName, lastName;
         int choice1, choice2, choice3; //3var for 3 levels of user input
-        LocalDate dob;
-        EmployeeType type = null;
+        LocalDate dob = LocalDate.of(2010,10,10);
+        EmployeeType employeeType = null;
         String search;
+        List<? extends Worksite> worksites;
+        Worksite worksite = null;
+        HashSet<Long> ids;
+        Employee employee = null;
         while (!exit) {
             System.out.println("\n=== MAIN MENU ===\n");
             System.out.println("1. View resort data");
@@ -87,7 +93,6 @@ public final class App {
             choice1 = sc.nextInt();
             sc.nextLine();
             goBack = false;
-            HashSet<Long> ids;
             switch(choice1) {
                 case 1 -> {
                     while (!goBack) {
@@ -139,7 +144,6 @@ public final class App {
 
                         System.out.print("Enter last name: ");
                         lastName = sc.nextLine();
-
                         while (!valid) {
                             System.out.print("Enter date of birth, format YYYY-MM-DD : ");
                             String dobInput = sc.nextLine();
@@ -150,10 +154,10 @@ public final class App {
                                 System.out.println("Invalid date format. Try again.");
                             }
                         }
+                        valid = false;
                         switch (choice2) {
                             case 1 -> {
-                                valid = false;
-                                while (!valid) {
+                                do {
                                     System.out.println("Select employee type");
                                     System.out.println("1. Pister");
                                     System.out.println("2. Lift Operator");
@@ -161,7 +165,7 @@ public final class App {
                                     System.out.println("4. Maintenance");
                                     choice3 = sc.nextInt();
                                     sc.nextLine();
-                                    type = switch (choice3) {
+                                    employeeType = switch (choice3) {
                                         case 1 -> EmployeeType.PISTER;
                                         case 2 -> EmployeeType.LIFT_OP;
                                         case 3 -> EmployeeType.RESTAURATION;
@@ -171,8 +175,44 @@ public final class App {
                                             yield null;
                                         }
                                     };
-                                    valid = (type!=null);
+                                } while (employeeType == null);
+
+                                worksites = switch (employeeType) {
+                                    case PISTER -> new ArrayList<>(resort.getRescuePoints().values());
+                                    case LIFT_OP -> new ArrayList<>(resort.getLifts().values());
+                                    case RESTAURATION -> new ArrayList<>(resort.getRestaurants().values());
+                                    case MAINTENANCE -> new ArrayList<>(resort.getSkiAreas().values());
+                                };
+
+                                while (!valid){
+                                    System.out.println("Select employee worksite (adapted to employee type): ");
+                                    for (int i = 0;i<worksites.size();i++){
+                                        System.out.println((i+1) + ". " + worksites.get(i));
+                                    }
+                                    choice3 = sc.nextInt();
+                                    sc.nextLine();
+                                    if (0<choice3 && choice3<worksites.size()+1){
+                                        worksite = worksites.get(choice3-1);
+                                        valid = true;
+                                    } else {
+                                        System.out.println("Out of bounds, try again.");
+                                    }
                                 }
+                                valid = false;
+                                try {
+                                    employee = new Employee(email, firstName, lastName,
+                                            dob, employeeType, worksite.getId());
+                                    try {
+                                        personRepo.save(employee);
+                                        System.out.println("Successfully saved employee : " + employee.toString());
+                                    } catch (Exception e){
+                                        System.out.println("Error while saving employee to the DB : " + e);
+                                    }
+
+                                } catch (Exception e){
+                                    System.out.println("Error while instantiating employee : " + e);
+                                }
+
                             }
                             case 4 -> {
                                 System.out.println("going back...");

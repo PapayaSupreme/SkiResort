@@ -1,14 +1,13 @@
 package terrain;
 
 import enums.*;
-import utils.Worksite;
 
 import java.util.UUID;
 
-public class Lift implements Worksite, Terrain {
+public class Lift implements Terrain, Worksite {
     private final long id;
-    private final UUID publicId;
-    private String name;
+    private UUID publicId;
+    private final String name;
     private LiftType type;
     private LiftStatus status;
     private final SkiArea skiArea;
@@ -49,20 +48,18 @@ public class Lift implements Worksite, Terrain {
     public Slope getDownSlope() { return this.downSlope; }
     public SkiArea getSkiArea() { return skiArea; }
 
-    public void setName(String name) { this.name = name; }
     public void setType(LiftType type) { this.type = type; }
     public void setStatus(LiftStatus status) { this.status = status; }
     public void setUpSlope(Slope upSlope) { this.upSlope = upSlope; }
     public void setDownSlope(Slope downSlope) { this.downSlope = downSlope; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
-
-
-    @Override public WorksiteType getWorksiteType(){
-        return WorksiteType.LIFT;
+    @Override
+    public TerrainType getTerrainType(){
+        return TerrainType.Lift;
     }
 
     @Override
-    public TerrainType getTerrainType(){
+    public TerrainType getWorksiteType(){
         return TerrainType.Lift;
     }
 

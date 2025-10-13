@@ -1,17 +1,16 @@
 package terrain;
 
-
 import enums.*;
 
 import java.util.UUID;
 
 public class Slope implements Terrain {
     private final long id;
-    private final UUID publicId;
-    private String name;
+    private UUID publicId;
+    private final String name;
     private SlopeDifficulty slopeDifficulty;
     private SnowConsistency snowConsistency = SnowConsistency.NONE;
-    private final SlopeType slopeType;
+    private SlopeType slopeType;
     private final SkiArea skiArea;
     private final Point up;
     private final Point down;
@@ -33,8 +32,8 @@ public class Slope implements Terrain {
         this.skiArea = skiArea;
     }
 
-    public String getName() { return this.name; }
-    public long getId() { return this.id; }
+    @Override public String getName() { return this.name; }
+    @Override public long getId() { return this.id; }
     public Point getUp() { return this.up; }
     public Point getDown() { return this.down; }
     public double getLength() { return this.length; }
@@ -44,11 +43,10 @@ public class Slope implements Terrain {
     public SlopeType getSlopeType() { return this.slopeType;}
     public SkiArea getSkiArea() { return this.skiArea; }
 
-
-    public void setName(String name) { this.name = name; }
     public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void setSlopeDifficulty(SlopeDifficulty slopeDifficulty) { this.slopeDifficulty = slopeDifficulty; }
     public void setSnowConsistency(SnowConsistency snowConsistency) { this.snowConsistency = snowConsistency; }
+    public void setSlopeType(SlopeType slopeType) { this.slopeType = slopeType; }
 
     @Override
     public TerrainType getTerrainType(){

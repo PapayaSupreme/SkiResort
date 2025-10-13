@@ -2,21 +2,19 @@ package terrain;
 
 import enums.OpeningHours;
 import enums.TerrainType;
-import enums.WorksiteType;
-import utils.Worksite;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SkiArea implements Worksite, Terrain {
-    private String name;
-    private final UUID publicId;
+public class SkiArea implements Terrain, Worksite {
+    private final String name;
+    private final UUID publicId; //TODO: make it so that nothing is editable except in admit mode, and it shows changes on db reload
     private final long id;
     private final int up;
     private final int down;
     private boolean functioning;
-    private OpeningHours openingHours;
+    private final OpeningHours openingHours;
 
     private final List<Lift> lifts = new ArrayList<>();
     private final List<Slope> slopes = new ArrayList<>();
@@ -47,9 +45,7 @@ public class SkiArea implements Worksite, Terrain {
     public List<Restaurant> getRestaurants() { return List.copyOf(this.restaurants); }
     public List<Summit> getSummits() { return List.copyOf(this.summits); }
 
-    @Override public void setName(String name) { this.name = name; }
     public void setFunctioning(boolean functioning) { this.functioning = functioning; }
-    public void setOpeningHours(OpeningHours openingHours) { this.openingHours = openingHours; }
     public void addLift(Lift lift) { this.lifts.add(lift); }
     public void addSlope(Slope slope) { this.slopes.add(slope); }
     public void addRescuePoint(RescuePoint rescuePoint) { this.rescuePoints.add(rescuePoint); }
@@ -71,12 +67,12 @@ public class SkiArea implements Worksite, Terrain {
     }
 
     @Override
-    public WorksiteType getWorksiteType(){
-        return WorksiteType.SKI_AREA;
+    public TerrainType getTerrainType(){
+        return TerrainType.SkiArea;
     }
 
     @Override
-    public TerrainType getTerrainType(){
+    public TerrainType getWorksiteType() {
         return TerrainType.SkiArea;
     }
 
