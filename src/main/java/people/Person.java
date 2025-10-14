@@ -77,7 +77,7 @@ public abstract class Person {
 
     public abstract PersonKind getPersonKind();
     public EmployeeType getEmployeeType() { return null; }
-    public Long getWorksiteId() { return null; }
+    public Long getWorksiteId() { return this.worksiteId; }
     public SkiSchool getSkiSchool() { return null; }
 
     protected void setWorksiteId(Long worksiteId) { this.worksiteId = worksiteId; }

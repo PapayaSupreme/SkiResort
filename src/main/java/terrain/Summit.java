@@ -29,7 +29,7 @@ public class Summit extends POI implements Terrain{
     @Override
     public String toString() {
         return "Summit: snow height=" + this.snowHeight
-                + "snow consistency="+ this.snowConsistency
+                + ", snow consistency="+ this.snowConsistency
                 + ", " + super.toString();
     }
 }

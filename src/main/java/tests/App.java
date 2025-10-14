@@ -299,7 +299,7 @@ public final class App {
                                             dob, employeeType, worksite.getId());
                                     try {
                                         personRepo.save(employee);
-                                        System.out.println("Successfully saved employee : " + employee.toString());
+                                        System.out.println("Successfully saved employee : " + employee);
                                     } catch (Exception e){
                                         System.out.println("Error while saving employee to the DB : " + e);
                                     }
@@ -315,7 +315,7 @@ public final class App {
                                     guest = new Guest(email, firstName, lastName, dob);
                                     try {
                                         personRepo.save(guest);
-                                        System.out.println("Successfully saved guest : " + guest.toString());
+                                        System.out.println("Successfully saved guest : " + guest);
                                     } catch (Exception e){
                                         System.out.println("Error while saving guest to the DB : " + e);
                                     }
@@ -346,7 +346,7 @@ public final class App {
                                             dob, skiSchool, worksite.getId());
                                     try {
                                         personRepo.save(instructor);
-                                        System.out.println("Successfully saved instructor : " + instructor.toString());
+                                        System.out.println("Successfully saved instructor : " + instructor);
                                     } catch (Exception e){
                                         System.out.println("Error while saving instructor to the DB : " + e);
                                     }

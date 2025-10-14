@@ -1,10 +1,11 @@
 package enums;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.Set;
 
-public record OpeningHours(
-        LocalTime opening,
-        LocalTime closing
-) {}
+public record OpeningHours(LocalTime opening, LocalTime closing) {
+
+    @Override
+    public String toString(){
+        return this.opening + " - " + this.closing;
+    }
+}

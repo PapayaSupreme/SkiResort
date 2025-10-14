@@ -35,6 +35,6 @@ public class Employee extends Person {
 
     @Override
     public String toString(){
-        return "Employee: kind=" + this.employeeType + ", worksite=" + this.getWorksiteId() + super.toString();
+        return "Employee: type=" + this.employeeType + ", worksiteId=" + this.getWorksiteId() + super.toString();
     }
 }

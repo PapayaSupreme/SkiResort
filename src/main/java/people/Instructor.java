@@ -35,6 +35,6 @@ public class Instructor extends Person {
 
     @Override
     public String toString(){
-        return "Instructor: ski school=" + this.skiSchool + ", worksite=" + this.getWorksiteId() + super.toString();
+        return "Instructor: ski school=" + this.skiSchool + ", worksiteId=" + this.getWorksiteId() + super.toString();
     }
 }

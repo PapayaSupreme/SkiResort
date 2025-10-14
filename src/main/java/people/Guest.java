@@ -13,7 +13,6 @@ public class Guest extends Person {
 
     public Guest(String email, String firstName, String lastName, LocalDate dob) {
         super(email, firstName, lastName, dob);
-        setWorksiteId(null);
         setPersonKind(PersonKind.GUEST);
     }
 
