@@ -35,12 +35,6 @@ public final class PersonRepo {
         }
     }
 
-    public int countAll(){
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("COUNT(*) FROM person").getFirstResult();
-        }
-    }
-
     public Optional<Person> findById(Long id) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             return Optional.ofNullable(entityManager.find(Person.class, id));

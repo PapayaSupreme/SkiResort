@@ -88,8 +88,21 @@ public final class ResortUtils {
         return choice;
     }
 
+    public static class ConsoleColors {
+        public static final String ANSI_RESET = "\u001B[0m";
+        public static final String ANSI_BLACK = "\u001B[30m";
+        public static final String ANSI_RED = "\u001B[31m";
+        public static final String ANSI_GREEN = "\u001B[32m";
+        public static final String ANSI_YELLOW = "\u001B[33m";
+        public static final String ANSI_BLUE = "\u001B[34m";
+        public static final String ANSI_PURPLE = "\u001B[35m";
+        public static final String ANSI_CYAN = "\u001B[36m";
+        public static final String ANSI_WHITE = "\u001B[37m";
+    }
+
     public static void runTimer(String action, long t0, long t1){
         long t = t1 - t0;
-        System.out.println(action+ " done in " + (t / 1000000.0) + "ms.");
+        System.out.println("\n" + ConsoleColors.ANSI_PURPLE + "TIMER: " + ConsoleColors.ANSI_RESET
+                + action+ " done in " + (t / 1000000.0) + "ms.");
     }
 }

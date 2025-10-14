@@ -1,6 +1,7 @@
 package tests;
 
 import com.zaxxer.hikari.HikariDataSource;
+import enums.PersonKind;
 import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.util.*;
@@ -74,6 +75,8 @@ public final class App {
     public static void Dashboard(Resort resort, PersonRepo personRepo) {
         Scanner sc = new Scanner(System.in);
         long t0, t1;
+        int count1 = 0;
+        int count2 = 0;
         boolean exit = false;
         boolean goBack = false;
         boolean valid = false;
@@ -110,7 +113,24 @@ public final class App {
                         System.out.println("5. go back");
                         choice2 = pickInt(sc, 1, 5);
                         switch(choice2) {
-                            case 1 -> System.out.println(resort.toString());
+                            case 1 -> {
+                                t0 = System.nanoTime();
+                                System.out.println(resort.toString());
+                                System.out.printf("""
+                                                Total terrain: %d
+                                                (%d ski areas, %d slopes, %d lifts,
+                                                %d restaurants, %d rescue points, %d summits)
+                                                """,
+                                        resort.getTerrainIndex().size(),
+                                        resort.getSkiAreas().size(),
+                                        resort.getSlopes().size(),
+                                        resort.getLifts().size(),
+                                        resort.getRestaurants().size(),
+                                        resort.getRescuePoints().size(),
+                                        resort.getSummits().size());
+                                t1 = System.nanoTime();
+                                runTimer("Total terrain display from instances", t0, t1);
+                            }
 
                             case 2 -> {
                                 System.out.println("\n=== TERRAIN SEARCH ===\n");
@@ -134,9 +154,21 @@ public final class App {
                                 persons = personRepo.findAll();
                                 for (Person person: persons){
                                     System.out.println(person.toString());
+                                    if (person.getPersonKind() == PersonKind.EMPLOYEE){
+                                        count1++;
+                                    } else if(person.getPersonKind() == PersonKind.INSTRUCTOR){
+                                        count2++;
+                                    }
                                 }
+                                System.out.printf("""
+                                                Total persons: %d
+                                                Details: %d employees, %d instructors, %d guests.
+                                                """,
+                                persons.size(), count1, count2, (persons.size() - count1 - count2));
                                 t1 = System.nanoTime();
-                                runTimer("Exhaustive person display from DB", t0, t1);
+                                runTimer("Total person display from DB", t0, t1);
+                                count1 = 0;
+                                count2 = 0;
                             }
                             case 5 -> {
                                 System.out.println("going back...");
