@@ -93,6 +93,6 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return "id=%s, name='%s %s', dob=%s, email=%s".formatted(id, firstName, lastName, dob, email);
+        return " id=%s, name='%s %s', dob=%s, email=%s".formatted(id, firstName, lastName, dob, email);
     }
 }

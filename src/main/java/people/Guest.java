@@ -30,6 +30,6 @@ public class Guest extends Person {
 
     @Override
     public String toString(){
-        return "Guest: " + super.toString();
+        return "Guest:" + super.toString();
     }
 }

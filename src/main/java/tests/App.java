@@ -72,15 +72,21 @@ public final class App {
         return Collections.unmodifiableMap(out);
     }
 
+
+
+
     public static void Dashboard(Resort resort, PersonRepo personRepo) {
         Scanner sc = new Scanner(System.in);
         long t0, t1;
         int count1 = 0;
         int count2 = 0;
+        Optional<Person> person;
         boolean exit = false;
         boolean goBack = false;
         boolean valid = false;
-        String email, firstName, lastName;
+        String email = "";
+        String firstName = "";
+        String lastName = "";;
         int choice1, choice2, choice3; //3var for 3 levels of user input
         LocalDate dob = LocalDate.of(2010,10,10);
         EmployeeType employeeType = null;
@@ -109,7 +115,7 @@ public final class App {
                         System.out.println("1. VIEW ALL terrain");
                         System.out.println("2. SEARCH IN terrain");
                         System.out.println("3. VIEW ALL persons");
-                        System.out.println("4. [WIP] SEARCH IN persons");
+                        System.out.println("4. SEARCH IN persons");
                         System.out.println("5. go back");
                         choice2 = pickInt(sc, 1, 5);
                         switch(choice2) {
@@ -132,6 +138,7 @@ public final class App {
                                 runTimer("Total terrain display from instances", t0, t1);
                             }
 
+
                             case 2 -> {
                                 System.out.println("\n=== TERRAIN SEARCH ===\n");
                                 System.out.println("Search by name of the structure:\n");
@@ -149,18 +156,20 @@ public final class App {
                                 }
                             }
 
+
                             case 3 -> {
                                 t0 = System.nanoTime();
                                 persons = personRepo.findAll();
-                                for (Person person: persons){
-                                    System.out.println(person.toString());
-                                    if (person.getPersonKind() == PersonKind.EMPLOYEE){
+                                for (Person p: persons){
+                                    System.out.println(p.toString());
+                                    if (p.getPersonKind() == PersonKind.EMPLOYEE){
                                         count1++;
-                                    } else if(person.getPersonKind() == PersonKind.INSTRUCTOR){
+                                    } else if(p.getPersonKind() == PersonKind.INSTRUCTOR){
                                         count2++;
                                     }
                                 }
                                 System.out.printf("""
+                                                
                                                 Total persons: %d
                                                 Details: %d employees, %d instructors, %d guests.
                                                 """,
@@ -170,12 +179,58 @@ public final class App {
                                 count1 = 0;
                                 count2 = 0;
                             }
+
+
+                            case 4 -> {
+                                System.out.println("Select the person's info to search from: ");
+                                System.out.println("1. Email (exact match)");
+                                System.out.println("2. Last name (exact/partial match)");
+                                choice3 = pickInt(sc, 1, 2);
+                                if (choice3 == 1){
+                                    System.out.println("Enter email: ");
+                                    email = sc.next();
+                                    sc.nextLine();
+                                    t0 = System.nanoTime();
+                                    person = personRepo.findByEmail(email);
+                                    t1 = System.nanoTime();
+                                    if (person.isPresent()) {
+                                        System.out.println("Person found. \n" + person.get().toString());
+                                    } else {
+                                        System.out.println("Person not found");
+                                    }
+                                    runTimer("Person match from email", t0, t1);
+                                } else{
+                                    System.out.println("Enter last name, or a part of it: ");
+                                    lastName = sc.nextLine();
+                                    t0 = System.nanoTime();
+                                    persons = personRepo.findByLastName(lastName);
+                                    t1 = System.nanoTime();
+                                    if (!persons.isEmpty()) {
+                                        if (persons.size() == 1) {
+                                            System.out.println(persons.size() + " person was found: \n");
+                                        } else {
+                                            System.out.println(persons.size() + " persons were found: \n");
+                                        }
+                                        for (Person p: persons){
+                                            System.out.println(p.toString());
+                                        }
+                                    } else {
+                                        System.out.println("No match was found");
+                                    }
+                                    runTimer("Person match from email", t0, t1);
+                                }
+                            }
+
+
                             case 5 -> {
                                 System.out.println("going back...");
                                 goBack = true;}
                         }
                     }
                 }
+
+
+
                 case 2 -> {
                     while (!goBack) {
                         System.out.println("\n=== PERSONS MENU ===\n");
@@ -184,25 +239,28 @@ public final class App {
                         System.out.println("3. Register an instructor");
                         System.out.println("4. GO BACK");
                         choice2 = pickInt(sc, 1, 4);
-                        System.out.print("Enter email: ");
-                        email = sc.nextLine();
+                        if (choice2 != 4){
+                            System.out.print("Enter email: ");
+                            email = sc.nextLine();
 
-                        System.out.print("Enter first name: ");
-                        firstName = sc.nextLine();
+                            System.out.print("Enter first name: ");
+                            firstName = sc.nextLine();
 
-                        System.out.print("Enter last name: ");
-                        lastName = sc.nextLine();
-                        while (!valid) {
-                            System.out.print("Enter date of birth, format YYYY-MM-DD : ");
-                            String dobInput = sc.nextLine();
-                            try {
-                                dob = LocalDate.parse(dobInput);
-                                valid = true;
-                            } catch (Exception e) {
-                                System.out.println("Invalid date format. Try again.");
+                            System.out.print("Enter last name: ");
+                            lastName = sc.nextLine();
+
+                            while (!valid) {
+                                System.out.print("Enter date of birth, format YYYY-MM-DD : ");
+                                String dobInput = sc.nextLine();
+                                try {
+                                    dob = LocalDate.parse(dobInput);
+                                    valid = true;
+                                } catch (Exception e) {
+                                    System.out.println("Invalid date format. Try again.");
+                                }
                             }
+                            valid = false;
                         }
-                        valid = false;
                         switch (choice2) {
                             case 1 -> {
                                 System.out.println("Select employee type");
@@ -306,6 +364,9 @@ public final class App {
                         }
                     }
                 }
+
+
+
                 case 4 -> {
                     System.out.println("exiting...");
                     exit = true;

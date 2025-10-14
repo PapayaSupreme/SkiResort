@@ -30,7 +30,7 @@ public final class PersonRepo {
 
     public List<Person> findAll() {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("select p from Person p", Person.class)
+            return entityManager.createQuery("SELECT p FROM Person p", Person.class)
                     .getResultList();
         }
     }
@@ -38,6 +38,23 @@ public final class PersonRepo {
     public Optional<Person> findById(Long id) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             return Optional.ofNullable(entityManager.find(Person.class, id));
+        }
+    }
+
+    public Optional<Person> findByEmail(String email) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Person p WHERE p.email = :email", Person.class)
+                    .setParameter("email", email)
+                    .getResultStream()
+                    .findFirst();
+        }
+    }
+
+    public List<Person> findByLastName(String lastName) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Person p WHERE p.lastName LIKE :lastName", Person.class)
+                    .setParameter("lastName", "%" + lastName + "%")
+                    .getResultList();
         }
     }
 }
