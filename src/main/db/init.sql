@@ -8,6 +8,7 @@
 --   - POI base + subtypes (Restaurant/RescuePoint as POI+Worksite; Summit as POI-only)
 --   - Persons & Passes kept minimal (user said they'll stay in SQL)
 -- Conventions:
+-- Conventions:
 --   - All "instant" timestamps are TIMESTAMPTZ with auto-updated updated_at
 --   - 3D points are (x,y,z_m) with z_m >= 0
 --   - public_id defaults to gen_random_uuid()
@@ -269,22 +270,61 @@ CREATE TRIGGER trg_person_updated
 BEFORE UPDATE ON person
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
+-- PASS
 CREATE TABLE IF NOT EXISTS pass (
-  id           BIGSERIAL PRIMARY KEY,
-  public_id    UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
-  owner_id     BIGINT NOT NULL REFERENCES person(id) ON DELETE CASCADE,
-  pass_type    VARCHAR(32) NOT NULL, -- e.g., DAY, WEEK, SEASON, HOLISKI
-  valid_from   DATE NOT NULL,
-  valid_to     DATE NOT NULL,
-  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-  CONSTRAINT chk_pass_dates CHECK (valid_to >= valid_from)
+                                    id           BIGSERIAL PRIMARY KEY,
+                                    public_id    UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+                                    owner_id     BIGINT NOT NULL REFERENCES person(id) ON DELETE CASCADE,
+
+                                    pass_category VARCHAR(32) NOT NULL
+                                        CHECK (pass_category IN ('ALACARTE', 'DAY', 'MULTIDAY', 'SEASON')),
+
+                                    valid_day     DATE,   -- for DAY / ALACARTE single-day passes
+                                    valid_from    DATE,   -- for MULTIDAY / SEASON range start
+                                    valid_to      DATE,   -- for MULTIDAY / SEASON range end
+
+                                    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+                                    updated_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+                                    CONSTRAINT chk_pass_dates_range_ok
+                                        CHECK (valid_from IS NULL OR valid_to IS NULL OR valid_to >= valid_from),
+
+                                    CONSTRAINT chk_pass_category_fields
+                                        CHECK (
+                                            (pass_category IN ('DAY','ALACARTE') AND valid_day IS NOT NULL AND valid_from IS NULL AND valid_to IS NULL)
+                                                OR
+                                            (pass_category IN ('MULTIDAY','SEASON') AND valid_day IS NULL AND valid_from IS NOT NULL AND valid_to IS NOT NULL)
+                                            )
 );
+
 CREATE INDEX IF NOT EXISTS idx_pass_owner ON pass(owner_id);
+
+
+DROP TRIGGER IF EXISTS trg_pass_updated ON pass;
+CREATE TRIGGER trg_pass_updated
+    BEFORE UPDATE ON pass
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- PASS USAGE (one row per day used per pass)
+CREATE TABLE IF NOT EXISTS pass_usage (
+                                          pass_id     BIGINT NOT NULL REFERENCES pass(id) ON DELETE CASCADE,
+                                          used_on     DATE   NOT NULL,
+                                          created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+                                          PRIMARY KEY (pass_id, used_on)
+);
+
+CREATE INDEX IF NOT EXISTS idx_pass_usage_used_on ON pass_usage(used_on);
+
 
 CREATE TRIGGER trg_pass_updated
 BEFORE UPDATE ON pass
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+CREATE TABLE IF NOT EXISTS pass_usage (
+                                          pass_id   BIGINT NOT NULL REFERENCES pass(id) ON DELETE CASCADE,
+                                          used_on   DATE   NOT NULL,
+                                          created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                                          PRIMARY KEY (pass_id, used_on) -- no dupes that way hehe
+);
 
 ------------ Views helpers ----------
 CREATE OR REPLACE VIEW v_lifts_with_areas AS
