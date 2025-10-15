@@ -41,7 +41,7 @@ public abstract class Person {
     @Column(name = "worksite_id")
     private Long worksiteId;
 
-    // DB defaults handle insert; app sets updatedAt on UPDATE
+
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Instant createdAt;
 
@@ -51,14 +51,13 @@ public abstract class Person {
     protected Person() { /* JPA */ }
 
     protected Person(String email, String firstName, String lastName, LocalDate dob) {
-        this.publicId = UUID.randomUUID();
+        this.publicId = UUID.randomUUID(); // TODO: try delete that
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
         this.email = email;
     }
 
-    // Keep DB as source of truth for created_at; update updated_at on changes
     @PreUpdate
     void touchUpdatedAt() {
         this.updatedAt = Instant.now();

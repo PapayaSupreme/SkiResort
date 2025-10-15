@@ -1,37 +1,30 @@
 package passes;
 
 import enums.PassCategory;
-import enums.PassStatus;
+import jakarta.persistence.Column;
+import people.Person;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+
 
 public class MultiDayPass extends Pass {
-    private final double price;
-    private final LocalDate startDate;
-    private final int numberOfDays;
+    @Column(name = "valid_from")
+    private LocalDate validFrom;
 
-    public MultiDayPass(int ownerId, PassCategory passCategory, double price, LocalDate startDate, int numberOfDays) {
-        super(ownerId, passCategory);
-        this.price = price;
-        this.startDate = startDate;
-        this.numberOfDays = numberOfDays;
+    @Column(name = "valid_to")
+    private LocalDate validTo;
+
+    public MultiDayPass() { /* JPA */ }
+
+    public MultiDayPass(Person owner, LocalDate validFrom, LocalDate validTo) {
+        super(owner);
+        this.validFrom = validFrom;
+        this.validTo = validTo;
+        setPassCategory(PassCategory.MULTIDAY);
     }
 
-    @Override public double getPrice() { return this.price; }
-    public LocalDate getStartDate() { return this.startDate; }
-    public int getNumberOfDays() { return this.numberOfDays; }
-    public LocalDate getEndDate() {
-        return this.startDate.plusDays(this.numberOfDays - 1);
-    }
+    public LocalDate getValidFrom() { return this.validFrom; }
+    public LocalDate getValidTo() { return this.validTo; }
 
-    @Override
-    public boolean isValidAt(Instant at) {
-        LocalDate date = at.atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endDate = this.startDate.plusDays(this.numberOfDays - 1);
-        return (date.isEqual(this.startDate) || date.isAfter(this.startDate))
-                && (date.isEqual(endDate)   || date.isBefore(endDate))
-                && getPassStatus() == PassStatus.ACTIVE;
-    }
+    @Override public PassCategory getPassCategory(){ return PassCategory.MULTIDAY; }
 }

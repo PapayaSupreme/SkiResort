@@ -8,9 +8,11 @@ import java.util.Optional;
 
 public final class PersonRepo {
     private final EntityManagerFactory entityManagerFactory;
+
     public PersonRepo(EntityManagerFactory entityManagerFactory){
         this.entityManagerFactory = entityManagerFactory;
     }
+
     public void save(Person p) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();

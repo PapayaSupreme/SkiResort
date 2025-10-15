@@ -1,28 +1,27 @@
 package passes;
 
+
 import enums.PassCategory;
-import enums.PassStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import people.Person;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
-public class DayPass extends Pass {
-    private final double price;
-    private final LocalDate validDate;
 
-    public DayPass(int ownerId, PassCategory passCategory, double price, LocalDate validDate) {
-        super(ownerId, passCategory);
-        this.price = price;
-        this.validDate = validDate;
+@Entity
+@DiscriminatorValue("DAY")
+public class DayPass extends Pass{
+    @Column(name = "valid_day")
+    private LocalDate validDay;
+
+    public DayPass() { /* JPA */ }
+
+    public DayPass(Person owner, LocalDate validDay){
+        super(owner);
+        setPassCategory(PassCategory.DAY);
     }
 
-    @Override public double getPrice() { return this.price; }
-    public LocalDate getValidDate() { return this.validDate; }
-
-    @Override
-    public boolean isValidAt(Instant at) {
-        LocalDate date = at.atZone(ZoneId.systemDefault()).toLocalDate();
-        return date.isEqual(this.validDate) && getPassStatus() == PassStatus.ACTIVE;
-    }
+    @Override public PassCategory getPassCategory(){ return PassCategory.DAY; }
 }

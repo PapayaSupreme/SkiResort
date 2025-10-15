@@ -299,6 +299,17 @@ CREATE TABLE IF NOT EXISTS pass (
 
 CREATE INDEX IF NOT EXISTS idx_pass_owner ON pass(owner_id);
 
+ALTER TABLE pass
+    add column if not exists pass_status VARCHAR(32),
+    add column if not exists year INT;
+
+ALTER TABLE pass
+    drop column if exists year;
+
+ALTER TABLE pass
+    DROP constraint chk_pass_category_fields;
+
+CREATE INDEX IF NOT EXISTS idx_pass_year ON pass(year);
 
 DROP TRIGGER IF EXISTS trg_pass_updated ON pass;
 CREATE TRIGGER trg_pass_updated

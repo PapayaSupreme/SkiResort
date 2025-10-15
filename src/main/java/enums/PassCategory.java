@@ -1,3 +1,3 @@
 package enums;
 
-public enum PassCategory {GUEST, INSTRUCTOR, EMPLOYEE, FREE, VIP }
+public enum PassCategory { ALACARTE, DAY, MULTIDAY, SEASON }
