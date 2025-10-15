@@ -387,64 +387,42 @@ public final class App {
                         choice2 = pickInt(sc, 1, 4);
                         switch (choice2) {
                             case 1 -> {
-                                System.out.println("Enter last name of guest, or a part of it: ");
-                                lastName = sc.nextLine();
-                                t0 = System.nanoTime();
-                                persons = personRepo.findByLastName(lastName);
-                                for (Person p : persons) {
-                                    if (p.getPersonKind().toString() == "GUEST") {
-                                        guests.add((Guest) p);
-                                    }
-                                }
-                                t1 = System.nanoTime();
-                                if (!guests.isEmpty()) {
-                                    if (guests.size() == 1) {
-                                        System.out.println(guests.size() + " guest was found: \n");
-                                    } else {
-                                        System.out.println(guests.size() + " guests were found: \n");
-                                    }
-                                    for (int i = 0; i<guests.size(); i++){
-                                        System.out.println((i+1) + ". " + guests.get(i));
-                                    }
-                                } else {
-                                    System.out.println("No match was found");
-                                }
-                                runTimer("Guest from partial name match", t0, t1);
-                                choice3 = pickInt(sc, 1, guests.size()) -1;
-                                guest = guests.get(choice3);
-                                System.out.println("\nSelect Pass Category: \n");
-                                System.out.println("1. [WIP] Day Pass");
-                                System.out.println("2. [WIP] Multi-Day Pass");
-                                System.out.println("3. [WIP] Season Pass");
-                                System.out.println("4. [WIP] A la Carte Pass");
-                                choice3 = pickInt(sc, 1, 4);
-                                switch(choice3){
-                                    case 1 -> {
-                                        while (!valid) {
-                                            System.out.print("Enter the validity date, format YYYY-MM-DD : ");
-                                            String dayInput = sc.nextLine();
+                                guest = Person.findByNameGUI(sc, personRepo, Guest.class);
+                                if (guest != null) {
+                                    System.out.println("\nSelect Pass Category: \n");
+                                    System.out.println("1. [WIP] Day Pass");
+                                    System.out.println("2. [WIP] Multi-Day Pass");
+                                    System.out.println("3. [WIP] Season Pass");
+                                    System.out.println("4. [WIP] A la Carte Pass");
+                                    choice3 = pickInt(sc, 1, 4);
+                                    switch (choice3) {
+                                        case 1 -> {
+                                            while (!valid) {
+                                                System.out.print("Enter the validity date, format YYYY-MM-DD : ");
+                                                String dayInput = sc.nextLine();
+                                                try {
+                                                    day = LocalDate.parse(dayInput);
+                                                    if (day.isAfter(LocalDate.now())) {
+                                                        valid = true;
+                                                    } else {
+                                                        System.out.println("Enter a date later than today. Try again.");
+                                                    }
+                                                } catch (Exception e) {
+                                                    System.out.println("Invalid date format. Try again.");
+                                                }
+                                            }
+                                            valid = false;
                                             try {
-                                                day = LocalDate.parse(dayInput);
-                                                if (day.isAfter(LocalDate.now())){
-                                                    valid = true;
-                                                } else {
-                                                    System.out.println("Enter a date later than today. Try again.");
+                                                dayPass = new DayPass(guest, day);
+                                                try {
+                                                    passRepo.save(dayPass);
+                                                    System.out.println("Successfully saved to the DB" + dayPass.toString());
+                                                } catch (Exception e) {
+                                                    System.out.println("Error while saving DayPass to the DB: " + e);
                                                 }
                                             } catch (Exception e) {
-                                                System.out.println("Invalid date format. Try again.");
+                                                System.out.println("Error while instantiating DayPass: " + e);
                                             }
-                                        }
-                                        valid = false;
-                                        try {
-                                            dayPass = new DayPass(guest, day);
-                                            try {
-                                                passRepo.save(dayPass);
-                                                System.out.println("Successfully saved to the DB" + dayPass.toString());
-                                            } catch(Exception e) {
-                                                System.out.println("Error while saving DayPass to the DB: " + e);
-                                            }
-                                        } catch (Exception e){
-                                            System.out.println("Error while instantiating DayPass: " + e);
                                         }
                                     }
                                 }

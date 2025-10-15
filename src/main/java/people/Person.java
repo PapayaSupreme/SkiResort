@@ -7,8 +7,10 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import static utils.ResortUtils.pickInt;
+import static utils.ResortUtils.runTimer;
 
 @Entity
 @Table(name = "person")
@@ -89,6 +91,40 @@ public abstract class Person {
         return Objects.equals(publicId, that.publicId);
     }
     @Override public int hashCode() { return Objects.hash(publicId); }
+
+    public static <T extends Person> T findByNameGUI(Scanner sc, PersonRepo personRepo, Class<T> clazz){
+        System.out.println("Enter last name of " + clazz.getSimpleName() + ", or a part of it: ");
+        String lastName = sc.nextLine();
+        long t0 = System.nanoTime();
+        List<Person> persons = personRepo.findByLastName(lastName);
+        List<T> out = persons.stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .toList();
+        long t1 = System.nanoTime();
+        if (!out.isEmpty()) {
+            if (out.size() == 1) {
+                System.out.println(out.size() + clazz.getSimpleName() + " was found: \n");
+            } else {
+                System.out.println(out.size() + clazz.getSimpleName() + "s were found: \n");
+            }
+            for (int i = 0; i<out.size(); i++){
+                System.out.println((i+1) + ". " + out.get(i));
+            }
+            System.out.println("0. CANCEL");
+        } else {
+            System.out.println("No match was found");
+            runTimer(clazz.getSimpleName() + " from partial name match", t0, t1);
+            return null;
+        }
+        runTimer(clazz.getSimpleName() + " from partial name match", t0, t1);
+        int choice = pickInt(sc, 0, out.size()) -1;
+        if (choice != -1){
+            return out.get(choice);
+        }
+        System.out.println("Cancelling...");
+        return null;
+    }
 
     @Override
     public String toString() {
