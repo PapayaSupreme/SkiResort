@@ -209,24 +209,7 @@ public final class App {
                                     }
                                     runTimer("Person match from email", t0, t1);
                                 } else{
-                                    System.out.println("Enter last name, or a part of it: ");
-                                    lastName = sc.nextLine();
-                                    t0 = System.nanoTime();
-                                    persons = personRepo.findByLastName(lastName);
-                                    t1 = System.nanoTime();
-                                    if (!persons.isEmpty()) {
-                                        if (persons.size() == 1) {
-                                            System.out.println(persons.size() + " person was found: \n");
-                                        } else {
-                                            System.out.println(persons.size() + " persons were found: \n");
-                                        }
-                                        for (Person p: persons){
-                                            System.out.println(p.toString());
-                                        }
-                                    } else {
-                                        System.out.println("No match was found");
-                                    }
-                                    runTimer("Person from partial name match", t0, t1);
+                                    Person.findByNameGUI(sc, personRepo, Person.class);
                                 }
                             }
 
@@ -386,7 +369,7 @@ public final class App {
                         System.out.println("4. GO BACK");
                         choice2 = pickInt(sc, 1, 4);
                         switch (choice2) {
-                            case 1 -> {
+                            case 1 -> {//TODO: cleanup that + implement the rest
                                 guest = Person.findByNameGUI(sc, personRepo, Guest.class);
                                 if (guest != null) {
                                     System.out.println("\nSelect Pass Category: \n");
