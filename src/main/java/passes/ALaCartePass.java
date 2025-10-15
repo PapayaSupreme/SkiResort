@@ -1,6 +1,6 @@
 package passes;
 
-import enums.PassCategory;
+import enums.PassKind;
 import people.Person;
 
 public class ALaCartePass extends Pass {
@@ -9,10 +9,13 @@ public class ALaCartePass extends Pass {
 
     public ALaCartePass(Person owner) {
         super(owner);
-        setPassCategory(PassCategory.ALACARTE);
+        setPassKind(PassKind.ALACARTE);
     }
 
-    @Override public PassCategory getPassCategory() { return PassCategory.ALACARTE; }
+    @Override public PassKind getPassKind() { return PassKind.ALACARTE; }
 
-
+    @Override
+    public String toString(){
+        return "ALaCartePass: "+ super.toString();
+    }
 }

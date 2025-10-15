@@ -1,6 +1,6 @@
 package passes;
 
-import enums.PassCategory;
+import enums.PassKind;
 import jakarta.persistence.Column;
 import people.Person;
 
@@ -20,11 +20,16 @@ public class MultiDayPass extends Pass {
         super(owner);
         this.validFrom = validFrom;
         this.validTo = validTo;
-        setPassCategory(PassCategory.MULTIDAY);
+        setPassKind(PassKind.MULTIDAY);
     }
 
     public LocalDate getValidFrom() { return this.validFrom; }
     public LocalDate getValidTo() { return this.validTo; }
 
-    @Override public PassCategory getPassCategory(){ return PassCategory.MULTIDAY; }
+    @Override public PassKind getPassKind(){ return PassKind.MULTIDAY; }
+
+    @Override
+    public String toString(){
+        return "MultiDayPass: validDays=[" + this.validFrom + " - "  + this.validTo + "], " + super.toString();
+    }
 }

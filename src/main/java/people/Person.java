@@ -51,7 +51,7 @@ public abstract class Person {
     protected Person() { /* JPA */ }
 
     protected Person(String email, String firstName, String lastName, LocalDate dob) {
-        this.publicId = UUID.randomUUID(); // TODO: try delete that
+        this.publicId = UUID.randomUUID(); // we have to still init it bc its not nullable in db and jpa so we have to send it lol
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;

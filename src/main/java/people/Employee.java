@@ -19,7 +19,7 @@ public class Employee extends Person {
     public Employee(String email, String firstName, String lastName, LocalDate dob,
                     EmployeeType employeeType, Long worksiteId) {
         super(email, firstName, lastName, dob);
-        this.employeeType =employeeType;
+        this.employeeType = employeeType;
         setWorksiteId(worksiteId);
     }
 

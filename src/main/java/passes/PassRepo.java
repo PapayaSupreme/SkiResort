@@ -3,7 +3,6 @@ package passes;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import people.Person;
 
 public class PassRepo {
     private final EntityManagerFactory entityManagerFactory;

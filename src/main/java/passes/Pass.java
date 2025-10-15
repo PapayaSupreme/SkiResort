@@ -1,6 +1,6 @@
 package passes;
 
-import enums.PassCategory;
+import enums.PassKind;
 import enums.PassStatus;
 import jakarta.persistence.*;
 import people.Person;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "pass")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "pass_category")
+@DiscriminatorColumn(name = "pass_kind")
 public abstract class Pass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +29,8 @@ public abstract class Pass {
     private PassStatus passStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "pass_category", nullable = false,insertable = false, updatable = false, length = 32)
-    private PassCategory passCategory;
+    @Column(name = "pass_kind", nullable = false,insertable = false, updatable = false, length = 32)
+    private PassKind passKind;
 
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Instant createdAt;
@@ -52,12 +52,18 @@ public abstract class Pass {
     public PassStatus getPassStatus() { return this.passStatus; }
     public Instant getCreatedAt() { return this.createdAt; }
     public Instant getUpdatedAt() { return this.updatedAt; }
-    public abstract PassCategory getPassCategory();
+    public abstract PassKind getPassKind();
 
     public void setPassStatus(PassStatus passStatus) { this.passStatus = passStatus; }
 
-    public void setPassCategory(PassCategory passCategory) { this.passCategory = passCategory; }
+    public void setPassKind(PassKind passCategory) { this.passKind = passCategory; }
 
     public void activate() { this.passStatus = PassStatus.ACTIVE; }
     public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
+
+    @Override
+    public String toString() {
+        return "owner=" + this.owner.getPersonKind() + this.owner.getId() + " - " + this.owner.getFirstName() + this.owner.getLastName()
+                + " - " + this.owner.getEmail();
+    }
 }

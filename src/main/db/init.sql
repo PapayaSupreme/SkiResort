@@ -309,6 +309,13 @@ ALTER TABLE pass
 ALTER TABLE pass
     DROP constraint chk_pass_category_fields;
 
+ALTER TABLE pass
+      drop column if exists pass_category;
+
+ALTER TABLE pass
+    add column if not exists pass_kind VARCHAR(32);
+
+
 CREATE INDEX IF NOT EXISTS idx_pass_year ON pass(year);
 
 DROP TRIGGER IF EXISTS trg_pass_updated ON pass;

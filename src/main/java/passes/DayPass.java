@@ -1,7 +1,7 @@
 package passes;
 
 
-import enums.PassCategory;
+import enums.PassKind;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -20,8 +20,14 @@ public class DayPass extends Pass{
 
     public DayPass(Person owner, LocalDate validDay){
         super(owner);
-        setPassCategory(PassCategory.DAY);
+        setPassKind(PassKind.DAY);
+        this.validDay = validDay;
     }
 
-    @Override public PassCategory getPassCategory(){ return PassCategory.DAY; }
+    @Override public PassKind getPassKind(){ return PassKind.DAY; }
+
+    @Override
+    public String toString(){
+        return "DayPass: validDay=" + this.validDay + ", " + super.toString();
+    }
 }
