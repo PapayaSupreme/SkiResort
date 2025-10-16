@@ -1,8 +1,12 @@
 package passes;
 
 import enums.PassKind;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import people.Person;
 
+@Entity
+@DiscriminatorValue("ALACARTE")
 public class ALaCartePass extends Pass {
 
     public ALaCartePass(){ /* JPA*/ }

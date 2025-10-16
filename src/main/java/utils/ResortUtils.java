@@ -6,6 +6,7 @@ import enums.OpeningHours;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Locale;
 import java.util.Scanner;
@@ -86,6 +87,25 @@ public final class ResortUtils {
             sc.nextLine();
         }
         return choice;
+    }
+
+    public static LocalDate pickDate(Scanner sc, boolean isAfterNow) {
+        boolean valid = false;
+        LocalDate date = null;
+        while (!valid) {
+            String dayInput = sc.nextLine();
+            try {
+                date = LocalDate.parse(dayInput);
+                if (date.isBefore(LocalDate.now()) && isAfterNow) {
+                    System.out.println("Date must be today or later. Try again.");
+                } else {
+                    valid = true;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Try again.");
+            }
+        }
+        return date;
     }
 
     public static class ConsoleColors {

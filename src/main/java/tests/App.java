@@ -241,17 +241,8 @@ public final class App {
                             System.out.print("Enter last name: ");
                             lastName = sc.nextLine();
 
-                            while (!valid) {
-                                System.out.print("Enter date of birth, format YYYY-MM-DD : ");
-                                String dobInput = sc.nextLine();
-                                try {
-                                    day = LocalDate.parse(dobInput);
-                                    valid = true;
-                                } catch (Exception e) {
-                                    System.out.println("Invalid date format. Try again.");
-                                }
-                            }
-                            valid = false;
+                            System.out.print("Enter date of birth, format YYYY-MM-DD : ");
+                            day = pickDate(sc, false);
                         }
                         switch (choice2) {
                             case 1 -> {
@@ -362,8 +353,8 @@ public final class App {
                 case 3 ->{
                     while (!goBack) {
                         System.out.println("\n=== PASS MENU ===\n");
-                        System.out.println("\n=== NOTE: Person has to exist, create her first. ===\n");
-                        System.out.println("1. [WIP] Create a guest pass");
+                        System.out.println("=== NOTE: Person has to exist, create her first. ===\n");
+                        System.out.println("1. Create a guest pass");
                         System.out.println("2. [WIP] Create an employee pass");
                         System.out.println("3. [WIP] Create an instructor pass");
                         System.out.println("4. GO BACK");
@@ -373,28 +364,15 @@ public final class App {
                                 guest = Person.findByNameGUI(sc, personRepo, Guest.class);
                                 if (guest != null) {
                                     System.out.println("\nSelect Pass Category: \n");
-                                    System.out.println("1. [WIP] Day Pass");
-                                    System.out.println("2. [WIP] Multi-Day Pass");
-                                    System.out.println("3. [WIP] Season Pass");
-                                    System.out.println("4. [WIP] A la Carte Pass");
+                                    System.out.println("1. Day Pass");
+                                    System.out.println("2. Multi-Day Pass");
+                                    System.out.println("3. Season Pass");
+                                    System.out.println("4. A la Carte Pass");
                                     choice3 = pickInt(sc, 1, 4);
                                     switch (choice3) {
                                         case 1 -> {
-                                            while (!valid) {
-                                                System.out.print("Enter the validity date, format YYYY-MM-DD : ");
-                                                String dayInput = sc.nextLine();
-                                                try {
-                                                    day = LocalDate.parse(dayInput);
-                                                    if (day.isAfter(LocalDate.now())) {
-                                                        valid = true;
-                                                    } else {
-                                                        System.out.println("Enter a date later than today. Try again.");
-                                                    }
-                                                } catch (Exception e) {
-                                                    System.out.println("Invalid date format. Try again.");
-                                                }
-                                            }
-                                            valid = false;
+                                            System.out.print("Enter the valid date of the day pass, format YYYY-MM-DD : ");
+                                            day = pickDate(sc, true);
                                             try {
                                                 dayPass = new DayPass(guest, day);
                                                 try {
@@ -405,6 +383,50 @@ public final class App {
                                                 }
                                             } catch (Exception e) {
                                                 System.out.println("Error while instantiating DayPass: " + e);
+                                            }
+                                        }
+                                        case 2 -> {
+                                            System.out.print("Enter the start date of the multi-day pass, format YYYY-MM-DD : ");
+                                            day = pickDate(sc, true);
+
+                                            System.out.print("How much day will this multi-day pass be valid for ? (min 2, max 30) : ");
+                                            choice3 = pickInt(sc, 2, 30);
+                                            try {
+                                                multiDayPass = new MultiDayPass(guest, day, day.plusDays(choice3-1));
+                                                try {
+                                                    passRepo.save(multiDayPass);
+                                                    System.out.println("Successfully saved to the DB" + multiDayPass.toString());
+                                                } catch (Exception e) {
+                                                    System.out.println("Error while saving MultiDayPass to the DB: " + e);
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println("Error while instantiating MultiDayPass: " + e);
+                                            }
+                                        }
+                                        case 3 -> {
+                                            try {
+                                                seasonPass = new SeasonPass(guest);
+                                                try {
+                                                    passRepo.save(seasonPass);
+                                                    System.out.println("Successfully saved to the DB" + seasonPass.toString());
+                                                } catch (Exception e) {
+                                                    System.out.println("Error while saving SeasonPass to the DB: " + e);
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println("Error while instantiating SeasonPass: " + e);
+                                            }
+                                        }
+                                        case 4 -> {
+                                            try {
+                                                aLaCartePass = new ALaCartePass(guest);
+                                                try {
+                                                    passRepo.save(aLaCartePass);
+                                                    System.out.println("Successfully saved to the DB" + aLaCartePass.toString());
+                                                } catch (Exception e) {
+                                                    System.out.println("Error while saving ALaCartePass to the DB: " + e);
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println("Error while instantiating ALaCartePass: " + e);
                                             }
                                         }
                                     }

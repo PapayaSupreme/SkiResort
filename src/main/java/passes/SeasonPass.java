@@ -2,10 +2,13 @@ package passes;
 
 
 import enums.PassKind;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import people.Person;
 
 
-
+@Entity
+@DiscriminatorValue("SEASON")
 public class SeasonPass extends Pass {
 
     public SeasonPass(){ /* JPA */ }

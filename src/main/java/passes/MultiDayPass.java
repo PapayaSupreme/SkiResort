@@ -2,11 +2,14 @@ package passes;
 
 import enums.PassKind;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import people.Person;
 
 import java.time.LocalDate;
 
-
+@Entity
+@DiscriminatorValue("MULTIDAY")
 public class MultiDayPass extends Pass {
     @Column(name = "valid_from")
     private LocalDate validFrom;
