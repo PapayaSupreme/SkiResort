@@ -1,8 +1,13 @@
 package passes;
 
+import enums.PassStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import people.Person;
+
+import java.util.List;
+import java.util.Optional;
 
 public class PassRepo {
     private final EntityManagerFactory entityManagerFactory;
@@ -25,6 +30,15 @@ public class PassRepo {
             throw e;
         } finally {
             entityManager.close();
+        }
+    }
+
+    public List<Pass> findValidPasses(Person owner) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner AND p.passStatus = :activeStatus", Pass.class)
+                    .setParameter("owner", owner)
+                    .setParameter("activeStatus", PassStatus.ACTIVE)
+                    .getResultList();
         }
     }
 

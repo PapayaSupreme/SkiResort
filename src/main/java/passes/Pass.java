@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import people.Person;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -63,7 +64,7 @@ public abstract class Pass {
 
     @Override
     public String toString() {
-        return "owner=" + this.owner.getPersonKind() + this.owner.getId() + " - " + this.owner.getFirstName() + this.owner.getLastName()
+        return "owner("+ this.owner.getPersonKind() + ")=" + this.owner.getId() + " - " + this.owner.getFirstName() + this.owner.getLastName()
                 + " - " + this.owner.getEmail();
     }
 }
