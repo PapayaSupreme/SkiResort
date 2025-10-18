@@ -8,7 +8,8 @@ SETUP :<br>
               1. Run `/src/main/db/init.sql` (db config)<br>
               2. Setup env variable; fill and rename to `.env` the root file `template.env`<br>
               3. [OPTIONAL] setup SLF4J log providers for Hikari<br>
-              4. Run `/src/main/test/App.java`<br><br>
+              4. [OPTIONAL] Import sample data for passes and persons tables from CSVs at `/src/main/java/factory/`<br>
+              5. Run `/src/main/java/test/App.java`<br><br>
 
 ===== NOTE ===== <br>
 All resort terrain instances are instantiated from the db on every run to allow for ease of use<br>
