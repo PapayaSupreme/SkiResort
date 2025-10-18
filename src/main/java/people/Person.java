@@ -4,6 +4,9 @@ import enums.EmployeeType;
 import enums.PersonKind;
 import enums.SkiSchool;
 import jakarta.persistence.*;
+import passes.DayPass;
+import passes.PassRepo;
+import utils.ResortUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -83,6 +86,31 @@ public abstract class Person {
 
     protected void setWorksiteId(Long worksiteId) { this.worksiteId = worksiteId; }
     public void setPersonKind(PersonKind personKind) { this.personKind = personKind; }
+
+    public static Guest createGuest(PersonRepo repo, String email, String firstName, String lastName, LocalDate dob) {
+        return savePerson(repo, new Guest(email, firstName, lastName, dob), "Guest");
+    }
+
+    public static Instructor createInstructor(PersonRepo repo, String email, String firstName, String lastName, LocalDate dob,
+                                              SkiSchool skiSchool, long worksiteId) {
+        return savePerson(repo, new Instructor(email, firstName, lastName, dob, skiSchool, worksiteId), "Instructor");
+    }
+
+    public static Employee createEmployee(PersonRepo repo, String email, String firstName, String lastName, LocalDate dob, EmployeeType employeeType, long worksiteId) {
+        return savePerson(repo, new Employee(email, firstName, lastName, dob, employeeType, worksiteId), "Employee");
+    }
+
+    private static <T extends Person> T savePerson(PersonRepo personRepo, T person, String typeName) {
+        try {
+            personRepo.save(person);
+            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
+                    "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + person);
+            return person;
+        } catch (Exception e) {
+            System.err.println("Failed to save " + typeName + ": " + e);
+            return null;
+        }
+    }
 
     // equals/hashCode by publicId (stable before DB id exists)
     @Override public boolean equals(Object o) {

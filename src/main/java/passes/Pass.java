@@ -4,6 +4,7 @@ import enums.PassKind;
 import enums.PassStatus;
 import jakarta.persistence.*;
 import people.Person;
+import utils.ResortUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -68,7 +69,7 @@ public abstract class Pass {
         try {
             ALaCartePass aLaCartePass = new ALaCartePass(owner);
             passRepo.save(aLaCartePass);
-            System.out.println("Successfully saved to the DB" + aLaCartePass);
+            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + aLaCartePass);
             return aLaCartePass;
         } catch (Exception e) {
             System.out.println("Failed to create/save ALaCartePass: " + e);
@@ -80,7 +81,7 @@ public abstract class Pass {
         try {
             DayPass dayPass = new DayPass(owner, validDay);
             passRepo.save(dayPass);
-            System.out.println("Successfully saved to the DB" + dayPass);
+            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + dayPass);
             return dayPass;
         } catch (Exception e) {
             System.out.println("Failed to create/save DayPass: " + e);
@@ -92,7 +93,7 @@ public abstract class Pass {
         try {
             MultiDayPass multiDayPass = new MultiDayPass(owner, validFrom, validTo);
             passRepo.save(multiDayPass);
-            System.out.println("Successfully saved to the DB" + multiDayPass);
+            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + multiDayPass);
             return multiDayPass;
         } catch (Exception e) {
             System.out.println("Failed to create/save MultiDayPass: " + e);
@@ -104,7 +105,7 @@ public abstract class Pass {
         try {
             SeasonPass seasonPass = new SeasonPass(owner);
             passRepo.save(seasonPass);
-            System.out.println("Successfully saved to the DB" + seasonPass);
+            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + seasonPass);
             return seasonPass;
         } catch (Exception e) {
             System.out.println("Failed to create/save SeasonPass: " + e);

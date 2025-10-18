@@ -15,6 +15,7 @@ import passes.*;
 import people.*;
 import terrain.*;
 import utils.JPA;
+import utils.ResortUtils;
 
 import static utils.ResortUtils.*;
 
@@ -110,24 +111,23 @@ public final class App {
         SeasonPass seasonPass;
         ALaCartePass aLaCartePass;
         while (!exit) {
-            System.out.println("\n=== MAIN MENU ===\n");
+            System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== MAIN MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
             System.out.println("1. View resort data");
             System.out.println("2. Create person");
             System.out.println("3. Create pass");
-            System.out.println("4. EXIT");
-            choice1 = sc.nextInt();
-            sc.nextLine();
+            System.out.println("0. EXIT");
+            choice1 = ResortUtils.pickInt(sc, 0, 3);
             goBack = false;
             switch(choice1) {
                 case 1 -> {
                     while (!goBack) {
-                        System.out.println("\n=== RESORT MENU ===\n");
+                        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== RESORT MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
                         System.out.println("1. VIEW ALL terrain");
                         System.out.println("2. SEARCH IN terrain");
                         System.out.println("3. VIEW ALL persons");
                         System.out.println("4. SEARCH IN persons");
-                        System.out.println("5. go back");
-                        choice2 = pickInt(sc, 1, 5);
+                        System.out.println("0. GO BACK");
+                        choice2 = pickInt(sc, 0, 4);
                         switch(choice2) {
                             case 1 -> {
                                 t0 = System.nanoTime();
@@ -150,7 +150,7 @@ public final class App {
 
 
                             case 2 -> {
-                                System.out.println("\n=== TERRAIN SEARCH ===\n");
+                                System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== TERRAIN SEARCH ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
                                 System.out.println("Search by name of the structure:\n");
                                 search = sc.nextLine();
                                 t0 = System.nanoTime();
@@ -162,7 +162,7 @@ public final class App {
                                 t1 = System.nanoTime();
                                 runTimer("Terrain name search query", t0, t1);
                                 if (Objects.equals(search, "")){
-                                    System.out.println("\nNote: your query was empty, so it displayed the whole resort.");
+                                    System.out.println("\n===Note: your query was empty, so it displayed the whole resort.===");
                                 }
                             }
 
@@ -195,7 +195,8 @@ public final class App {
                                 System.out.println("Select the person's info to search from: ");
                                 System.out.println("1. Email (exact match)");
                                 System.out.println("2. Last name (exact/partial match)");
-                                choice3 = pickInt(sc, 1, 2);
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 2);
                                 if (choice3 == 1){
                                     System.out.println("Enter email: ");
                                     email = sc.next();
@@ -209,14 +210,16 @@ public final class App {
                                         System.out.println("Person not found");
                                     }
                                     runTimer("Person match from email", t0, t1);
+                                } else if (choice3 == 2){
+                                    Person.findByNameGUI(sc, personRepo, Person.class); //TODO: when clicked, display properly details of a person / ask to edit ?
                                 } else{
-                                    Person.findByNameGUI(sc, personRepo, Person.class);
+                                    System.out.println("Cancelling...");
                                 }
                             }
 
 
-                            case 5 -> {
-                                System.out.println("going back...");
+                            case 0 -> {
+                                System.out.println("Going back...");
                                 goBack = true;}
                         }
                     }
@@ -226,13 +229,13 @@ public final class App {
 
                 case 2 -> {
                     while (!goBack) {
-                        System.out.println("\n=== PERSONS MENU ===\n");
+                        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PERSONS MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
                         System.out.println("1. Register an employee");
                         System.out.println("2. Register a guest");
                         System.out.println("3. Register an instructor");
-                        System.out.println("4. GO BACK");
-                        choice2 = pickInt(sc, 1, 4);
-                        if (choice2 != 4){
+                        System.out.println("0. GO BACK");
+                        choice2 = pickInt(sc, 0, 3);
+                        if (choice2 != 0){
                             System.out.print("Enter email: ");
                             email = sc.nextLine();
 
@@ -252,61 +255,42 @@ public final class App {
                                 System.out.println("2. Lift Operator");
                                 System.out.println("3. Restauration Crew");
                                 System.out.println("4. Maintenance");
-                                choice3 = pickInt(sc, 1, 4);
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 4);
                                 employeeType = switch (choice3) {
                                     case 1 -> EmployeeType.PISTER;
                                     case 2 -> EmployeeType.LIFT_OP;
                                     case 3 -> EmployeeType.RESTAURATION;
                                     case 4 -> EmployeeType.MAINTENANCE;
                                     default -> {
-                                        System.out.println("Invalid choice, try again.");
+                                        System.out.println("Cancelling...");
                                         yield null;
                                     }
                                 };
-
-                                assert employeeType != null;
-                                worksites = switch (employeeType) {
-                                    case PISTER -> new ArrayList<>(resort.getRescuePoints().values());
-                                    case LIFT_OP -> new ArrayList<>(resort.getLifts().values());
-                                    case RESTAURATION -> new ArrayList<>(resort.getRestaurants().values());
-                                    case MAINTENANCE -> new ArrayList<>(resort.getSkiAreas().values());
-                                };
-                                System.out.println("Select employee worksite (adapted to employee type): ");
-                                for (int i = 0;i<worksites.size();i++){
-                                    System.out.println((i+1) + ". " + worksites.get(i));
-                                }
-                                choice3 = pickInt(sc, 1, worksites.size())-1;
-                                worksite = worksites.get(choice3);
-
-                                try {
-                                    employee = new Employee(email, firstName, lastName,
-                                            day, employeeType, worksite.getId());
-                                    try {
-                                        personRepo.save(employee);
-                                        System.out.println("Successfully saved employee : " + employee);
-                                    } catch (Exception e){
-                                        System.out.println("Error while saving employee to the DB : " + e);
+                                if (employeeType != null) {
+                                    worksites = switch (employeeType) {
+                                        case PISTER -> new ArrayList<>(resort.getRescuePoints().values());
+                                        case LIFT_OP -> new ArrayList<>(resort.getLifts().values());
+                                        case RESTAURATION -> new ArrayList<>(resort.getRestaurants().values());
+                                        case MAINTENANCE -> new ArrayList<>(resort.getSkiAreas().values());
+                                    };
+                                    System.out.println("Select employee worksite (adapted to employee type): ");
+                                    for (int i = 0; i < worksites.size(); i++) {
+                                        System.out.println((i + 1) + ". " + worksites.get(i));
                                     }
-
-                                } catch (Exception e){
-                                    System.out.println("Error while instantiating employee : " + e);
+                                    System.out.println("0. CANCEL");
+                                    choice3 = pickInt(sc, 0, worksites.size()) - 1;
+                                    if (choice3 != -1) {
+                                        worksite = worksites.get(choice3);
+                                        employee = Person.createEmployee(personRepo, email, firstName, lastName, day, employeeType, worksite.getId());
+                                    } else {
+                                        System.out.println("Cancelling...");
+                                    }
                                 }
                             }
 
 
-                            case 2 ->{
-                                try {
-                                    guest = new Guest(email, firstName, lastName, day);
-                                    try {
-                                        personRepo.save(guest);
-                                        System.out.println("Successfully saved guest : " + guest);
-                                    } catch (Exception e){
-                                        System.out.println("Error while saving guest to the DB : " + e);
-                                    }
-                                } catch (Exception e){
-                                    System.out.println("Error while instantiating guest : " + e);
-                                }
-                            }
+                            case 2 -> guest = Person.createGuest(personRepo, email, firstName, lastName, day);
 
 
                             case 3 ->{
@@ -314,35 +298,33 @@ public final class App {
                                 for (SkiSchool s: SkiSchool.values()){
                                     System.out.println((s.ordinal()+1) + ". " + s.name());
                                 }
-                                choice3 = pickInt(sc, 1, SkiSchool.values().length)-1;
-                                skiSchool = SkiSchool.values()[choice3];
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, SkiSchool.values().length)-1;
+                                if (choice3 != -1) {
+                                    skiSchool = SkiSchool.values()[choice3];
 
-                                worksites = new ArrayList<>(resort.getSkiAreas().values());
-                                System.out.println("Select instructor worksite: ");
-                                for (int i = 0;i<worksites.size();i++){
-                                    System.out.println((i+1) + ". " + worksites.get(i));
-                                }
-                                choice3 = pickInt(sc, 1, worksites.size())-1;
-                                worksite = worksites.get(choice3);
-
-                                try {
-                                    instructor = new Instructor(email, firstName, lastName,
-                                            day, skiSchool, worksite.getId());
-                                    try {
-                                        personRepo.save(instructor);
-                                        System.out.println("Successfully saved instructor : " + instructor);
-                                    } catch (Exception e){
-                                        System.out.println("Error while saving instructor to the DB : " + e);
+                                    worksites = new ArrayList<>(resort.getSkiAreas().values());
+                                    System.out.println("Select instructor worksite: ");
+                                    for (int i = 0; i < worksites.size(); i++) {
+                                        System.out.println((i + 1) + ". " + worksites.get(i));
                                     }
+                                    System.out.println("0. CANCEL");
+                                    choice3 = pickInt(sc, 0, worksites.size()) - 1;
+                                    if (choice3 != -1) {
+                                        worksite = worksites.get(choice3);
 
-                                } catch (Exception e){
-                                    System.out.println("Error while instantiating instructor : " + e);
+                                        instructor = Person.createInstructor(personRepo, email, firstName, lastName, day, skiSchool, worksite.getId());
+                                    } else {
+                                        System.out.println("Cancelling...");
+                                    }
+                                } else {
+                                    System.out.println("Cancelling...");
                                 }
                             }
 
 
-                            case 4 -> {
-                                System.out.println("going back...");
+                            case 0 -> {
+                                System.out.println("Going back...");
                                 goBack = true;
                             }
                         }
@@ -353,7 +335,7 @@ public final class App {
 
                 case 3 ->{
                     while (!goBack) {
-                        System.out.println("\n=== PASS MENU ===\n");
+                        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PASS MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
                         System.out.println("=== NOTE: Person has to exist, create her first. ===\n");
                         System.out.println("1. Create a guest pass");
                         System.out.println("2. Create an employee pass");
@@ -374,17 +356,7 @@ public final class App {
                                         case 1 -> {
                                             System.out.print("Enter the valid date of the day pass, format YYYY-MM-DD : ");
                                             day = pickDate(sc, true);
-                                            try {
-                                                dayPass = new DayPass(guest, day);
-                                                try {
-                                                    passRepo.save(dayPass);
-                                                    System.out.println("Successfully saved to the DB" + dayPass.toString());
-                                                } catch (Exception e) {
-                                                    System.out.println("Error while saving DayPass to the DB: " + e);
-                                                }
-                                            } catch (Exception e) {
-                                                System.out.println("Error while instantiating DayPass: " + e);
-                                            }
+                                            dayPass = Pass.createDayPass(passRepo, guest, day);
                                         }
                                         case 2 -> {
                                             System.out.print("Enter the start date of the multi-day pass, format YYYY-MM-DD : ");
@@ -405,17 +377,7 @@ public final class App {
                                             }
                                         }
                                         case 3 -> {
-                                            try {
-                                                seasonPass = new SeasonPass(guest);
-                                                try {
-                                                    passRepo.save(seasonPass);
-                                                    System.out.println("Successfully saved to the DB" + seasonPass.toString());
-                                                } catch (Exception e) {
-                                                    System.out.println("Error while saving SeasonPass to the DB: " + e);
-                                                }
-                                            } catch (Exception e) {
-                                                System.out.println("Error while instantiating SeasonPass: " + e);
-                                            }
+                                            seasonPass = Pass.createSeasonPass(passRepo, guest);
                                         }
                                         case 4 -> {
                                             try {
@@ -438,7 +400,7 @@ public final class App {
                             case 2 ->{
                                 employee = Person.findByNameGUI(sc, personRepo, Employee.class);
                                 if (employee != null) {
-                                    System.out.println("===REMINDER: Employee profiles do not have guests passes.===\n");
+                                    System.out.println("===NOTE: Employee profiles do not have guests passes.===\n");
                                     passes = passRepo.findValidPasses(employee);
                                     if (!passes.isEmpty()) {
                                         System.out.println("This employee already has a valid employee pass: ");
@@ -453,7 +415,7 @@ public final class App {
                             case 3->{
                                 instructor = Person.findByNameGUI(sc, personRepo, Instructor.class);
                                 if (instructor != null) {
-                                    System.out.println("===REMINDER: Instructor profiles do not have guests passes.===\n");
+                                    System.out.println("===NOTE: Instructor profiles do not have guests passes.===\n");
                                     passes = passRepo.findValidPasses(instructor);
                                     if (!passes.isEmpty()) {
                                         System.out.println("This instructor already has a valid instructor pass: ");
@@ -485,13 +447,11 @@ public final class App {
 
 
 
-                case 4 -> {
-                    System.out.println("exiting...");
+                case 0 -> {
+                    System.out.println("Exiting...");
                     exit = true;
                 }
             }
         }
-
-
     }
 }
