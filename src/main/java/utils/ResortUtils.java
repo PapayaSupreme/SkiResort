@@ -123,6 +123,6 @@ public final class ResortUtils {
     public static void runTimer(String action, long t0, long t1){
         long t = t1 - t0;
         System.out.println("\n" + ConsoleColors.ANSI_PURPLE + "TIMER: " + ConsoleColors.ANSI_RESET
-                + action+ " done in " + (t / 1000000.0) + "ms.");
+                + action+ " done in " + (t / 1000000.0) + "ms.\n");
     }
 }

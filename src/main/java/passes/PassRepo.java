@@ -42,5 +42,13 @@ public class PassRepo {
         }
     }
 
+    public List<Pass> findAllPasses(Person owner) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner", Pass.class)
+                    .setParameter("owner", owner)
+                    .getResultList();
+        }
+    }
+
 
 }

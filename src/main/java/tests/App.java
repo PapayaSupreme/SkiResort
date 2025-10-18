@@ -83,7 +83,8 @@ public final class App {
         long t0, t1;
         int count1 = 0;
         int count2 = 0;
-        Optional<Person> person;
+        Optional<Person> personOptional;
+        Person person;
         boolean exit = false;
         boolean goBack = false;
         boolean valid = false;
@@ -202,16 +203,19 @@ public final class App {
                                     email = sc.next();
                                     sc.nextLine();
                                     t0 = System.nanoTime();
-                                    person = personRepo.findByEmail(email);
+                                    personOptional = personRepo.findByEmail(email);
                                     t1 = System.nanoTime();
-                                    if (person.isPresent()) {
-                                        System.out.println("Person found. \n" + person.get().toString());
+                                    runTimer("Person match from email", t0, t1);
+                                    if (personOptional.isPresent()) {
+                                        personOptional.get().displayFullInfo(passRepo);
                                     } else {
                                         System.out.println("Person not found");
                                     }
-                                    runTimer("Person match from email", t0, t1);
                                 } else if (choice3 == 2){
-                                    Person.findByNameGUI(sc, personRepo, Person.class); //TODO: when clicked, display properly details of a person / ask to edit ?
+                                    person = Person.findByNameGUI(sc, personRepo, Person.class); //TODO: when clicked,  ask to edit ?
+                                    if (person != null){
+                                        person.displayFullInfo(passRepo);
+                                    }
                                 } else{
                                     System.out.println("Cancelling...");
                                 }
@@ -336,7 +340,6 @@ public final class App {
                 case 3 ->{
                     while (!goBack) {
                         System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PASS MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
-                        System.out.println("=== NOTE: Person has to exist, create her first. ===\n");
                         System.out.println("1. Create a guest pass");
                         System.out.println("2. Create an employee pass");
                         System.out.println("3. Create an instructor pass");

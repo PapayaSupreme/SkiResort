@@ -1,10 +1,12 @@
 package people;
 
 import enums.EmployeeType;
+import enums.PassStatus;
 import enums.PersonKind;
 import enums.SkiSchool;
 import jakarta.persistence.*;
 import passes.DayPass;
+import passes.Pass;
 import passes.PassRepo;
 import utils.ResortUtils;
 
@@ -154,6 +156,29 @@ public abstract class Person {
         return null;
     }
 
+    public void displayFullInfo(PassRepo passRepo){
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== INFO ===\n\n" + ResortUtils.ConsoleColors.ANSI_RESET + this);
+        long t0 = System.nanoTime();
+        List<Pass> passes = passRepo.findAllPasses(this);
+        List<Pass> expiredPasses = passes.stream().filter(p -> p.getPassStatus() == PassStatus.EXPIRED).toList();
+        List<Pass> suspendedPasses = passes.stream().filter(p -> p.getPassStatus() == PassStatus.SUSPENDED).toList();
+        List<Pass> validPasses = passes.stream().filter(p -> p.getPassStatus() == PassStatus.ACTIVE).toList();
+        long t1 = System.nanoTime();
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PASSES ===\n\n"+ ResortUtils.ConsoleColors.ANSI_RESET + "Expired Passes:");
+        for (Pass p: expiredPasses){
+            System.out.println(p);
+        }
+        System.out.println("\nSuspended Passes: ");
+        for (Pass p: suspendedPasses){
+            System.out.println(p);
+        }
+        System.out.println("\nValid Passes: ");
+        for (Pass p: validPasses){
+            System.out.println(p);
+        }
+        System.out.println("\nTotal: " + expiredPasses.size() + " expired, " + suspendedPasses.size() + " suspended, " + validPasses.size() + " valid.");
+        runTimer("Fetch of a person's passes", t0, t1);
+    }
     @Override
     public String toString() {
         return " id=%s, name='%s %s', dob=%s, email=%s".formatted(id, firstName, lastName, dob, email);
