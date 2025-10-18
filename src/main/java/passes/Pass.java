@@ -4,6 +4,7 @@ import enums.PassKind;
 import enums.PassStatus;
 import jakarta.persistence.*;
 import people.Person;
+import people.PersonRepo;
 import utils.ResortUtils;
 
 import java.time.Instant;
@@ -66,49 +67,30 @@ public abstract class Pass {
 
 
     public static ALaCartePass createALaCartePass(PassRepo passRepo, Person owner){
-        try {
-            ALaCartePass aLaCartePass = new ALaCartePass(owner);
-            passRepo.save(aLaCartePass);
-            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + aLaCartePass);
-            return aLaCartePass;
-        } catch (Exception e) {
-            System.out.println("Failed to create/save ALaCartePass: " + e);
-            return null;
-        }
+        return savePass(passRepo, new ALaCartePass(owner), "ALaCartePass");
     }
 
     public static DayPass createDayPass(PassRepo passRepo, Person owner, LocalDate validDay){
-        try {
-            DayPass dayPass = new DayPass(owner, validDay);
-            passRepo.save(dayPass);
-            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + dayPass);
-            return dayPass;
-        } catch (Exception e) {
-            System.out.println("Failed to create/save DayPass: " + e);
-            return null;
-        }
+        return savePass(passRepo, new DayPass(owner, validDay), "DayPass");
     }
 
     public static MultiDayPass  createMultiDayPass(PassRepo passRepo, Person owner, LocalDate validFrom, LocalDate validTo){
-        try {
-            MultiDayPass multiDayPass = new MultiDayPass(owner, validFrom, validTo);
-            passRepo.save(multiDayPass);
-            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + multiDayPass);
-            return multiDayPass;
-        } catch (Exception e) {
-            System.out.println("Failed to create/save MultiDayPass: " + e);
-            return null;
-        }
+        return savePass(passRepo, new MultiDayPass(owner, validFrom, validTo), "MultiDayPass");
     }
 
     public static SeasonPass createSeasonPass(PassRepo passRepo, Person owner){
+        return savePass(passRepo, new SeasonPass(owner), "SeasonPass");
+    }
+
+
+    private static <T extends Pass> T savePass(PassRepo passRepo, T pass, String typeName) {
         try {
-            SeasonPass seasonPass = new SeasonPass(owner);
-            passRepo.save(seasonPass);
-            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN + "Successfully saved to the DB: " + seasonPass);
-            return seasonPass;
+            passRepo.save(pass);
+            System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
+                    "Successfully saved to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET + pass);
+            return pass;
         } catch (Exception e) {
-            System.out.println("Failed to create/save SeasonPass: " + e);
+            System.err.println("Failed to save " + typeName + ": " + e);
             return null;
         }
     }

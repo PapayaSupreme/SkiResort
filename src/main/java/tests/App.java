@@ -351,46 +351,34 @@ public final class App {
                                     System.out.println("2. Multi-Day Pass");
                                     System.out.println("3. Season Pass");
                                     System.out.println("4. A la Carte Pass (Pay-per-use)");
-                                    choice3 = pickInt(sc, 1, 4);
+                                    System.out.println("0. Cancel");
+                                    choice3 = pickInt(sc, 0, 4);
                                     switch (choice3) {
                                         case 1 -> {
                                             System.out.print("Enter the valid date of the day pass, format YYYY-MM-DD : ");
                                             day = pickDate(sc, true);
                                             dayPass = Pass.createDayPass(passRepo, guest, day);
                                         }
+
                                         case 2 -> {
                                             System.out.print("Enter the start date of the multi-day pass, format YYYY-MM-DD : ");
                                             day = pickDate(sc, true);
 
                                             System.out.print("How much day will this multi-day pass be valid for ? (min 2, max 30) : ");
                                             choice3 = pickInt(sc, 2, 30);
-                                            try {
-                                                multiDayPass = new MultiDayPass(guest, day, day.plusDays(choice3-1));
-                                                try {
-                                                    passRepo.save(multiDayPass);
-                                                    System.out.println("Successfully saved to the DB" + multiDayPass.toString());
-                                                } catch (Exception e) {
-                                                    System.out.println("Error while saving MultiDayPass to the DB: " + e);
-                                                }
-                                            } catch (Exception e) {
-                                                System.out.println("Error while instantiating MultiDayPass: " + e);
-                                            }
+                                            multiDayPass = Pass.createMultiDayPass(passRepo, guest, day, day.plusDays(choice3-1));
                                         }
+
                                         case 3 -> {
                                             seasonPass = Pass.createSeasonPass(passRepo, guest);
                                         }
+
                                         case 4 -> {
-                                            try {
-                                                aLaCartePass = new ALaCartePass(guest);
-                                                try {
-                                                    passRepo.save(aLaCartePass);
-                                                    System.out.println("Successfully saved to the DB" + aLaCartePass.toString());
-                                                } catch (Exception e) {
-                                                    System.out.println("Error while saving ALaCartePass to the DB: " + e);
-                                                }
-                                            } catch (Exception e) {
-                                                System.out.println("Error while instantiating ALaCartePass: " + e);
-                                            }
+                                            aLaCartePass = Pass.createALaCartePass(passRepo, guest);
+                                        }
+
+                                        case 0 -> {
+                                            System.out.println("Cancelling...");
                                         }
                                     }
                                 }
@@ -406,11 +394,11 @@ public final class App {
                                         System.out.println("This employee already has a valid employee pass: ");
                                         System.out.println("Employee " + passes.getFirst());
                                     } else {
-                                        System.out.println("No valid Employee passes found. Creating...\n");
                                         Pass.createSeasonPass(passRepo, employee);
                                     }
                                 }
                             }
+
 
                             case 3->{
                                 instructor = Person.findByNameGUI(sc, personRepo, Instructor.class);
@@ -421,16 +409,15 @@ public final class App {
                                         System.out.println("This instructor already has a valid instructor pass: ");
                                         System.out.println("Instructor " + passes.getFirst());
                                     } else {
-                                        System.out.println("No valid instructor pass found.\n");
                                         System.out.println("Choose instructor pass type:");
                                         System.out.println("1. Season Pass (One time payment)");
                                         System.out.println("2. A La Carte Pass (Pay-per-use)");
                                         System.out.println("0. Cancel");
                                         choice3 = pickInt(sc, 0, 2);
                                         switch (choice3) {
-                                            case 1 ->
-                                                    Pass.createSeasonPass(passRepo, instructor);//TODO: create printPass method and ask it always
+                                            case 1 -> Pass.createSeasonPass(passRepo, instructor);//TODO: create printPass method and ask it always
                                             case 2 -> Pass.createALaCartePass(passRepo, instructor);
+                                            case 0 -> System.out.println("Cancelling...");
                                         }
                                     }
                                 }
