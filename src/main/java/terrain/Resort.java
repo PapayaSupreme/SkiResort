@@ -1,5 +1,6 @@
 package terrain;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static utils.ResortUtils.norm;
@@ -14,6 +15,9 @@ public final class Resort {
     private final Map<Long, Summit> summits;
     private final Map<String, List<Long>> idFromName = new HashMap<>();
     private final Map<Long, Terrain> terrainIndex = new HashMap<>();
+
+    public final LocalDate SEASON_START = LocalDate.of(2025, 1, 1); //TODO; obv temporary, make it not hardcoded
+    public final LocalDate SEASON_END = LocalDate.of(2026, 12, 31);
 
     public Resort(String resortName, Map<Long, ?> sa, Map<Long, ?> sl, Map<Long, ?> lf,
                   Map<Long, ?> re, Map<Long, ?> rp, Map<Long, ?> su) {
@@ -69,6 +73,11 @@ public final class Resort {
         this.terrainIndex.putAll(this.restaurants);
         this.terrainIndex.putAll(this.rescuePoints);
         this.terrainIndex.putAll(this.summits);
+    }
+
+    public boolean isInSeasonRange(LocalDate day){
+        return this.SEASON_START.isBefore(day) &&
+                this.SEASON_END.isAfter(day); //TODO; obv temporary, make it not hardcoded
     }
 
     @Override

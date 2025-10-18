@@ -106,7 +106,7 @@ public abstract class Person {
             if (out.size() == 1) {
                 System.out.println(out.size() + clazz.getSimpleName() + " was found: \n");
             } else {
-                System.out.println(out.size() + clazz.getSimpleName() + "s were found: \n");
+                System.out.println(out.size() + " " +  clazz.getSimpleName() + "s were found: \n");
             }
             for (int i = 0; i<out.size(); i++){
                 System.out.println((i+1) + ". " + out.get(i));

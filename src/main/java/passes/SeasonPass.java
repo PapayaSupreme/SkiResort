@@ -6,6 +6,8 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import people.Person;
 
+import java.time.LocalDate;
+
 
 @Entity
 @DiscriminatorValue("SEASON")

@@ -120,11 +120,6 @@ public final class ResortUtils {
         public static final String ANSI_WHITE = "\u001B[37m";
     }
 
-    public static boolean isInSeasonRange(LocalDate day){
-        return LocalDate.of(2025, 1, 1).isBefore(day)
-                && LocalDate.of(2026, 12, 31).isAfter(day); //TODO; obv temporary, make it not hardcoded
-    }
-
     public static void runTimer(String action, long t0, long t1){
         long t = t1 - t0;
         System.out.println("\n" + ConsoleColors.ANSI_PURPLE + "TIMER: " + ConsoleColors.ANSI_RESET

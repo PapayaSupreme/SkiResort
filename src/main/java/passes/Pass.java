@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import people.Person;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,6 +62,56 @@ public abstract class Pass {
 
     public void activate() { this.passStatus = PassStatus.ACTIVE; }
     public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
+
+
+    public static ALaCartePass createALaCartePass(PassRepo passRepo, Person owner){
+        try {
+            ALaCartePass aLaCartePass = new ALaCartePass(owner);
+            passRepo.save(aLaCartePass);
+            System.out.println("Successfully saved to the DB" + aLaCartePass);
+            return aLaCartePass;
+        } catch (Exception e) {
+            System.out.println("Failed to create/save ALaCartePass: " + e);
+            return null;
+        }
+    }
+
+    public static DayPass createDayPass(PassRepo passRepo, Person owner, LocalDate validDay){
+        try {
+            DayPass dayPass = new DayPass(owner, validDay);
+            passRepo.save(dayPass);
+            System.out.println("Successfully saved to the DB" + dayPass);
+            return dayPass;
+        } catch (Exception e) {
+            System.out.println("Failed to create/save DayPass: " + e);
+            return null;
+        }
+    }
+
+    public static MultiDayPass  createMultiDayPass(PassRepo passRepo, Person owner, LocalDate validFrom, LocalDate validTo){
+        try {
+            MultiDayPass multiDayPass = new MultiDayPass(owner, validFrom, validTo);
+            passRepo.save(multiDayPass);
+            System.out.println("Successfully saved to the DB" + multiDayPass);
+            return multiDayPass;
+        } catch (Exception e) {
+            System.out.println("Failed to create/save MultiDayPass: " + e);
+            return null;
+        }
+    }
+
+    public static SeasonPass createSeasonPass(PassRepo passRepo, Person owner){
+        try {
+            SeasonPass seasonPass = new SeasonPass(owner);
+            passRepo.save(seasonPass);
+            System.out.println("Successfully saved to the DB" + seasonPass);
+            return seasonPass;
+        } catch (Exception e) {
+            System.out.println("Failed to create/save SeasonPass: " + e);
+            return null;
+        }
+    }
+
 
     @Override
     public String toString() {

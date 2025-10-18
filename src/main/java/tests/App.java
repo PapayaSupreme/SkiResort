@@ -368,7 +368,7 @@ public final class App {
                                     System.out.println("1. Day Pass");
                                     System.out.println("2. Multi-Day Pass");
                                     System.out.println("3. Season Pass");
-                                    System.out.println("4. A la Carte Pass");
+                                    System.out.println("4. A la Carte Pass (Pay-per-use)");
                                     choice3 = pickInt(sc, 1, 4);
                                     switch (choice3) {
                                         case 1 -> {
@@ -437,23 +437,39 @@ public final class App {
 
                             case 2 ->{
                                 employee = Person.findByNameGUI(sc, personRepo, Employee.class);
-                                System.out.println("===REMINDER: Employee profiles do not have guests passes.===\n");
-                                passes =  passRepo.findValidPasses(employee);
-                                if (!passes.isEmpty()){
-                                    System.out.println("This employee already has valid a employee pass: ");
-                                    System.out.println("Employee " + passes.getFirst());
-                                } else{
-                                    System.out.println("No valid Employee passes found. Creating...\n");
-                                    try {
-                                        seasonPass = new SeasonPass(employee);
-                                        try {
-                                            passRepo.save(seasonPass);
-                                            System.out.println("Successfully saved to the DB Employee " + seasonPass.toString());
-                                        } catch (Exception e) {
-                                            System.out.println("Error while saving Employee SeasonPass to the DB: " + e);
+                                if (employee != null) {
+                                    System.out.println("===REMINDER: Employee profiles do not have guests passes.===\n");
+                                    passes = passRepo.findValidPasses(employee);
+                                    if (!passes.isEmpty()) {
+                                        System.out.println("This employee already has a valid employee pass: ");
+                                        System.out.println("Employee " + passes.getFirst());
+                                    } else {
+                                        System.out.println("No valid Employee passes found. Creating...\n");
+                                        Pass.createSeasonPass(passRepo, employee);
+                                    }
+                                }
+                            }
+
+                            case 3->{
+                                instructor = Person.findByNameGUI(sc, personRepo, Instructor.class);
+                                if (instructor != null) {
+                                    System.out.println("===REMINDER: Instructor profiles do not have guests passes.===\n");
+                                    passes = passRepo.findValidPasses(instructor);
+                                    if (!passes.isEmpty()) {
+                                        System.out.println("This instructor already has a valid instructor pass: ");
+                                        System.out.println("Instructor " + passes.getFirst());
+                                    } else {
+                                        System.out.println("No valid instructor pass found.\n");
+                                        System.out.println("Choose instructor pass type:");
+                                        System.out.println("1. Season Pass (One time payment)");
+                                        System.out.println("2. A La Carte Pass (Pay-per-use)");
+                                        System.out.println("0. Cancel");
+                                        choice3 = pickInt(sc, 0, 2);
+                                        switch (choice3) {
+                                            case 1 ->
+                                                    Pass.createSeasonPass(passRepo, instructor);//TODO: create printPass method and ask it always
+                                            case 2 -> Pass.createALaCartePass(passRepo, instructor);
                                         }
-                                    } catch (Exception e) {
-                                        System.out.println("Error while instantiating Employee SeasonPass: " + e);
                                     }
                                 }
                             }

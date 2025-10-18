@@ -5,6 +5,8 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import people.Person;
 
+import java.time.LocalDate;
+
 @Entity
 @DiscriminatorValue("ALACARTE")
 public class ALaCartePass extends Pass {
