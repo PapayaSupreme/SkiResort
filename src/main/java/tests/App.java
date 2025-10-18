@@ -1,6 +1,7 @@
 package tests;
 
 import com.zaxxer.hikari.HikariDataSource;
+import enums.PassKind;
 import enums.PersonKind;
 import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
@@ -83,6 +84,7 @@ public final class App {
         long t0, t1;
         int count1 = 0;
         int count2 = 0;
+        int count3 = 0;
         Optional<Person> personOptional;
         Person person;
         boolean exit = false;
@@ -127,8 +129,10 @@ public final class App {
                         System.out.println("2. SEARCH IN terrain");
                         System.out.println("3. VIEW ALL persons");
                         System.out.println("4. SEARCH IN persons");
+                        System.out.println("5. VIEW ALL passes");
+                        System.out.println("6. SEARCH IN passes");
                         System.out.println("0. GO BACK");
-                        choice2 = pickInt(sc, 0, 4);
+                        choice2 = pickInt(sc, 0, 6);
                         switch(choice2) {
                             case 1 -> {
                                 t0 = System.nanoTime();
@@ -169,26 +173,34 @@ public final class App {
 
 
                             case 3 -> {
-                                t0 = System.nanoTime();
-                                persons = personRepo.findAll();
-                                for (Person p: persons){
-                                    System.out.println(p.toString());
-                                    if (p.getPersonKind() == PersonKind.EMPLOYEE){
-                                        count1++;
-                                    } else if(p.getPersonKind() == PersonKind.INSTRUCTOR){
-                                        count2++;
+                                System.out.println("This is a heavy request. Proceed ?");
+                                System.out.println("1. Yes, proceed");
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 1);
+                                if (choice3==1) {
+                                    t0 = System.nanoTime();
+                                    persons = personRepo.findAll();
+                                    for (Person p : persons) {
+                                        System.out.println(p.toString());
+                                        if (p.getPersonKind() == PersonKind.EMPLOYEE) {
+                                            count1++;
+                                        } else if (p.getPersonKind() == PersonKind.INSTRUCTOR) {
+                                            count2++;
+                                        }
                                     }
+                                    System.out.printf("""
+                                                    
+                                                    Total persons: %d
+                                                    Details: %d employees, %d instructors, %d guests.
+                                                    """,
+                                            persons.size(), count1, count2, (persons.size() - count1 - count2));
+                                    t1 = System.nanoTime();
+                                    runTimer("Total person display from DB", t0, t1);
+                                    count1 = 0;
+                                    count2 = 0;
+                                } else {
+                                    System.out.println("Cancelling...");
                                 }
-                                System.out.printf("""
-                                                
-                                                Total persons: %d
-                                                Details: %d employees, %d instructors, %d guests.
-                                                """,
-                                persons.size(), count1, count2, (persons.size() - count1 - count2));
-                                t1 = System.nanoTime();
-                                runTimer("Total person display from DB", t0, t1);
-                                count1 = 0;
-                                count2 = 0;
                             }
 
 
@@ -222,9 +234,76 @@ public final class App {
                             }
 
 
+                            case 5 -> {
+                                System.out.println("This is a heavy request. Proceed ?");
+                                System.out.println("1. Yes, proceed");
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 1);
+                                if (choice3==1) {
+                                    passes = passRepo.findAllPasses();
+                                    count1 = 0;
+                                    count2 = 0;
+                                    count3 = 0;
+                                    for(Pass p: passes){
+                                        if (p.getPassKind() == PassKind.DAY){
+                                            count1++;
+                                        } else if (p.getPassKind() == PassKind.MULTIDAY) {
+                                            count2++;
+                                        } else if (p.getPassKind() == PassKind.SEASON) {
+                                            count3++;
+                                        }
+                                        System.out.println(p.toString());
+                                    }
+                                    System.out.printf("""
+                                                    
+                                                    Total passes: %d
+                                                    Details: %d day passes, %d multi-day passes, %d season passes, %d a la carte passes.
+                                                    """,
+                                            passes.size(), count1, count2, count3, (passes.size() - count1 - count2 - count3));
+                                } else {
+                                    System.out.println("Cancelling...");
+                                }
+                            }
+
+
+                            case 6 -> {
+                                System.out.println("Select the pass criteria to search from: ");
+                                System.out.println("1. Pass kind (Day, Season...)");
+                                System.out.println("2. Pass validity on a date");
+                                System.out.println("3. Pass issued to non-guests (Employees, Instructors)");
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 3);
+                                switch(choice3) {
+                                    case 1 -> {
+                                        System.out.println("Select what kind of pass to display: ");
+                                        System.out.println("1. Day Pass");
+                                        System.out.println("2. Multi-Day Pass");
+                                        System.out.println("3. Season Pass");
+                                        System.out.println("4. A la Carte Pass (Pay-per-use)");
+                                        System.out.println("0. CANCEL");
+                                        choice3 = pickInt(sc, 0, 4);
+                                        switch (choice3) {
+                                            case 1 -> Pass.displayPassesOfKind(passRepo, PassKind.DAY);
+
+                                            case 2 -> Pass.displayPassesOfKind(passRepo, PassKind.MULTIDAY);
+
+                                            case 3 -> Pass.displayPassesOfKind(passRepo, PassKind.SEASON);
+
+                                            case 4 -> Pass.displayPassesOfKind(passRepo, PassKind.ALACARTE);
+
+                                            case 0 -> System.out.println("Cancelling...");
+                                        }
+                                    }
+
+                                    case 0 -> System.out.println("Cancelling...");
+                                }
+                            }
+
+
                             case 0 -> {
                                 System.out.println("Going back...");
-                                goBack = true;}
+                                goBack = true;
+                        }
                         }
                     }
                 }
@@ -349,7 +428,7 @@ public final class App {
                             case 1 -> {//TODO: cleanup that
                                 guest = Person.findByNameGUI(sc, personRepo, Guest.class);
                                 if (guest != null) {
-                                    System.out.println("\nSelect Pass Category: \n");
+                                    System.out.println("\nSelect Pass Kind: \n");
                                     System.out.println("1. Day Pass");
                                     System.out.println("2. Multi-Day Pass");
                                     System.out.println("3. Season Pass");
@@ -391,7 +470,6 @@ public final class App {
                             case 2 ->{
                                 employee = Person.findByNameGUI(sc, personRepo, Employee.class);
                                 if (employee != null) {
-                                    System.out.println("===NOTE: Employee profiles do not have guests passes.===\n");
                                     passes = passRepo.findValidPasses(employee);
                                     if (!passes.isEmpty()) {
                                         System.out.println("This employee already has a valid employee pass: ");
@@ -406,7 +484,6 @@ public final class App {
                             case 3->{
                                 instructor = Person.findByNameGUI(sc, personRepo, Instructor.class);
                                 if (instructor != null) {
-                                    System.out.println("===NOTE: Instructor profiles do not have guests passes.===\n");
                                     passes = passRepo.findValidPasses(instructor);
                                     if (!passes.isEmpty()) {
                                         System.out.println("This instructor already has a valid instructor pass: ");

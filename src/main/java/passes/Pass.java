@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import static utils.ResortUtils.runTimer;
+
 @Entity
 @Table(name = "pass")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -80,6 +82,18 @@ public abstract class Pass {
 
     public static SeasonPass createSeasonPass(PassRepo passRepo, Person owner){
         return savePass(passRepo, new SeasonPass(owner), "SeasonPass");
+    }
+
+
+    public static void displayPassesOfKind(PassRepo passRepo, PassKind passKind){
+        long t0 = System.nanoTime();
+        List<Pass> passes = passRepo.findPassesOfKind(passKind);
+        long t1 = System.nanoTime();
+        runTimer("All active " + passKind.toString() + " Passes search", t0, t1);
+        for (Pass p : passes) {
+            System.out.println(p);
+        }
+        System.out.println("\nTotal " + passKind + " Passes: " + passes.size());
     }
 
 

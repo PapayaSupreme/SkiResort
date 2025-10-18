@@ -1,5 +1,6 @@
 package passes;
 
+import enums.PassKind;
 import enums.PassStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -35,9 +36,9 @@ public class PassRepo {
 
     public List<Pass> findValidPasses(Person owner) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner AND p.passStatus = :activeStatus", Pass.class)
+            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner AND p.passStatus = :passStatus", Pass.class)
                     .setParameter("owner", owner)
-                    .setParameter("activeStatus", PassStatus.ACTIVE)
+                    .setParameter("passStatus", PassStatus.ACTIVE)
                     .getResultList();
         }
     }
@@ -46,6 +47,24 @@ public class PassRepo {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner", Pass.class)
                     .setParameter("owner", owner)
+                    .getResultList();
+        }
+    }
+
+
+    public List<Pass> findAllPasses() {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Pass p", Pass.class)
+                    .getResultList();
+        }
+    }
+
+
+    public List<Pass> findPassesOfKind(PassKind passKind) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.passKind = :passKind AND p.passStatus = :passStatus", Pass.class)
+                    .setParameter("passKind", passKind)
+                    .setParameter("passStatus", PassStatus.ACTIVE)
                     .getResultList();
         }
     }
