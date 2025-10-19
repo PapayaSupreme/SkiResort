@@ -16,8 +16,8 @@ public final class Resort {
     private final Map<String, List<Long>> idFromName = new HashMap<>();
     private final Map<Long, Terrain> terrainIndex = new HashMap<>();
 
-    public final LocalDate SEASON_START = LocalDate.of(2025, 1, 1); //TODO; obv temporary, make it not hardcoded
-    public final LocalDate SEASON_END = LocalDate.of(2026, 12, 31);
+    private static final LocalDate SEASON_START = LocalDate.of(2025, 1, 1); //TODO; obv temporary, make it not hardcoded
+    private static final LocalDate SEASON_END = LocalDate.of(2026, 12, 31);
 
     public Resort(String resortName, Map<Long, ?> sa, Map<Long, ?> sl, Map<Long, ?> lf,
                   Map<Long, ?> re, Map<Long, ?> rp, Map<Long, ?> su) {
@@ -40,6 +40,9 @@ public final class Resort {
     public Map<Long, RescuePoint> getRescuePoints(){ return Map.copyOf(this.rescuePoints); }
     public Map<Long, Summit>  getSummits(){ return Map.copyOf(this.summits); }
     public Map<Long, Terrain> getTerrainIndex() { return Map.copyOf(this.terrainIndex); }
+
+    public static LocalDate getSeasonStart() { return SEASON_START; }
+    public static LocalDate getSeasonEnd() { return SEASON_END; }
 
     public HashSet<Long> getIdsFromName(String name){
         HashSet<Long> out = new HashSet<>();

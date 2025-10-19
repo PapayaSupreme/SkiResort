@@ -2,6 +2,7 @@ package passes;
 
 import enums.PassKind;
 import enums.PassStatus;
+import enums.PersonKind;
 import jakarta.persistence.*;
 import people.Person;
 import people.PersonRepo;
@@ -9,6 +10,7 @@ import utils.ResortUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +25,7 @@ public abstract class Pass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_id", nullable = false, foreignKey = @ForeignKey(name = "fk_pass_owner"))
     private Person owner;
 
@@ -84,6 +86,36 @@ public abstract class Pass {
         return savePass(passRepo, new SeasonPass(owner), "SeasonPass");
     }
 
+    public static void displayPassesValidAt(PassRepo passRepo, LocalDate date){
+        long t0 = System.nanoTime();
+        List<DayPass> dayPasses = passRepo.findDayPassesValidOn(date);
+        List<MultiDayPass> multiDayPasses = passRepo.findMultiDayPassesValidOn(date);
+        List<SeasonPass> seasonPasses = passRepo.findSeasonPassesValidOn(date);
+        List<ALaCartePass> aLaCartePasses = passRepo.findALaCartePassesValidOn(date);
+        long t1 = System.nanoTime();
+        runTimer("All passes valid on " + date.toString() + " search", t0, t1);
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== DAY PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (DayPass p: dayPasses){
+            System.out.println(p);
+        }
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== MULTI-DAY PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (MultiDayPass p: multiDayPasses){
+            System.out.println(p);
+        }
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== SEASON PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (SeasonPass p: seasonPasses){
+            System.out.println(p);
+        }
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== A LA CARTE PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (ALaCartePass p: aLaCartePasses){
+            System.out.println(p);
+        }
+        System.out.println("\nTotal valid passes on " + date + ": "
+                + (dayPasses.size() + multiDayPasses.size() + seasonPasses.size() + aLaCartePasses.size()));
+        System.out.println("Day Passes: " + dayPasses.size() + ", Multi-Day Passes: " + multiDayPasses.size()
+                + ", Season Passes: " + seasonPasses.size() + ", A La Carte Passes: " + aLaCartePasses.size());
+    }
+
 
     public static void displayPassesOfKind(PassRepo passRepo, PassKind passKind){
         long t0 = System.nanoTime();
@@ -94,6 +126,35 @@ public abstract class Pass {
             System.out.println(p);
         }
         System.out.println("\nTotal " + passKind + " Passes: " + passes.size());
+    }
+
+    public static void displaySpecialPasses(PassRepo passRepo){
+        long t0 = System.nanoTime();
+        List<Pass> employeePasses = passRepo.findPassesOfPersonKind(PersonKind.EMPLOYEE);
+        List<Pass> instructorPasses = passRepo.findPassesOfPersonKind(PersonKind.INSTRUCTOR);
+        long t1 = System.nanoTime();
+        runTimer("All special passes search", t0, t1);
+        int count1 = 0;
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== EMPLOYEE - SEASON PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (Pass p: employeePasses){
+            System.out.println(p);
+        }
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== INSTRUCTOR - SEASON PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (Pass p: instructorPasses){
+            if (p.getPassKind() == PassKind.SEASON) {
+                System.out.println(p);
+                count1++;
+            }
+        }
+        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== INSTRUCTOR - A LA CARTE PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
+        for (Pass p: instructorPasses){
+            if (p.getPassKind() == PassKind.ALACARTE) {
+                System.out.println(p);
+            }
+        }
+        System.out.println("\nTotal special passes: " + employeePasses.size() + instructorPasses.size());
+        System.out.println("Employee Season Passes: " + employeePasses.size() + ", Instructor Season Passes: "
+                + count1 + ", A La Carte Passes: " + (instructorPasses.size() - count1));
     }
 
 

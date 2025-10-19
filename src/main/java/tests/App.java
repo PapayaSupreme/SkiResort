@@ -295,6 +295,14 @@ public final class App {
                                         }
                                     }
 
+                                    case 2 -> {
+                                        System.out.println("Enter the desired date to display valid passes (YYYY-MM-DD): ");
+                                        day = pickDate(sc, true);
+                                        Pass.displayPassesValidAt(passRepo, day);
+                                    }
+
+                                    case 3 -> Pass.displaySpecialPasses(passRepo);
+
                                     case 0 -> System.out.println("Cancelling...");
                                 }
                             }
