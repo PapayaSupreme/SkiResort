@@ -102,7 +102,10 @@ public final class App {
         HashSet<Long> ids;
         Employee employee = null;
         List<Pass> passes = new ArrayList<>();
+        Map<Long, Lift> lifts = new HashMap<>();
         Guest guest = null;
+        Pass pass;
+        Lift lift;
         Instructor instructor = null;
         SkiSchool skiSchool = null;
         List<Person> persons= new ArrayList<>();
@@ -114,17 +117,18 @@ public final class App {
         SeasonPass seasonPass;
         ALaCartePass aLaCartePass;
         while (!exit) {
-            System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== MAIN MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
+            System.out.println(ConsoleColors.ANSI_BLUE + "\n=== MAIN MENU ===\n" + ConsoleColors.ANSI_RESET);
             System.out.println("1. View resort data");
             System.out.println("2. Create person");
             System.out.println("3. Create pass");
+            System.out.println("4. [WIP] Emulate IRL actions");
             System.out.println("0. EXIT");
-            choice1 = ResortUtils.pickInt(sc, 0, 3);
+            choice1 = pickInt(sc, 0, 4);
             goBack = false;
             switch(choice1) {
                 case 1 -> {
                     while (!goBack) {
-                        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== RESORT MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_BLUE + "\n=== RESORT MENU ===\n" + ConsoleColors.ANSI_RESET);
                         System.out.println("1. VIEW ALL terrain");
                         System.out.println("2. SEARCH IN terrain");
                         System.out.println("3. VIEW ALL persons");
@@ -155,7 +159,7 @@ public final class App {
 
 
                             case 2 -> {
-                                System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== TERRAIN SEARCH ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
+                                System.out.println(ConsoleColors.ANSI_BLUE + "\n=== TERRAIN SEARCH ===\n" + ConsoleColors.ANSI_RESET);
                                 System.out.println("Search by name of the structure:\n");
                                 search = sc.nextLine();
                                 t0 = System.nanoTime();
@@ -320,7 +324,7 @@ public final class App {
 
                 case 2 -> {
                     while (!goBack) {
-                        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PERSONS MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_BLUE + "\n=== PERSONS MENU ===\n" + ConsoleColors.ANSI_RESET);
                         System.out.println("1. Register an employee");
                         System.out.println("2. Register a guest");
                         System.out.println("3. Register an instructor");
@@ -426,12 +430,12 @@ public final class App {
 
                 case 3 ->{
                     while (!goBack) {
-                        System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PASS MENU ===\n" + ResortUtils.ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_BLUE + "\n=== PASS MENU ===\n" + ConsoleColors.ANSI_RESET);
                         System.out.println("1. Create a guest pass");
                         System.out.println("2. Create an employee pass");
                         System.out.println("3. Create an instructor pass");
-                        System.out.println("4. GO BACK");
-                        choice2 = pickInt(sc, 1, 4);
+                        System.out.println("0. GO BACK");
+                        choice2 = pickInt(sc, 0, 3);
                         switch (choice2) {
                             case 1 -> {//TODO: cleanup that
                                 guest = Person.findByNameGUI(sc, personRepo, Guest.class);
@@ -459,17 +463,11 @@ public final class App {
                                             multiDayPass = Pass.createMultiDayPass(passRepo, guest, day, day.plusDays(choice3-1));
                                         }
 
-                                        case 3 -> {
-                                            seasonPass = Pass.createSeasonPass(passRepo, guest);
-                                        }
+                                        case 3 -> seasonPass = Pass.createSeasonPass(passRepo, guest);
 
-                                        case 4 -> {
-                                            aLaCartePass = Pass.createALaCartePass(passRepo, guest);
-                                        }
+                                        case 4 -> aLaCartePass = Pass.createALaCartePass(passRepo, guest);
 
-                                        case 0 -> {
-                                            System.out.println("Cancelling...");
-                                        }
+                                        case 0 -> System.out.println("Cancelling...");
                                     }
                                 }
                             }
@@ -512,7 +510,58 @@ public final class App {
                             }
 
 
-                            case 4 -> {
+                            case 0 -> {
+                                System.out.println("going back...");
+                                goBack = true;
+                            }
+                        }
+                    }
+                }
+
+
+
+                case 4 -> {
+                    while (!goBack) {
+                        System.out.println(ConsoleColors.ANSI_BLUE + "\n=== EMULATION MENU ===\n" + ConsoleColors.ANSI_RESET);
+                        System.out.println("1. Log pass usage");
+                        System.out.println("0. GO BACK");
+                        choice2 = pickInt(sc, 0, 1);
+                        switch (choice2) {
+                            case 1 ->{
+                                System.out.println("This is a heavy request. Proceed ?");
+                                System.out.println("1. Yes, proceed");
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 1);
+                                if (choice3==1) {
+                                    passes = passRepo.findAllPasses();
+                                    for (int i = 0; i<passes.size(); i++){
+                                        System.out.println(i+1 + ". " + passes.get(i));
+                                    }
+                                    System.out.println("0. CANCEL");
+                                    System.out.println("\nChoose the pass to log a use on: ");
+                                    choice3 = pickInt(sc, 0, passes.size()) - 1;
+                                    if (choice3 != -1){
+                                        pass = passes.get(choice3);
+                                        lifts = resort.getLifts();
+                                        for (long i = 0; i < lifts.size(); i++){
+                                            System.out.println(i+1 + ". " + lifts.get(i));
+                                        }
+                                        System.out.println("0. CANCEL");
+                                        System.out.println("Choose the lift to log a use from: ");
+                                        choice3 = pickInt(sc, 0, passes.size()) - 1;
+                                        if (choice3 != -1){
+                                            lift = lifts.get(((long) choice3));
+                                            passRepo.logUse(pass, lift);
+                                        } else {
+                                            System.out.println("Cancelling...");
+                                        }
+                                    } else {
+                                        System.out.println("Cancelling...");
+                                    }
+                                }
+
+                            }
+                            case 0 -> {
                                 System.out.println("going back...");
                                 goBack = true;
                             }

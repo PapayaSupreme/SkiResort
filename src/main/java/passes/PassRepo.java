@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import people.Person;
+import terrain.Lift;
 import terrain.Resort;
 
 import java.time.LocalDate;
@@ -47,17 +48,19 @@ public class PassRepo {
     }
 
     public List<Pass> findAllPasses(Person owner) {
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner", Pass.class)
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+            return em.createQuery(
+                            "SELECT p FROM Pass p JOIN FETCH p.owner WHERE p.owner = :owner", Pass.class)
                     .setParameter("owner", owner)
                     .getResultList();
         }
     }
 
 
+
     public List<Pass> findAllPasses() {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM Pass p", Pass.class)
+            return entityManager.createQuery("SELECT p FROM Pass p JOIN FETCH p.owner", Pass.class)
                     .getResultList();
         }
     }
@@ -65,7 +68,7 @@ public class PassRepo {
 
     public List<Pass> findPassesOfKind(PassKind passKind) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.passKind = :passKind AND p.passStatus = :passStatus", Pass.class)
+            return entityManager.createQuery("SELECT p FROM Pass p JOIN FETCH p.owner WHERE p.passKind = :passKind AND p.passStatus = :passStatus", Pass.class)
                     .setParameter("passKind", passKind)
                     .setParameter("passStatus", PassStatus.ACTIVE)
                     .getResultList();
@@ -75,7 +78,7 @@ public class PassRepo {
 
     public List<DayPass> findDayPassesValidOn(LocalDate date){
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM DayPass p WHERE p.passStatus = :activeStatus AND p.validDay = :date", DayPass.class)
+            return entityManager.createQuery("SELECT p FROM DayPass p JOIN FETCH p.owner WHERE p.passStatus = :activeStatus AND p.validDay = :date", DayPass.class)
                     .setParameter("activeStatus", PassStatus.ACTIVE)
                     .setParameter("date", date)
                     .getResultList();
@@ -84,7 +87,7 @@ public class PassRepo {
 
     public List<MultiDayPass> findMultiDayPassesValidOn(LocalDate date){
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM MultiDayPass p WHERE p.passStatus = :activeStatus AND :date BETWEEN p.validFrom AND p.validTo", MultiDayPass.class)
+            return entityManager.createQuery("SELECT p FROM MultiDayPass p JOIN FETCH p.owner WHERE p.passStatus = :activeStatus AND :date BETWEEN p.validFrom AND p.validTo", MultiDayPass.class)
                     .setParameter("activeStatus", PassStatus.ACTIVE)
                     .setParameter("date", date)
                     .getResultList();
@@ -93,7 +96,7 @@ public class PassRepo {
 
     public List<SeasonPass> findSeasonPassesValidOn(LocalDate date){
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM SeasonPass p WHERE p.passStatus = :activeStatus AND :date BETWEEN :seasonStart AND :seasonEnd", SeasonPass.class)
+            return entityManager.createQuery("SELECT p FROM SeasonPass p JOIN FETCH p.owner WHERE p.passStatus = :activeStatus AND :date BETWEEN :seasonStart AND :seasonEnd", SeasonPass.class)
                     .setParameter("activeStatus", PassStatus.ACTIVE)
                     .setParameter("date", date)
                     .setParameter("seasonStart", Resort.getSeasonStart())
@@ -104,7 +107,7 @@ public class PassRepo {
 
     public List<ALaCartePass> findALaCartePassesValidOn(LocalDate date){
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM ALaCartePass p WHERE p.passStatus = :activeStatus AND :date BETWEEN :seasonStart AND :seasonEnd", ALaCartePass.class)
+            return entityManager.createQuery("SELECT p FROM ALaCartePass p JOIN FETCH p.owner WHERE p.passStatus = :activeStatus AND :date BETWEEN :seasonStart AND :seasonEnd", ALaCartePass.class)
                     .setParameter("activeStatus", PassStatus.ACTIVE)
                     .setParameter("date", date)
                     .setParameter("seasonStart", Resort.getSeasonStart())
@@ -122,6 +125,18 @@ public class PassRepo {
                     .getResultList();
         }
     }
+
+    public void logUse(Pass pass, Lift lift) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            PassUsage usage = new PassUsage(pass, lift.getId());
+            entityManager.persist(usage);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            System.err.println("Failed to log pass use: " + e.getMessage());
+        }
+    }
+
 
 
 }
