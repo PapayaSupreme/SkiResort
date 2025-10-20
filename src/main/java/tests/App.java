@@ -102,7 +102,7 @@ public final class App {
         HashSet<Long> ids;
         Employee employee = null;
         List<Pass> passes = new ArrayList<>();
-        Map<Long, Lift> lifts = new HashMap<>();
+        List<Lift> lifts = new ArrayList<>();
         Guest guest = null;
         Pass pass;
         Lift lift;
@@ -121,7 +121,7 @@ public final class App {
             System.out.println("1. View resort data");
             System.out.println("2. Create person");
             System.out.println("3. Create pass");
-            System.out.println("4. [WIP] Emulate IRL actions");
+            System.out.println("4. Emulate IRL actions");
             System.out.println("0. EXIT");
             choice1 = pickInt(sc, 0, 4);
             goBack = false;
@@ -542,15 +542,15 @@ public final class App {
                                     choice3 = pickInt(sc, 0, passes.size()) - 1;
                                     if (choice3 != -1){
                                         pass = passes.get(choice3);
-                                        lifts = resort.getLifts();
-                                        for (long i = 0; i < lifts.size(); i++){
-                                            System.out.println(i+1 + ". " + lifts.get(i));
+                                        lifts = new ArrayList<>(resort.getLifts().values());
+                                        for (int i = 0; i < lifts.size(); i++){
+                                            System.out.println(i+1 + ". " + lifts.get(i).getName());
                                         }
                                         System.out.println("0. CANCEL");
                                         System.out.println("Choose the lift to log a use from: ");
                                         choice3 = pickInt(sc, 0, passes.size()) - 1;
                                         if (choice3 != -1){
-                                            lift = lifts.get(((long) choice3));
+                                            lift = lifts.get(choice3);
                                             passRepo.logUse(pass, lift);
                                         } else {
                                             System.out.println("Cancelling...");

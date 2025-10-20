@@ -20,6 +20,7 @@
         <class>terrain.SkiArea</class>
         <class>terrain.Slope</class>
         <class>terrain.Summit</class>
+        <class>passes.PassUsage</class>
 
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

@@ -322,7 +322,7 @@ create table pass_usage
 (
     id bigserial primary key,
     pass_id bigint references pass on delete cascade,
-    use_time timestamp not null default now(),
+    use_time timestamp default now(),
     lift_id bigint references lift(id)
 );
 

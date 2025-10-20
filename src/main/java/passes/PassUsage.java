@@ -1,7 +1,6 @@
 package passes;
 
 import jakarta.persistence.*;
-import terrain.Lift;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +20,7 @@ public class PassUsage {
             foreignKey = @ForeignKey(name="fk_pass_usage_pass"))
     private Pass pass;
 
-    @Column(name = "use_time", nullable = false)
+    @Column(name = "use_time", insertable = false)
     private LocalDateTime useTime;
 
     protected PassUsage() { /* JPA */ }
