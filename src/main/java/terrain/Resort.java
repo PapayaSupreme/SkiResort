@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static utils.ResortUtils.norm;
+import static utils.ResortUtils.runTimer;
 
 public final class Resort {
     private final String resortName;
@@ -48,11 +49,14 @@ public final class Resort {
         HashSet<Long> out = new HashSet<>();
         if (name == null) return out;
         String contain = norm(name);
+        long t0 = System.nanoTime();
         for (var idFromNameEntry: this.idFromName.entrySet()) {
             if (idFromNameEntry.getKey().contains(contain)){
                 out.addAll(idFromNameEntry.getValue());
             }
         }
+        long t1 = System.nanoTime();
+        runTimer("Terrain name search query", t0, t1);
         return out;
     }
 

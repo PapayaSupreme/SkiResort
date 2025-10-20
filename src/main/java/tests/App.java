@@ -139,7 +139,6 @@ public final class App {
                         choice2 = pickInt(sc, 0, 6);
                         switch(choice2) {
                             case 1 -> {
-                                t0 = System.nanoTime();
                                 System.out.println(resort.toString());
                                 System.out.printf("""
                                                 Total terrain: %d
@@ -153,8 +152,6 @@ public final class App {
                                         resort.getRestaurants().size(),
                                         resort.getRescuePoints().size(),
                                         resort.getSummits().size());
-                                t1 = System.nanoTime();
-                                runTimer("Total terrain display from instances", t0, t1);
                             }
 
 
@@ -162,14 +159,11 @@ public final class App {
                                 System.out.println(ConsoleColors.ANSI_BLUE + "\n=== TERRAIN SEARCH ===\n" + ConsoleColors.ANSI_RESET);
                                 System.out.println("Search by name of the structure:\n");
                                 search = sc.nextLine();
-                                t0 = System.nanoTime();
                                 ids = resort.getIdsFromName(search);
                                 for (Long id: ids){
                                     System.out.println(resort.getTerrainIndex()
                                             .get(id).toString());
                                 }
-                                t1 = System.nanoTime();
-                                runTimer("Terrain name search query", t0, t1);
                                 if (Objects.equals(search, "")){
                                     System.out.println("\n===Note: your query was empty, so it displayed the whole resort.===");
                                 }
@@ -184,6 +178,8 @@ public final class App {
                                 if (choice3==1) {
                                     t0 = System.nanoTime();
                                     persons = personRepo.findAll();
+                                    t1 = System.nanoTime();
+                                    runTimer("All persons display query", t0, t1);
                                     for (Person p : persons) {
                                         System.out.println(p.toString());
                                         if (p.getPersonKind() == PersonKind.EMPLOYEE) {
@@ -198,8 +194,6 @@ public final class App {
                                                     Details: %d employees, %d instructors, %d guests.
                                                     """,
                                             persons.size(), count1, count2, (persons.size() - count1 - count2));
-                                    t1 = System.nanoTime();
-                                    runTimer("Total person display from DB", t0, t1);
                                     count1 = 0;
                                     count2 = 0;
                                 } else {
@@ -221,7 +215,7 @@ public final class App {
                                     t0 = System.nanoTime();
                                     personOptional = personRepo.findByEmail(email);
                                     t1 = System.nanoTime();
-                                    runTimer("Person match from email", t0, t1);
+                                    runTimer("Person match from email query", t0, t1);
                                     if (personOptional.isPresent()) {
                                         personOptional.get().displayFullInfo(passRepo);
                                     } else {
@@ -244,7 +238,10 @@ public final class App {
                                 System.out.println("0. CANCEL");
                                 choice3 = pickInt(sc, 0, 1);
                                 if (choice3==1) {
+                                    t0 = System.nanoTime();
                                     passes = passRepo.findAllPasses();
+                                    t1 = System.nanoTime();
+                                    runTimer("All passes display query", t0, t1);
                                     count1 = 0;
                                     count2 = 0;
                                     count3 = 0;
@@ -551,7 +548,14 @@ public final class App {
                                         choice3 = pickInt(sc, 0, passes.size()) - 1;
                                         if (choice3 != -1){
                                             lift = lifts.get(choice3);
-                                            passRepo.logUse(pass, lift);
+                                            try {
+                                                passRepo.logUse(pass, lift);
+                                                System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
+                                                        "Successfully logged to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET
+                                                        + " usage of " + pass.toString() + " on " + lift.getName());
+                                            } catch (Exception e) {
+                                                System.err.println("Failed to log usage on" + lift.getName() + " of " + pass.toString() + ": " + e);
+                                            }
                                         } else {
                                             System.out.println("Cancelling...");
                                         }

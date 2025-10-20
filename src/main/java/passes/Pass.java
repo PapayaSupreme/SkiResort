@@ -93,7 +93,7 @@ public abstract class Pass {
         List<SeasonPass> seasonPasses = passRepo.findSeasonPassesValidOn(date);
         List<ALaCartePass> aLaCartePasses = passRepo.findALaCartePassesValidOn(date);
         long t1 = System.nanoTime();
-        runTimer("All passes valid on " + date.toString() + " search", t0, t1);
+        runTimer("All passes valid on " + date.toString() + " query", t0, t1);
         System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== DAY PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
         for (DayPass p: dayPasses){
             System.out.println(p);
@@ -121,7 +121,7 @@ public abstract class Pass {
         long t0 = System.nanoTime();
         List<Pass> passes = passRepo.findPassesOfKind(passKind);
         long t1 = System.nanoTime();
-        runTimer("All active " + passKind.toString() + " Passes search", t0, t1);
+        runTimer("All active " + passKind.toString() + " Passes query", t0, t1);
         for (Pass p : passes) {
             System.out.println(p);
         }
@@ -133,7 +133,7 @@ public abstract class Pass {
         List<Pass> employeePasses = passRepo.findPassesOfPersonKind(PersonKind.EMPLOYEE);
         List<Pass> instructorPasses = passRepo.findPassesOfPersonKind(PersonKind.INSTRUCTOR);
         long t1 = System.nanoTime();
-        runTimer("All special passes search", t0, t1);
+        runTimer("All special passes query", t0, t1);
         int count1 = 0;
         System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== EMPLOYEE - SEASON PASSES ===" + ResortUtils.ConsoleColors.ANSI_RESET);
         for (Pass p: employeePasses){
@@ -173,7 +173,7 @@ public abstract class Pass {
 
     @Override
     public String toString() {
-        return "owner("+ this.owner.getPersonKind() + ")=" + this.owner.getId() + " - " + this.owner.getFirstName() + this.owner.getLastName()
-                + " - " + this.owner.getEmail();
+        return "owner("+ this.owner.getPersonKind() + ")=" + this.owner.getId() + " - " + this.owner.getFirstName() + " "
+                + this.owner.getLastName() + " - " + this.owner.getEmail();
     }
 }
