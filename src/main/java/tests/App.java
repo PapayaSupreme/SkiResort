@@ -68,7 +68,7 @@ public final class App {
 
     }
 
-    /** Unsafe but convenient cast from Map<Long,Object> -> Map<Long,T> (controlled both ends still). */
+    // Unsafe but convenient cast from Map<Long,Object> -> Map<Long,T> (controlled both ends still).
     @SuppressWarnings("unchecked")
     private static <T> Map<Long, T> cast(Map<Long, Object> m, Class<T> cls) {
         var out = new LinkedHashMap<Long, T>(m.size());

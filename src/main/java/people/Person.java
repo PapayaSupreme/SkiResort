@@ -7,6 +7,7 @@ import enums.SkiSchool;
 import jakarta.persistence.*;
 import passes.Pass;
 import passes.PassRepo;
+import passes.PassUsage;
 import utils.ResortUtils;
 
 import java.time.Instant;
@@ -162,20 +163,45 @@ public abstract class Person {
         List<Pass> expiredPasses = passes.stream().filter(p -> p.getPassStatus() == PassStatus.EXPIRED).toList();
         List<Pass> suspendedPasses = passes.stream().filter(p -> p.getPassStatus() == PassStatus.SUSPENDED).toList();
         List<Pass> validPasses = passes.stream().filter(p -> p.getPassStatus() == PassStatus.ACTIVE).toList();
+        List<PassUsage> passUsages = passRepo.findAllPassUsages(this);
+        HashSet<LocalDate> dayCount = new HashSet<>();
+        for (PassUsage pu: passUsages){
+            dayCount.add(pu.getUseTime().toLocalDate());
+        }
         long t1 = System.nanoTime();
+        int count = 0;
         System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PASSES ===\n\n"+ ResortUtils.ConsoleColors.ANSI_RESET + "Expired Passes:");
         for (Pass p: expiredPasses){
-            System.out.println(p);
+            for (PassUsage pu: passUsages){
+                if (pu.getPass().equals(p)){
+                    count++;
+                }
+            }
+            System.out.println("Uses: " + count + " - " + p);
+            count = 0;
         }
         System.out.println("\nSuspended Passes: ");
         for (Pass p: suspendedPasses){
-            System.out.println(p);
+            for (PassUsage pu: passUsages){
+                if (pu.getPass().equals(p)){
+                    count++;
+                }
+            }
+            System.out.println("Uses: " + count + " - " + p);
+            count = 0;
         }
         System.out.println("\nValid Passes: ");
         for (Pass p: validPasses){
-            System.out.println(p);
+            for (PassUsage pu: passUsages){
+                if (pu.getPass().getId() == p.getId()) {
+                    count++;
+                }
+            }
+            System.out.println("Used " + count + " times - " + p);
+            count = 0;
         }
         System.out.println("\nTotal: " + expiredPasses.size() + " expired, " + suspendedPasses.size() + " suspended, " + validPasses.size() + " valid.");
+        System.out.println("Total uses: " + passUsages.size() + " times on " + dayCount.size() + " days.");
         runTimer("Fetch of a person's passes", t0, t1);
     }
     @Override

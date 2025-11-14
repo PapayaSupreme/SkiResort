@@ -1,6 +1,7 @@
 package passes;
 
 import jakarta.persistence.*;
+import terrain.Resort;
 
 import java.time.LocalDateTime;
 
@@ -34,4 +35,10 @@ public class PassUsage {
     public Pass getPass() { return this.pass; }
     public Long getLiftId() { return this.liftId; }
     public LocalDateTime getUseTime() { return this.useTime; }
+
+    @Override
+    public String toString(){
+        return "type: " + this.pass.getPassKind() + ", id: " + this.pass.getId() + " used on "
+                + this.useTime + " on lift " + Resort.getTerrainIndex().get(this.liftId).getName();
+    }
 }

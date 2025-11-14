@@ -15,7 +15,7 @@ public final class Resort {
     private final Map<Long, RescuePoint> rescuePoints;
     private final Map<Long, Summit> summits;
     private final Map<String, List<Long>> idFromName = new HashMap<>();
-    private final Map<Long, Terrain> terrainIndex = new HashMap<>();
+    private static final Map<Long, Terrain> terrainIndex = new HashMap<>();
 
     private static final LocalDate SEASON_START = LocalDate.of(2025, 1, 1); //TODO; obv temporary, make it not hardcoded
     private static final LocalDate SEASON_END = LocalDate.of(2026, 12, 31);
@@ -40,7 +40,7 @@ public final class Resort {
     public Map<Long, Restaurant> getRestaurants(){ return Map.copyOf(this.restaurants); }
     public Map<Long, RescuePoint> getRescuePoints(){ return Map.copyOf(this.rescuePoints); }
     public Map<Long, Summit>  getSummits(){ return Map.copyOf(this.summits); }
-    public Map<Long, Terrain> getTerrainIndex() { return Map.copyOf(this.terrainIndex); }
+    public static Map<Long, Terrain> getTerrainIndex() { return Map.copyOf(terrainIndex); }
 
     public static LocalDate getSeasonStart() { return SEASON_START; }
     public static LocalDate getSeasonEnd() { return SEASON_END; }
@@ -83,8 +83,8 @@ public final class Resort {
     }
 
     public boolean isInSeasonRange(LocalDate day){
-        return this.SEASON_START.isBefore(day) &&
-                this.SEASON_END.isAfter(day); //TODO; obv temporary, make it not hardcoded
+        return SEASON_START.isBefore(day) &&
+                SEASON_END.isAfter(day); //TODO; obv temporary, make it not hardcoded
     }
 
     @Override

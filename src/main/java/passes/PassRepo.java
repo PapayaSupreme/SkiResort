@@ -55,6 +55,15 @@ public class PassRepo {
         }
     }
 
+    public List<PassUsage> findAllPassUsages(Person owner) {
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+            return em.createQuery(
+                            "SELECT pu FROM PassUsage pu JOIN FETCH pu.pass p WHERE p.owner = :owner", PassUsage.class)
+                    .setParameter("owner", owner)
+                    .getResultList();
+        }
+    }
+
 
 
     public List<Pass> findAllPasses() {
