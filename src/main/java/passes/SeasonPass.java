@@ -1,12 +1,9 @@
 package passes;
 
-
 import enums.PassKind;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import people.Person;
-
-import java.time.LocalDate;
 
 
 @Entity

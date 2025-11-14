@@ -5,12 +5,10 @@ import enums.PassStatus;
 import enums.PersonKind;
 import jakarta.persistence.*;
 import people.Person;
-import people.PersonRepo;
 import utils.ResortUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

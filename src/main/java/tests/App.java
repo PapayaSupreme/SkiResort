@@ -525,7 +525,7 @@ public final class App {
                         choice2 = pickInt(sc, 0, 1);
                         switch (choice2) {
                             case 1 ->{
-                                System.out.println("This is a heavy request. Proceed ?");
+                                System.out.println("ALL PASS QUERY is a heavy request. Proceed ?");
                                 System.out.println("1. Yes, proceed");
                                 System.out.println("0. CANCEL");
                                 choice3 = pickInt(sc, 0, 1);
