@@ -2,7 +2,7 @@ PREREQUISITES :<br>
                 - Maven (Hibernate ORM, jakarta, zaxxer, PostgreSQL JDBC)<br>
                   =>in the `/pom.xml` root file<br>
                 - Java 23+<br>
-                - Ran on Intellij but other works<br>
+                - Ran on Intellij but other IDEs prolly work<br>
                 - PostgreSQL DB<br><br>
 SETUP :<br>
               1. Run `/src/main/db/init.sql` (db config)<br>
