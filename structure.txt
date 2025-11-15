@@ -8,34 +8,43 @@ II. Structure
 
 com
 ├─ passes
-│  ├─ Pass (abstract)
+│  ├─ Pass (abstract)		Pass => Person: @ManyToOne
 │  │   ├─ DayPass
 │  │   ├─ MultiDayPass
-│  │   ├─ YearPass
+│  │   ├─ SeasonPass
 │  │   └─ ALaCartePass
-│  └─ (enums used by passes: PassCategory, PassStatus)
+│  │   
+│  ├─ PassRepo (JPA)
+│  ├─ PassUsage
+│  └─ (enums used by passes: PassKind, PassStatus)
 │
 ├─ peoples
-│  ├─ Person (abstract)			(each Person has a list of Pass)
+│  ├─ Person (abstract)	
 │  │   ├─ Guest
-│  │   │  └─ Instructor
+│  │   ├─ Instructor
 │  │   └─ Employee
-│  └─ Worksite        (plain class; helper/assignment target)
+│  │   
+│  ├─ PersonRepo (JPA)
+│  └─ (Enums used by peoples: EmployeeType, 
+│       └─ OpeningHours, Point, SkiSchool)
 │
 └─ terrain
    ├─ POI             (base map entity, single-point locations)
    │   ├─ Summit
    │   ├─ Restaurant
-   │   ├─ Map
    │   └─ RescuePoint
    │
-   └─ SkiArea         (area with geometry)
-       ├─ Slope
-       └─ Lift
+   ├─ Slope 	Slope => SkiArea: @ManyToOne
+   ├─ Lift		Lift => SkiArea: @ManyToOne
+   ├─ Terrain (interface)
+   ├─ Worksite (interface)
+   ├─ SkiArea
+   └─ (Enums used by terrain: LiftStatus, LiftType,
+		├─ OpeningHours, Point, POIStatus, SlopeDifficulty,
+		└─ SlopeType, SnowConsistency, TerrainType)
 
 III. Features
 
-Pass: issuing different types of passes, compute their prices, check their validity, give user info
-Person: maps their role, attached location (restaurant for R&B crew, rescue point for pisters...), give out their status/schedule
-Terrain: Display opening hours or emergency status, give out snow and weather report when needed. Map their position and elevation, 
-	 and allow for use a shortest path algorithm between them. 
+Pass: issue different types of passes, check their validity, give user info
+Person: map their role, attached location (restaurant for R&B crew, rescue point for pisters...), give out their status/schedule
+Terrain: Display opening hours or emergency status, give out snow and weather report when needed. Map their position and elevation, and allow for use a shortest path algorithm between them. 
