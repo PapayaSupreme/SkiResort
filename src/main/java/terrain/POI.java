@@ -32,8 +32,8 @@ public class POI {
 
     @Override
     public String toString() {
-        return "name=" + this.name + ", id=" + this.id+ ", location="
-                + this.location.toString() + ", status=" + this.status
-                + ", ski area=" + this.skiArea.getName();
+        return "name: " + this.name + ", ID: " + this.id+ ", location: "
+                + this.location.toString() + ", status: " + this.status
+                + ", ski area: " + this.skiArea.getName();
     }
 }

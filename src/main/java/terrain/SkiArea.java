@@ -78,8 +78,8 @@ public class SkiArea implements Terrain, Worksite {
 
     @Override
     public String toString() {
-        return "Ski area: name=" + this.name + ", id=" + this.id+ ", up="
-                + this.up + ", down=" + this.down
-                + ", opening hours=" + this.openingHours;
+        return "Ski area - name: " + this.name + ", ID: " + this.id+ ", up: "
+                + this.up + ", down: " + this.down
+                + ", opening hours: " + this.openingHours;
     }
 }

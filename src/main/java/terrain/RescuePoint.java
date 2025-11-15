@@ -28,6 +28,6 @@ public class RescuePoint extends POI implements Terrain, Worksite {
 
     @Override
     public String toString() {
-        return "Rescue Point: warning=" + this.warning + ", " + super.toString();
+        return "Rescue Point -  warning: " + this.warning + ", " + super.toString();
     }
 }

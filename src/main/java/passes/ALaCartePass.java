@@ -20,6 +20,6 @@ public class ALaCartePass extends Pass {
 
     @Override
     public String toString(){
-        return "ALaCartePass: "+ super.toString();
+        return "ALaCartePass - "+ super.toString();
     }
 }

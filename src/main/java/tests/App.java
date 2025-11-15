@@ -142,16 +142,20 @@ public final class App {
                                 System.out.println(resort.toString());
                                 System.out.printf("""
                                                 Total terrain: %d
+                                                Total worksite: %d
                                                 (%d ski areas, %d slopes, %d lifts,
                                                 %d restaurants, %d rescue points, %d summits)
                                                 """,
-                                        resort.getTerrainIndex().size(),
+                                        Resort.getTerrainIndex().size(),
+                                        Resort.getWorksiteIndex().size(),
                                         resort.getSkiAreas().size(),
                                         resort.getSlopes().size(),
                                         resort.getLifts().size(),
                                         resort.getRestaurants().size(),
                                         resort.getRescuePoints().size(),
                                         resort.getSummits().size());
+                                System.out.println("terainI9ndex: " + Resort.getTerrainIndex());
+                                System.out.println("worksiteIndex: " + Resort.getWorksiteIndex());
                             }
 
 
@@ -161,7 +165,7 @@ public final class App {
                                 search = sc.nextLine();
                                 ids = resort.getIdsFromName(search);
                                 for (Long id: ids){
-                                    System.out.println(resort.getTerrainIndex()
+                                    System.out.println(Resort.getTerrainIndex()
                                             .get(id).toString());
                                 }
                                 if (Objects.equals(search, "")){
@@ -374,6 +378,9 @@ public final class App {
                                     choice3 = pickInt(sc, 0, worksites.size()) - 1;
                                     if (choice3 != -1) {
                                         worksite = worksites.get(choice3);
+                                        System.out.println("TEST: WORKSITE IS: " + worksite.toString());
+                                        System.out.printf("%s, %s, %s, %s, %s, %s", email, firstName, lastName,
+                                                day.toString(), employeeType.toString(), worksite.getId());
                                         employee = Person.createEmployee(personRepo, email, firstName, lastName, day, employeeType, worksite.getId());
                                     } else {
                                         System.out.println("Cancelling...");

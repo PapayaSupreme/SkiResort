@@ -33,6 +33,6 @@ public class MultiDayPass extends Pass {
 
     @Override
     public String toString(){
-        return "MultiDayPass: validDays=[" + this.validFrom + " - "  + this.validTo + "], " + super.toString();
+        return "MultiDayPass - validDays=[" + this.validFrom + " - "  + this.validTo + "], " + super.toString();
     }
 }

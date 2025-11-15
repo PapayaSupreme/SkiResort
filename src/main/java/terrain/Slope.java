@@ -55,11 +55,11 @@ public class Slope implements Terrain {
 
     @Override
     public String toString() {
-        return "Slope: name=" + this.name + ", id=" + this.id+ ", up="
-                + this.up.toString() + ", down=" + this.down
-                + ", length=" + this.length + ", opening hours=" + this.openingHours
-                + ", difficulty=" + this.slopeDifficulty + ", snow=" + this.snowConsistency
-                + ", type=" + this.slopeType + ", ski area=" + this.skiArea.getName();
+        return "Slope - name: " + this.name + ", ID: " + this.id+ ", up: "
+                + this.up.toString() + ", down: " + this.down
+                + ", length: " + this.length + ", opening hours: " + this.openingHours
+                + ", difficulty: " + this.slopeDifficulty + ", snow: " + this.snowConsistency
+                + ", type: " + this.slopeType + ", ski area: " + this.skiArea.getName();
     }
 
 

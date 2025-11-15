@@ -80,7 +80,7 @@ SELECT * FROM (
 ) AS t(n, t, oh)
 ON CONFLICT (worksite_name, worksite_type) DO NOTHING;
 
--- 5) Materialize Lifts (link to Ski Areas + geometry; no name column here)
+-- 5) Materialize Lifts (link to Ski Areas + geometry)
 WITH sa AS (
     SELECT sa.id, w.worksite_name AS name
     FROM ski_area sa
@@ -104,11 +104,11 @@ SELECT
 FROM worksite w
          JOIN (
     VALUES
-        ('Prorel 2', 'Briançon',    'GONDOLA',   2355, 1627, 2336),
-        ('Ratier',   'Chantemerle', 'GONDOLA',   1888, 1350, 1610),
-        ('Vallons',  'Chantemerle', 'CHAIRLIFT', 2505, 1915, 2207),
-        ('Bachas',   'Le Monêtier', 'CHAIRLIFT', 2176, 1465, 2492)
-) AS l(worksite_name, area_name, lift_type, up_z, down_z, length_m)
+        ('Prorel 2', 'Briançon',    'GONDOLA',   2355, 1627, 2336, 2, 1),
+        ('Ratier',   'Chantemerle', 'GONDOLA',   1888, 1350, 1610, 3, null),
+        ('Vallons',  'Chantemerle', 'CHAIRLIFT', 2505, 1915, 2207, 5, 4),
+        ('Bachas',   'Le Monêtier', 'CHAIRLIFT', 2176, 1465, 2492, null, 6)
+) AS l(worksite_name, area_name, lift_type, up_z, down_z, length_m, up_slope, down_slope)
               ON w.worksite_name = l.worksite_name
                   AND w.worksite_type = 'LIFT'
          JOIN sa

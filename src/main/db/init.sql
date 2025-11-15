@@ -1,4 +1,4 @@
-create table if not exists worksite
+create table if not exists worksite --TODO: make every key, even foreign, bigserial and not bigint but for now it works :)
 (
     id            bigserial
         primary key,

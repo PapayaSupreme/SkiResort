@@ -3,6 +3,7 @@ package people;
 import enums.EmployeeType;
 import enums.PersonKind;
 import jakarta.persistence.*;
+import terrain.Resort;
 
 import java.time.LocalDate;
 
@@ -35,6 +36,9 @@ public class Employee extends Person {
 
     @Override
     public String toString(){
-        return "Employee: type=" + this.employeeType + ", worksiteId=" + this.getWorksiteId() + super.toString();
+        return "Employee - type: " + this.employeeType + ", worksite: ["
+                + Resort.getWorksiteIndex().get(this.getWorksiteId()).getWorksiteType()
+                + " - " + Resort.getWorksiteIndex().get(this.getWorksiteId()).getName()
+                + "], " + super.toString();
     }
 }

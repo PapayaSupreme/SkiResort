@@ -22,6 +22,6 @@ public class Restaurant extends POI implements Terrain, Worksite {
 
     @Override
     public String toString() {
-        return "Restaurant: " + super.toString();
+        return "Restaurant - " + super.toString();
     }
 }

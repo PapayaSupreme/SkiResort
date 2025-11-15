@@ -65,19 +65,19 @@ public class Lift implements Terrain, Worksite {
 
     @Override
     public String toString() {
-        String upSlopeToString = ", upSlope=none";
-        String downSlopeToString = ", downSlope=none";
+        String upSlopeToString = ", upper Slope: none";
+        String downSlopeToString = ", down Slope: none";
         if (upSlope != null){
-            upSlopeToString = ", up slope=[" + this.upSlope.getId() + " - " + this.upSlope.getName() + "]";
+            upSlopeToString = ", upper Slope: [" + this.upSlope.getId() + " - " + this.upSlope.getName() + "]";
         }
         if (downSlope != null){
-            downSlopeToString = ", down slope=[" + this.downSlope.getId() + " - " + this.downSlope.getName() + "]";
+            downSlopeToString = ", down Slope=[" + this.downSlope.getId() + " - " + this.downSlope.getName() + "]";
         }
-        return "Lift: name=" + this.name + ", id=" + this.id+ ", up="
-                + this.up.toString() + ", down=" + this.down
-                + ", length=" + this.length + ", opening hours=" + this.openingHours.toString()
-                + ", type=" + this.type + ", status=" + this.status
+        return "Lift -  name: " + this.name + ", ID: " + this.id+ ", up: "
+                + this.up.toString() + ", down: " + this.down
+                + ", length: " + this.length + ", opening hours: " + this.openingHours.toString()
+                + ", type: " + this.type + ", status: " + this.status
                 + upSlopeToString + downSlopeToString
-                + ", ski area=" + this.skiArea.getName();
+                + ", ski area: " + this.skiArea.getName();
     }
 }

@@ -3,6 +3,7 @@ package people;
 import enums.PersonKind;
 import enums.SkiSchool;
 import jakarta.persistence.*;
+import terrain.Resort;
 
 import java.time.LocalDate;
 
@@ -35,6 +36,9 @@ public class Instructor extends Person {
 
     @Override
     public String toString(){
-        return "Instructor: ski school=" + this.skiSchool + ", worksiteId=" + this.getWorksiteId() + super.toString();
+        return "Instructor - Ski school: " + this.skiSchool + ", worksite: ["
+                + Resort.getWorksiteIndex().get(this.getWorksiteId()).getWorksiteType()
+                + " - " + Resort.getWorksiteIndex().get(this.getWorksiteId()).getName()
+                + "], " + super.toString();
     }
 }

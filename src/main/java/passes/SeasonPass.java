@@ -21,6 +21,6 @@ public class SeasonPass extends Pass {
 
     @Override
     public String toString(){
-        return "SeasonPass: "+ super.toString();
+        return "SeasonPass - "+ super.toString();
     }
 }

@@ -171,7 +171,7 @@ public abstract class Pass {
 
     @Override
     public String toString() {
-        return "owner("+ this.owner.getPersonKind() + ")=" + this.owner.getId() + " - " + this.owner.getFirstName() + " "
+        return "owner("+ this.owner.getPersonKind() + "): " + this.owner.getId() + " - " + this.owner.getFirstName() + " "
                 + this.owner.getLastName() + " - " + this.owner.getEmail();
     }
 }

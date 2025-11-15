@@ -8,7 +8,7 @@ import static utils.ResortUtils.runTimer;
 
 public final class Resort {
     private final String resortName;
-    private final Map<Long, SkiArea> skiAreas;
+    private final Map<Long, SkiArea> skiAreas; // TODO: make all of this hashmap
     private final Map<Long, Slope> slopes;
     private final Map<Long, Lift> lifts;
     private final Map<Long, Restaurant> restaurants;
@@ -16,6 +16,7 @@ public final class Resort {
     private final Map<Long, Summit> summits;
     private final Map<String, List<Long>> idFromName = new HashMap<>();
     private static final Map<Long, Terrain> terrainIndex = new HashMap<>();
+    private static final Map<Long, Worksite> worksiteIndex = new HashMap<>();
 
     private static final LocalDate SEASON_START = LocalDate.of(2025, 1, 1); //TODO; obv temporary, make it not hardcoded
     private static final LocalDate SEASON_END = LocalDate.of(2026, 12, 31);
@@ -30,6 +31,7 @@ public final class Resort {
         this.rescuePoints = Map.copyOf((Map<Long, RescuePoint>) rp);
         this.summits      = Map.copyOf((Map<Long, Summit>) su);
         buildTerrainIndex();
+        buildWorksiteIndex();
         buildIdFromNameIndex();
     }
 
@@ -41,6 +43,7 @@ public final class Resort {
     public Map<Long, RescuePoint> getRescuePoints(){ return Map.copyOf(this.rescuePoints); }
     public Map<Long, Summit>  getSummits(){ return Map.copyOf(this.summits); }
     public static Map<Long, Terrain> getTerrainIndex() { return Map.copyOf(terrainIndex); }
+    public static Map<Long, Worksite> getWorksiteIndex() { return Map.copyOf(worksiteIndex); }
 
     public static LocalDate getSeasonStart() { return SEASON_START; }
     public static LocalDate getSeasonEnd() { return SEASON_END; }
@@ -65,7 +68,7 @@ public final class Resort {
     //once-at-runtime helper, DO NOT USE AFTER OR MAYBE FOR HOT REBUILD
     private void buildIdFromNameIndex() {
         this.idFromName.clear();
-        for (var terrainIndexEntry: this.terrainIndex.entrySet()){
+        for (var terrainIndexEntry: terrainIndex.entrySet()){
             String k = norm(terrainIndexEntry.getValue().getName());
             this.idFromName.computeIfAbsent(k, unused -> new ArrayList<>())
             .add(terrainIndexEntry.getKey());
@@ -73,13 +76,21 @@ public final class Resort {
     }
 
     private void buildTerrainIndex() {
-        this.terrainIndex.clear();
-        this.terrainIndex.putAll(this.skiAreas);
-        this.terrainIndex.putAll(this.slopes);
-        this.terrainIndex.putAll(this.lifts);
-        this.terrainIndex.putAll(this.restaurants);
-        this.terrainIndex.putAll(this.rescuePoints);
-        this.terrainIndex.putAll(this.summits);
+        terrainIndex.clear();
+        terrainIndex.putAll(this.skiAreas);
+        terrainIndex.putAll(this.slopes);
+        terrainIndex.putAll(this.lifts);
+        terrainIndex.putAll(this.restaurants);
+        terrainIndex.putAll(this.rescuePoints);
+        terrainIndex.putAll(this.summits);
+    }
+
+    private void buildWorksiteIndex() {
+        worksiteIndex.clear();
+        worksiteIndex.putAll(this.skiAreas);
+        worksiteIndex.putAll(this.lifts);
+        worksiteIndex.putAll(this.rescuePoints);
+        worksiteIndex.putAll(this.restaurants);
     }
 
     public boolean isInSeasonRange(LocalDate day){
