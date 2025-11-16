@@ -141,21 +141,15 @@ public final class App {
                             case 1 -> {
                                 System.out.println(resort.toString());
                                 System.out.printf("""
-                                                Total terrain: %d
-                                                Total worksite: %d
-                                                (%d ski areas, %d slopes, %d lifts,
-                                                %d restaurants, %d rescue points, %d summits)
+                                                %d ski areas, %d slopes, %d lifts,
+                                                %d restaurants, %d rescue points, %d summits
                                                 """,
-                                        Resort.getTerrainIndex().size(),
-                                        Resort.getWorksiteIndex().size(),
                                         resort.getSkiAreas().size(),
                                         resort.getSlopes().size(),
                                         resort.getLifts().size(),
                                         resort.getRestaurants().size(),
                                         resort.getRescuePoints().size(),
                                         resort.getSummits().size());
-                                System.out.println("terainI9ndex: " + Resort.getTerrainIndex());
-                                System.out.println("worksiteIndex: " + Resort.getWorksiteIndex());
                             }
 
 
@@ -370,7 +364,6 @@ public final class App {
                                         case RESTAURATION -> new ArrayList<>(resort.getRestaurants().values());
                                         case MAINTENANCE -> new ArrayList<>(resort.getSkiAreas().values());
                                     };
-                                    System.out.println("Select employee worksite (adapted to employee type): ");
                                     for (int i = 0; i < worksites.size(); i++) {
                                         System.out.println((i + 1) + ". " + worksites.get(i));
                                     }
@@ -378,9 +371,6 @@ public final class App {
                                     choice3 = pickInt(sc, 0, worksites.size()) - 1;
                                     if (choice3 != -1) {
                                         worksite = worksites.get(choice3);
-                                        System.out.println("TEST: WORKSITE IS: " + worksite.toString());
-                                        System.out.printf("%s, %s, %s, %s, %s, %s", email, firstName, lastName,
-                                                day.toString(), employeeType.toString(), worksite.getId());
                                         employee = Person.createEmployee(personRepo, email, firstName, lastName, day, employeeType, worksite.getId());
                                     } else {
                                         System.out.println("Cancelling...");
@@ -551,7 +541,7 @@ public final class App {
                                             System.out.println(i+1 + ". " + lifts.get(i).getName());
                                         }
                                         System.out.println("0. CANCEL");
-                                        System.out.println("Choose the lift to log a use from: ");
+                                        System.out.println("Choose the lift to log a use from: "); //TODO: ask the date of use
                                         choice3 = pickInt(sc, 0, passes.size()) - 1;
                                         if (choice3 != -1){
                                             lift = lifts.get(choice3);

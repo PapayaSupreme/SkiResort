@@ -132,22 +132,22 @@ public abstract class Person {
                 .map(clazz::cast)
                 .toList();
         long t1 = System.nanoTime();
+        runTimer(clazz.getSimpleName() + " from partial name match", t0, t1);
         if (!out.isEmpty()) {
             if (out.size() == 1) {
-                System.out.println(out.size() + clazz.getSimpleName() + " was found: \n");
+                System.out.println(out.size() + " " + clazz.getSimpleName() + " was found: \n");
             } else {
                 System.out.println(out.size() + " " +  clazz.getSimpleName() + "s were found: \n");
             }
+            System.out.println("Choose the desired person: ");
             for (int i = 0; i<out.size(); i++){
                 System.out.println((i+1) + ". " + out.get(i));
             }
             System.out.println("0. CANCEL");
         } else {
             System.out.println("No match was found");
-            runTimer(clazz.getSimpleName() + " from partial name match", t0, t1);
             return null;
         }
-        runTimer(clazz.getSimpleName() + " from partial name match", t0, t1);
         int choice = pickInt(sc, 0, out.size()) -1;
         if (choice != -1){
             return out.get(choice);

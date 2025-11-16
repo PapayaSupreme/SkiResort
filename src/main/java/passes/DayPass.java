@@ -28,6 +28,6 @@ public class DayPass extends Pass{
 
     @Override
     public String toString(){
-        return "DayPass - validDay=" + this.validDay + ", " + super.toString();
+        return "DayPass - valid day: " + this.validDay + ", " + super.toString();
     }
 }
