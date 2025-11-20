@@ -37,6 +37,42 @@ public class PassRepo {
         }
     }
 
+    public void suspendPass(Pass pass) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        try {
+            entityTransaction.begin();
+            Pass managedPass = entityManager.merge(pass);
+            managedPass.setPassStatus(PassStatus.SUSPENDED);
+            entityTransaction.commit();
+        } catch (RuntimeException e) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void activatePass(Pass pass) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        try {
+            entityTransaction.begin();
+            Pass managedPass = entityManager.merge(pass);
+            managedPass.setPassStatus(PassStatus.ACTIVE);
+            entityTransaction.commit();
+        } catch (RuntimeException e) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public List<Pass> findValidPasses(Person owner) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner AND p.passStatus = :passStatus", Pass.class)

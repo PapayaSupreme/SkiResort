@@ -518,8 +518,10 @@ public final class App {
                     while (!goBack) {
                         System.out.println(ConsoleColors.ANSI_BLUE + "\n=== EMULATION MENU ===\n" + ConsoleColors.ANSI_RESET);
                         System.out.println("1. Log pass usage");
+                        System.out.println("2. Suspend pass");
+                        System.out.println("3. Activate pass");
                         System.out.println("0. GO BACK");
-                        choice2 = pickInt(sc, 0, 1);
+                        choice2 = pickInt(sc, 0, 3);
                         switch (choice2) {
                             case 1 ->{
                                 System.out.println("ALL PASS QUERY is a heavy request. Proceed ?");
@@ -560,8 +562,49 @@ public final class App {
                                         System.out.println("Cancelling...");
                                     }
                                 }
-
                             }
+
+
+                            case 2, 3 -> {
+                                System.out.println("ALL PASS QUERY is a heavy request. Proceed ?");
+                                System.out.println("1. Yes, proceed");
+                                System.out.println("0. CANCEL");
+                                choice3 = pickInt(sc, 0, 1);
+                                if (choice3==1) {
+                                    passes = passRepo.findAllPasses(); //TODO: not instantiate all passes when choosing
+                                    for (int i = 0; i < passes.size(); i++) {
+                                        System.out.println(i + 1 + ". " + passes.get(i));
+                                    }
+                                    System.out.println("0. CANCEL");
+                                    System.out.println("\nChoose the pass to modify status from: ");
+                                    choice3 = pickInt(sc, 0, passes.size()) - 1;
+                                    if (choice3 != -1){
+                                        pass = passes.get(choice3);
+                                        if (choice2 == 2){
+                                            try{
+                                                passRepo.suspendPass(pass);
+                                                System.out.println("Successfully suspended pass: " + pass.toString());
+                                            } catch (Exception e) {
+                                                System.err.println("Failed to suspend pass " + pass.toString() + ": " + e);
+                                            }
+                                        } else {
+                                            try{
+                                                passRepo.activatePass(pass);
+                                                System.out.println("Successfully activated pass: " + pass.toString());
+                                            } catch (Exception e) {
+                                                System.err.println("Failed to activate pass" + pass.toString() + ": " + e);
+                                            }
+                                        }
+                                    } else {
+                                        System.out.println("Cancelling...");
+                                    }
+                                } else {
+                                    System.out.println("Cancelling...");
+                                }
+                            }
+
+
+
                             case 0 -> {
                                 System.out.println("going back...");
                                 goBack = true;
