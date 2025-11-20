@@ -1,6 +1,5 @@
 package passes;
 
-
 import enums.PassKind;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;

@@ -13,7 +13,7 @@ public class PassUsage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "lift_id")  // Lift isn't a JPA entity, so I used a Long
+    @Column(name = "lift_id")  // Lift isn't a JPA entity, so used a long here not to do worthy tho :P
     private Long liftId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -21,7 +21,7 @@ public class PassUsage {
             foreignKey = @ForeignKey(name="fk_pass_usage_pass"))
     private Pass pass;
 
-    @Column(name = "use_time", insertable = false)
+    @Column(name = "use_time", updatable = false)
     private LocalDateTime useTime;
 
     protected PassUsage() { /* JPA */ }
@@ -29,6 +29,12 @@ public class PassUsage {
     public PassUsage(Pass pass, Long liftId) {
         this.pass = pass;
         this.liftId = liftId;
+    }
+
+    public PassUsage(Pass pass, Long liftId, LocalDateTime useTime) {
+        this.pass = pass;
+        this.liftId = liftId;
+        this.useTime = useTime;
     }
 
     public Long getId() { return this.id; }

@@ -64,9 +64,6 @@ public abstract class Pass {
 
     public void setPassKind(PassKind passCategory) { this.passKind = passCategory; }
 
-    public void activate() { this.passStatus = PassStatus.ACTIVE; }
-    public void deactivate() { this.passStatus = PassStatus.SUSPENDED; }
-
 
     public static ALaCartePass createALaCartePass(PassRepo passRepo, Person owner){
         return savePass(passRepo, new ALaCartePass(owner), "ALaCartePass");

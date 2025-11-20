@@ -1,14 +1,10 @@
 package tests;
 
 import com.zaxxer.hikari.HikariDataSource;
-import enums.PassKind;
-import enums.PersonKind;
+import enums.*;
 import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.util.*;
-
-import enums.EmployeeType;
-import enums.SkiSchool;
 
 import factory.ResortBootstrap;
 import factory.ResortLoader;
@@ -520,10 +516,12 @@ public final class App {
                         System.out.println("1. Log pass usage");
                         System.out.println("2. Suspend pass");
                         System.out.println("3. Activate pass");
+                        System.out.println("4. Advertise quietest day");
                         System.out.println("0. GO BACK");
-                        choice2 = pickInt(sc, 0, 3);
+                        choice2 = pickInt(sc, 0, 4);
                         switch (choice2) {
                             case 1 ->{
+                                System.out.println();
                                 System.out.println("ALL PASS QUERY is a heavy request. Proceed ?");
                                 System.out.println("1. Yes, proceed");
                                 System.out.println("0. CANCEL");
@@ -543,17 +541,34 @@ public final class App {
                                             System.out.println(i+1 + ". " + lifts.get(i).getName());
                                         }
                                         System.out.println("0. CANCEL");
-                                        System.out.println("Choose the lift to log a use from: "); //TODO: ask the date of use
+                                        System.out.println("Choose the lift to log a use from: ");
                                         choice3 = pickInt(sc, 0, passes.size()) - 1;
                                         if (choice3 != -1){
                                             lift = lifts.get(choice3);
-                                            try {
-                                                passRepo.logUse(pass, lift);
-                                                System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
-                                                        "Successfully logged to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET
-                                                        + " usage of " + pass.toString() + " on " + lift.getName());
-                                            } catch (Exception e) {
-                                                System.err.println("Failed to log usage on" + lift.getName() + " of " + pass.toString() + ": " + e);
+                                            System.out.println("\nLog use on a specific date ?");
+                                            System.out.println("1. YES");
+                                            System.out.println("0. NO");
+                                            choice3 = pickInt(sc, 0, 1);
+                                            if (choice3 == 1){
+                                                System.out.println("\nEnter date of use (YYYY-MM-DD): ");
+                                                day = ResortUtils.pickDate(sc, false);
+                                                try {
+                                                    passRepo.logUse(pass, lift, day);
+                                                    System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
+                                                            "Successfully logged to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET
+                                                            + " usage of " + pass.toString() + " on " + lift.getName() + " on " + day.toString());
+                                                } catch (Exception e) {
+                                                    System.err.println("Failed to log usage on" + lift.getName() + " of " + pass.toString() + ": " + e);
+                                                }
+                                            } else {
+                                                try {
+                                                    passRepo.logUse(pass, lift);
+                                                    System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
+                                                            "Successfully logged to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET
+                                                            + " usage of " + pass.toString() + " on " + lift.getName());
+                                                } catch (Exception e) {
+                                                    System.err.println("Failed to log usage on" + lift.getName() + " of " + pass.toString() + ": " + e);
+                                                }
                                             }
                                         } else {
                                             System.out.println("Cancelling...");
@@ -603,6 +618,15 @@ public final class App {
                                 }
                             }
 
+
+                            case 4 -> {
+                                DayMetrics dayMetrics = passRepo.findQuietestDateOfSeason(Resort.getSeasonStart(), Resort.getSeasonEnd());
+                                if (dayMetrics != null){
+                                    System.out.println("Quietest day would have been: " + dayMetrics.toString());
+                                } else {
+                                    System.out.println("No quietest day ??? error prolly");
+                                }
+                            }
 
 
                             case 0 -> {

@@ -3,6 +3,7 @@ package passes;
 import enums.PassKind;
 import enums.PassStatus;
 import enums.PersonKind;
+import enums.DayMetrics;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -25,7 +26,7 @@ public class PassRepo {
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             entityTransaction.begin();
-            entityManager.merge(p);   // insert or update
+            entityManager.merge(p);
             entityTransaction.commit();
         } catch (RuntimeException e) {
             if (entityTransaction.isActive()){
@@ -109,6 +110,39 @@ public class PassRepo {
         }
     }
 
+    public DayMetrics findQuietestDateOfSeason(LocalDate seasonStart, LocalDate seasonEnd) {
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+            List<DayMetrics> result = em.createQuery("""
+                SELECT new enums.DayMetrics(CAST(function('date', pu.useTime) AS LocalDate), COUNT(DISTINCT pu.pass.id), COUNT(pu))
+                FROM PassUsage pu
+                WHERE pu.useTime >= :start AND pu.useTime <= :end
+                GROUP BY function('date', pu.useTime)
+                ORDER BY COUNT(pu) ASC,COUNT(DISTINCT pu.pass.id) ASC
+                """, DayMetrics.class)
+                    .setParameter("start", seasonStart.atStartOfDay())
+                    .setParameter("end", seasonEnd.atStartOfDay())
+                    .setMaxResults(1)
+                    .getResultList();
+
+            List<LocalDate> allDates = seasonStart.datesUntil(seasonEnd).toList();
+            List<LocalDate> usedDates = result.stream().map(DayMetrics::localDate).toList();
+
+            LocalDate firstUnusedDate = allDates.stream()
+                    .filter(date -> !usedDates.contains(date))
+                    .findFirst()
+                    .orElse(null);
+
+            // return that if there's a day w 0 usage logged
+            if (firstUnusedDate != null) {
+                return new DayMetrics(firstUnusedDate, 0L, 0L);
+            }
+
+            return result.isEmpty() ? null : result.getFirst();
+        }
+    }
+
+
+
 
     public List<Pass> findPassesOfKind(PassKind passKind) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
@@ -180,6 +214,18 @@ public class PassRepo {
             System.err.println("Failed to log pass use: " + e.getMessage());
         }
     }
+
+    public void logUse(Pass pass, Lift lift, LocalDate date) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            PassUsage usage = new PassUsage(pass, lift.getId(), date.atStartOfDay());
+            entityManager.persist(usage);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            System.err.println("Failed to log pass use: " + e.getMessage());
+        }
+    }
+
 
 
 
