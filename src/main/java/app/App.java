@@ -1,4 +1,4 @@
-package tests;
+package app;
 
 import com.zaxxer.hikari.HikariDataSource;
 import enums.*;
@@ -26,7 +26,7 @@ public final class App {
             var snapshot = loader.load(mappers);
 
             Resort resort = new Resort(
-                    "Serre Chevalier",
+                    "TEST SAMPLE serreche",
                     cast(snapshot.skiAreas,     SkiArea.class),
                     cast(snapshot.slopes,       Slope.class),
                     cast(snapshot.lifts,        Lift.class),
@@ -209,14 +209,14 @@ public final class App {
                                     t0 = System.nanoTime();
                                     personOptional = personRepo.findByEmail(email);
                                     t1 = System.nanoTime();
-                                    runTimer("Person match from email query", t0, t1);
+                                    runTimer("Exact person match from email query", t0, t1);
                                     if (personOptional.isPresent()) {
                                         personOptional.get().displayFullInfo(passRepo);
                                     } else {
                                         System.out.println("Person not found");
                                     }
                                 } else if (choice3 == 2){
-                                    person = Person.findByNameGUI(sc, personRepo, Person.class); //TODO: when clicked,  ask to edit ?
+                                    person = Person.findByNameGUI(sc, personRepo, Person.class); //TODO: when selected, ask to edit ?
                                     if (person != null){
                                         person.displayFullInfo(passRepo);
                                     }
@@ -480,7 +480,8 @@ public final class App {
                             case 3->{
                                 instructor = Person.findByNameGUI(sc, personRepo, Instructor.class);
                                 if (instructor != null) {
-                                    passes = passRepo.findValidPasses(instructor);
+                                    passes = passRepo.findAllPasses(instructor)
+                                            .stream().filter(p -> p.getPassStatus() == PassStatus.ACTIVE).toList();
                                     if (!passes.isEmpty()) {
                                         System.out.println("This instructor already has a valid instructor pass: ");
                                         System.out.println("Instructor " + passes.getFirst());

@@ -13,6 +13,7 @@
         <class>passes.MultiDayPass</class>
         <class>passes.SeasonPass</class>
         <class>passes.ALaCartePass</class>
+        <class>passes.PassUsage</class>
         <class>terrain.Lift</class>
         <class>terrain.POI</class>
         <class>terrain.RescuePoint</class>
@@ -20,7 +21,7 @@
         <class>terrain.SkiArea</class>
         <class>terrain.Slope</class>
         <class>terrain.Summit</class>
-        <class>passes.PassUsage</class>
+
 
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

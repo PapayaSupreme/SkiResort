@@ -1,5 +1,7 @@
 package terrain;
 
+import utils.ResortUtils;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -95,6 +97,7 @@ public final class Resort {
 
     @Override
     public String toString(){
+        long t0 = System.nanoTime();
         StringBuilder s = new StringBuilder("===== " + this.resortName + " =====\n\n === Ski Areas ===\n");
         for (SkiArea skiArea: this.skiAreas.values()){
             s.append(skiArea.toString()).append("\n");
@@ -119,6 +122,8 @@ public final class Resort {
         for (Summit summit: this.summits.values()){
             s.append(summit.toString()).append("\n");
         }
+        long t1 = System.nanoTime();
+        ResortUtils.runTimer("Resort Display", t0, t1);
         return s.toString();
     }
 }

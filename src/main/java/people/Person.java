@@ -169,6 +169,7 @@ public abstract class Person {
             dayCount.add(pu.getUseTime().toLocalDate());
         }
         long t1 = System.nanoTime();
+        runTimer("Fetch of a person's passes", t0, t1);
         int count = 0;
         System.out.println(ResortUtils.ConsoleColors.ANSI_BLUE + "\n=== PASSES ===\n\n"+ ResortUtils.ConsoleColors.ANSI_RESET + "Expired Passes:");
         for (Pass p: expiredPasses){
@@ -202,7 +203,6 @@ public abstract class Person {
         }
         System.out.println("\nTotal: " + expiredPasses.size() + " expired, " + suspendedPasses.size() + " suspended, " + validPasses.size() + " valid.");
         System.out.println("Total uses: " + passUsages.size() + " times on " + dayCount.size() + " days.");
-        runTimer("Fetch of a person's passes", t0, t1);
     }
     @Override
     public String toString() {
