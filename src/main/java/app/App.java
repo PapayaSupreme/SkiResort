@@ -3,7 +3,10 @@ package app;
 import com.zaxxer.hikari.HikariDataSource;
 import enums.*;
 import jakarta.persistence.EntityManagerFactory;
+
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import factory.ResortBootstrap;
@@ -466,7 +469,8 @@ public final class App {
                             case 2 ->{
                                 employee = Person.findByNameGUI(sc, personRepo, Employee.class);
                                 if (employee != null) {
-                                    passes = passRepo.findValidPasses(employee);
+                                    passes = passRepo.findAllPasses(employee)
+                                            .stream().filter(p -> p.getPassStatus() == PassStatus.ACTIVE).toList();
                                     if (!passes.isEmpty()) {
                                         System.out.println("This employee already has a valid employee pass: ");
                                         System.out.println("Employee " + passes.getFirst());
@@ -554,21 +558,21 @@ public final class App {
                                                 System.out.println("\nEnter date of use (YYYY-MM-DD): ");
                                                 day = ResortUtils.pickDate(sc, false);
                                                 try {
-                                                    passRepo.logUse(pass, lift, day);
+                                                    passRepo.logUse(pass, lift, day.atStartOfDay());
                                                     System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
                                                             "Successfully logged to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET
-                                                            + " usage of " + pass.toString() + " on " + lift.getName() + " on " + day.toString());
+                                                            + " usage of " + pass.toString() + " on lift " + lift.getName() + " on " + day.toString());
                                                 } catch (Exception e) {
-                                                    System.err.println("Failed to log usage on" + lift.getName() + " of " + pass.toString() + ": " + e);
+                                                    System.err.println("Failed to log usage on lift " + lift.getName() + " of " + pass.toString() + ": " + e);
                                                 }
                                             } else {
                                                 try {
-                                                    passRepo.logUse(pass, lift);
+                                                    passRepo.logUse(pass, lift, LocalDateTime.now());
                                                     System.out.println(ResortUtils.ConsoleColors.ANSI_GREEN +
                                                             "Successfully logged to the DB: " + ResortUtils.ConsoleColors.ANSI_RESET
-                                                            + " usage of " + pass.toString() + " on " + lift.getName());
+                                                            + " usage of " + pass.toString() + " on lift " + lift.getName());
                                                 } catch (Exception e) {
-                                                    System.err.println("Failed to log usage on" + lift.getName() + " of " + pass.toString() + ": " + e);
+                                                    System.err.println("Failed to log usage on lift " + lift.getName() + " of " + pass.toString() + ": " + e);
                                                 }
                                             }
                                         } else {

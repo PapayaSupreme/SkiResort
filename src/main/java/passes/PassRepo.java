@@ -4,6 +4,7 @@ import enums.PassKind;
 import enums.PassStatus;
 import enums.PersonKind;
 import enums.DayMetrics;
+import exceptions.PassSuspendedException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -11,7 +12,10 @@ import people.Person;
 import terrain.Lift;
 import terrain.Resort;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 public class PassRepo {
@@ -74,15 +78,6 @@ public class PassRepo {
         }
     }
 
-    public List<Pass> findValidPasses(Person owner) {
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT p FROM Pass p WHERE p.owner = :owner AND p.passStatus = :passStatus", Pass.class)
-                    .setParameter("owner", owner)
-                    .setParameter("passStatus", PassStatus.ACTIVE)
-                    .getResultList();
-        }
-    }
-
     public List<Pass> findAllPasses(Person owner) {
         try (EntityManager em = entityManagerFactory.createEntityManager()) {
             return em.createQuery(
@@ -112,34 +107,48 @@ public class PassRepo {
 
     public DayMetrics findQuietestDateOfSeason(LocalDate seasonStart, LocalDate seasonEnd) {
         try (EntityManager em = entityManagerFactory.createEntityManager()) {
-            List<DayMetrics> result = em.createQuery("""
-                SELECT new enums.DayMetrics(CAST(function('date', pu.useTime) AS LocalDate), COUNT(DISTINCT pu.pass.id), COUNT(pu))
-                FROM PassUsage pu
-                WHERE pu.useTime >= :start AND pu.useTime <= :end
-                GROUP BY function('date', pu.useTime)
-                ORDER BY COUNT(pu) ASC,COUNT(DISTINCT pu.pass.id) ASC
-                """, DayMetrics.class)
-                    .setParameter("start", seasonStart.atStartOfDay())
-                    .setParameter("end", seasonEnd.atStartOfDay())
-                    .setMaxResults(1)
+            //I go from startDay -> endDay to startDayTime -> endDayTime + 1 to cover every NS
+            LocalDateTime start = seasonStart.atStartOfDay();
+            LocalDateTime endExclusive = seasonEnd.plusDays(1).atStartOfDay();
+            List<Object[]> rows = em.createQuery(
+                            "SELECT function('date', pu.useTime), COUNT(DISTINCT pu.pass.id), COUNT(pu) " +
+                                    "FROM PassUsage pu " +
+                                    "WHERE pu.useTime >= :start AND pu.useTime < :end " +
+                                    "GROUP BY function('date', pu.useTime)",
+                            Object[].class)
+                    .setParameter("start", start)
+                    .setParameter("end", endExclusive)
                     .getResultList();
+            List<DayMetrics> metrics = rows.stream().map(r -> {
+                Object rawDate = r[0];
+                LocalDate d = null;
+                //IDK what hibernate casts timestamp as so I put the legacy and current lol
+                if (rawDate instanceof Date) {
+                    d = ((Date) rawDate).toLocalDate();
+                } else if (rawDate instanceof LocalDate) {
+                    d = (LocalDate) rawDate;
+                }
+                Long uniquePasses = ((Number) r[1]).longValue();
+                Long uses = ((Number) r[2]).longValue();
+                return new DayMetrics(d, uniquePasses, uses);
+            }).toList();
 
-            List<LocalDate> allDates = seasonStart.datesUntil(seasonEnd).toList();
-            List<LocalDate> usedDates = result.stream().map(DayMetrics::localDate).toList();
+            List<LocalDate> allDates = seasonStart.datesUntil(seasonEnd.plusDays(1)).toList();
+            List<LocalDate> usedDates = metrics.stream().map(DayMetrics::localDate).toList();
 
-            LocalDate firstUnusedDate = allDates.stream()
-                    .filter(date -> !usedDates.contains(date))
-                    .findFirst()
-                    .orElse(null);
-
-            // return that if there's a day w 0 usage logged
-            if (firstUnusedDate != null) {
-                return new DayMetrics(firstUnusedDate, 0L, 0L);
+            LocalDate firstUnused = allDates.stream().filter(date -> !usedDates.contains(date)).findFirst().orElse(null);
+            if (firstUnused != null) {
+                return new DayMetrics(firstUnused, 0L, 0L);
             }
 
-            return result.isEmpty() ? null : result.getFirst();
+            return metrics.stream()
+                    .min(Comparator.comparingLong(DayMetrics::uses)
+                            .thenComparing(DayMetrics::localDate))
+                    .orElse(null);
         }
     }
+
+
 
 
 
@@ -204,21 +213,13 @@ public class PassRepo {
         }
     }
 
-    public void logUse(Pass pass, Lift lift) {
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            entityManager.getTransaction().begin();
-            PassUsage usage = new PassUsage(pass, lift.getId());
-            entityManager.persist(usage);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            System.err.println("Failed to log pass use: " + e.getMessage());
+    public void logUse(Pass pass, Lift lift, LocalDateTime dateTime) {
+        if (pass.getPassStatus() == PassStatus.SUSPENDED){
+            throw new PassSuspendedException(pass.getId());
         }
-    }
-
-    public void logUse(Pass pass, Lift lift, LocalDate date) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             entityManager.getTransaction().begin();
-            PassUsage usage = new PassUsage(pass, lift.getId(), date.atStartOfDay());
+            PassUsage usage = new PassUsage(pass, lift.getId(), dateTime);
             entityManager.persist(usage);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
